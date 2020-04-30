@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">AskUs</string>
+    <string name="linkSignUp">No account yet? <u>Create one</u></string>
+    <string name="linkLogin">Already have an account? <u>Log in</u></string>
+    <string name="fillFields">Don\'t let any empty field</string>
+    <string name="signup">Sign up</string>
+    <string name="login">Login</string>
+    <string name="invalidPassword">" The password must have at least six characters."</string>
+    <string name="password">Password</string>
+    <string name="rememberPassword"> <u>I\'ve forgotten my password</u> </string>
+    <string name="emailSent">Email sent</string>
+    <string name="emailNeeded">Email field needed</string>
+    <string name="error_emailSent">Error sending the email</string>
+    <string name="errorLogin">Error login</string>
+    <string name="lblEmail_account">Email</string>
+    <string name="lblNickname">Nickname</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
