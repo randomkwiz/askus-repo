@@ -12,7 +12,7 @@ constructor() {
     internal var loadJSONUseCase: LoadPostsUseCase
     private val loadingLiveData = MutableLiveData<Boolean>()
     private val showFinishMessage = MutableLiveData<Boolean>()
-    private val allNonDeletedPublicPostedPosts = MutableLiveData<MutableList<PublicacionDTO>>()
+    private val allNonDeletedPublicPostedPosts = MutableLiveData<List<PublicacionDTO>>()
 
     val finishMessage: LiveData<Boolean>
         get() = showFinishMessage
@@ -35,13 +35,13 @@ constructor() {
                 loadingLiveData.postValue(loading)
             }
 
-            override fun <T> onSuccess(data: MutableList<T>) {
-                allNonDeletedPublicPostedPosts.value = (data as MutableList<PublicacionDTO>)
+            override fun <T> onSuccess(data: List<T>) {
+                allNonDeletedPublicPostedPosts.value = (data as List<PublicacionDTO>)
             }
         })
     }
 
-    fun getAllNonDeletedPublicPostedPosts(): LiveData<MutableList<PublicacionDTO>> {
+    fun getAllNonDeletedPublicPostedPosts(): LiveData<List<PublicacionDTO>> {
         return allNonDeletedPublicPostedPosts
     }
 

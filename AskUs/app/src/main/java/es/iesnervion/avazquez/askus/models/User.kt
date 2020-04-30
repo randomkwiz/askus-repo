@@ -1,16 +1,16 @@
 package es.iesnervion.avazquez.askus.models
 
 data class User(
-    var id: String,
+    var id: String? = "",
     var nickname: String,
     var email: String,
-    var isModerador: Boolean,
-    var isBanned: Boolean,
-    var fechaInicioBaneo: String?,
-    var duracionBaneoEnDias: Int,
-    var fechaCreacionCuenta: String,
-    var fechaUltimoAcceso: String,
-    var isAdmin: Boolean,
+    var isModerador: Boolean? = false,
+    var isBanned: Boolean? = false,
+    var fechaInicioBaneo: String? = "",
+    var duracionBaneoEnDias: Int? = 0,
+    var fechaCreacionCuenta: String? = "",
+    var fechaUltimoAcceso: String? = "",
+    var isAdmin: Boolean? = false,
     var password: String
 ){
     constructor() :
