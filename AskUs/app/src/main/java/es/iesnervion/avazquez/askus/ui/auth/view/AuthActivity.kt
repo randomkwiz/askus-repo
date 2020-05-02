@@ -1,5 +1,8 @@
 package es.iesnervion.avazquez.askus.ui.auth.view
 
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -10,7 +13,8 @@ import es.iesnervion.avazquez.askus.interfaces.AuthActivityInterface
 import es.iesnervion.avazquez.askus.ui.auth.viewmodel.AuthViewModel
 import es.iesnervion.avazquez.askus.ui.fragments.LoginFragment
 import es.iesnervion.avazquez.askus.ui.fragments.SignUpFragment
-import es.iesnervion.avazquez.askus.ui.fragments.UserListFragment
+import es.iesnervion.avazquez.askus.ui.home.view.HomeActivity
+import es.iesnervion.avazquez.askus.utils.AppConstants
 import es.iesnervion.avazquez.askus.utils.AppConstants.TOKEN_LENGHT
 
 class AuthActivity : AppCompatActivity()
@@ -21,9 +25,13 @@ class AuthActivity : AppCompatActivity()
         SignUpFragment.newInstance()
     lateinit var tokenObserver: Observer<List<Char>>
     lateinit var viewModel: AuthViewModel
+    lateinit var sharedPreference: SharedPreferences
+    lateinit var editor: SharedPreferences.Editor
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        sharedPreference = getSharedPreferences(AppConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
+        editor = sharedPreference.edit()
         viewModel = ViewModelProviders.of(this)[AuthViewModel::class.java]
         //Pongo el fragment del login
         if (savedInstanceState == null) {
@@ -32,9 +40,9 @@ class AuthActivity : AppCompatActivity()
         // Create the observer which updates the UI.
         tokenObserver = Observer<List<Char>> {
             if (it.size == TOKEN_LENGHT) {
-                //Aquí se debe ir a la siguiente actividad (actividad home)
-                //TODO("Esto hay que cambiarlo, porque no es si no esta vacio, ya que puedo traer un espacio en blanco. Pon si es igual a nosecuantos caracteres")
-                loadFragmentLoader(UserListFragment())
+                editor.putString("token", it.joinToString(""))
+                editor.commit()
+                startActivity(Intent(this, HomeActivity::class.java))
             }
         }
         viewModel.getToken()

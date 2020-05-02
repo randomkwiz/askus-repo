@@ -3,6 +3,7 @@ package es.iesnervion.avazquez.askus.ui.fragments
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,7 @@ import es.iesnervion.avazquez.askus.R
 import es.iesnervion.avazquez.askus.interfaces.AuthActivityInterface
 import es.iesnervion.avazquez.askus.models.Login
 import es.iesnervion.avazquez.askus.ui.auth.viewmodel.AuthViewModel
+import es.iesnervion.avazquez.askus.utils.AppConstants.PREFERENCE_NAME
 import es.iesnervion.avazquez.askus.utils.AppConstants.UNAUTHORIZED
 import kotlinx.android.synthetic.main.fragment_login.*
 

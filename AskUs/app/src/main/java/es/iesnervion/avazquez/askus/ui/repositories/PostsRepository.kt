@@ -13,6 +13,7 @@ constructor() {
     private val loadingLiveData = MutableLiveData<Boolean>()
     private val showFinishMessage = MutableLiveData<Boolean>()
     private val allNonDeletedPublicPostedPosts = MutableLiveData<List<PublicacionDTO>>()
+    private val allNonDeletedPostedPosts = MutableLiveData<List<PublicacionDTO>>()
 
     val finishMessage: LiveData<Boolean>
         get() = showFinishMessage
@@ -25,7 +26,7 @@ constructor() {
         return loadingLiveData
     }
 
-    fun useCaseLoadJSON() {
+    fun useCaseLoadNonDeletedPublicPostedPosts() {
         loadJSONUseCase.getNonDeletedPublicPostedPosts(object : RepositoryInterface {
             override fun showError(show: Boolean) {
                 showFinishMessage.postValue(show)
@@ -36,13 +37,32 @@ constructor() {
             }
 
             override fun <T> onSuccess(data: List<T>) {
-                allNonDeletedPublicPostedPosts.value = (data as List<PublicacionDTO>)
+                allNonDeletedPublicPostedPosts.postValue(data as List<PublicacionDTO>)
             }
         })
     }
 
+    fun useCaseLoadNonDeletedPostedPosts(token : String) {
+        loadJSONUseCase.getNonDeletedPostedPosts(object : RepositoryInterface {
+            override fun showError(show: Boolean) {
+                showFinishMessage.postValue(show)
+            }
+
+            override fun onLoading(loading: Boolean) {
+                loadingLiveData.postValue(loading)
+            }
+
+            override fun <T> onSuccess(data: List<T>) {
+                allNonDeletedPostedPosts.postValue(data as List<PublicacionDTO>)
+            }
+        }, token)
+    }
+
     fun getAllNonDeletedPublicPostedPosts(): LiveData<List<PublicacionDTO>> {
         return allNonDeletedPublicPostedPosts
+
+    }fun getAllNonDeletedPostedPosts(): LiveData<List<PublicacionDTO>> {
+        return allNonDeletedPostedPosts
     }
 
 }

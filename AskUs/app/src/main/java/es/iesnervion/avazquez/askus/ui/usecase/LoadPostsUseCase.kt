@@ -17,6 +17,28 @@ class LoadPostsUseCase {
         GlobalApplication.applicationComponent?.inject(this)
     }
 
+    /*Gets public and private posted posts*/
+    fun getNonDeletedPostedPosts(repositoryInterface: RepositoryInterface, token : String) {
+        val call = requestInterface.getNonDeletedPostedPosts(token)
+        repositoryInterface.onLoading(true)
+        call.enqueue(object : Callback<List<PublicacionDTO>> {
+            override fun onFailure(call: Call<List<PublicacionDTO>>, t: Throwable) {
+                repositoryInterface.onLoading(false)
+                repositoryInterface.showError(false)
+            }
+
+            override fun onResponse(
+                call: Call<List<PublicacionDTO>>,
+                response: Response<List<PublicacionDTO>>
+            ) {
+                repositoryInterface.onLoading(false)
+                response.body()?.toList()
+                    ?.let { repositoryInterface.onSuccess(it) }
+            }
+
+        })
+    }
+    /*Gets public posted posts*/
     fun getNonDeletedPublicPostedPosts(repositoryInterface: RepositoryInterface) {
         val call = requestInterface.getNonDeletedPublicPostedPosts()
         repositoryInterface.onLoading(true)
@@ -31,7 +53,7 @@ class LoadPostsUseCase {
                 response: Response<List<PublicacionDTO>>
             ) {
                 repositoryInterface.onLoading(false)
-                response.body()?.toMutableList()
+                response.body()?.toList()
                     ?.let { repositoryInterface.onSuccess(it) }
             }
 
