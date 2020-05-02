@@ -3,6 +3,8 @@ package es.iesnervion.avazquez.askus.dagger.modules
 import dagger.Module
 import dagger.Provides
 import es.iesnervion.avazquez.askus.retrofit.interfaces.*
+import es.iesnervion.avazquez.askus.ui.repositories.AuthRepository
+import es.iesnervion.avazquez.askus.ui.repositories.PostsRepository
 import es.iesnervion.avazquez.askus.ui.repositories.UsersRepository
 import es.iesnervion.avazquez.askus.utils.AppConstants
 import okhttp3.OkHttpClient
@@ -15,6 +17,18 @@ class AppModule() {
     @Singleton
     fun usersRepository(): UsersRepository {
         return UsersRepository()
+    }
+
+    @Provides
+    @Singleton
+    fun authRepository(): AuthRepository {
+        return AuthRepository()
+    }
+
+    @Provides
+    @Singleton
+    fun postsRepository(): PostsRepository {
+        return PostsRepository()
     }
 
     @Provides

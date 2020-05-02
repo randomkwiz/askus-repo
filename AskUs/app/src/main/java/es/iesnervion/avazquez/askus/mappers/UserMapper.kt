@@ -23,7 +23,7 @@ class UserMapper() : Mapper<UserDTO, User>() {
 
     override fun modelToDto(obj: User): UserDTO {
         return UserDTO(
-            obj.id,
+            obj.id ?: "",
             obj.nickname,
             obj.email,
             obj.isModerador,

@@ -5,9 +5,15 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragments.UserListFragment">
 
-    <ListView
-        android:id="@+id/listViewUsers"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+    <TextView
+        android:layout_gravity="center"
+        android:text="Aqui pasan cosas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"></TextView>
+
+    <!--    <ListView-->
+    <!--        android:id="@+id/listViewUsers"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent"/>-->
 
 </FrameLayout>
