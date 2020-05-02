@@ -6,8 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.abdulhakeem.seemoretextview.SeeMoreTextView
 import es.iesnervion.avazquez.askus.DTOs.PublicacionDTO
 import es.iesnervion.avazquez.askus.R
+import kotlinx.android.synthetic.main.post_row.view.*
 import kotlin.random.Random
 
 class PostAdapter(posts: List<PublicacionDTO>, private val context: Context)
@@ -28,6 +30,8 @@ class PostAdapter(posts: List<PublicacionDTO>, private val context: Context)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         val itemView = LayoutInflater.from(context).inflate(R.layout.post_row, parent, false)
+        //TODO("Hacer que esto del see more / see less funcione")
+        //itemView.lbl_post_text.setTextMaxLength(100)
         return PostViewHolder(itemView)
     }
 

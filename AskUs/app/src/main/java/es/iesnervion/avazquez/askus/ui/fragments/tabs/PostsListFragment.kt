@@ -16,6 +16,7 @@ import es.iesnervion.avazquez.askus.adapters.PostAdapter
 import es.iesnervion.avazquez.askus.ui.fragments.tabs.viewmodel.PostViewModel
 import es.iesnervion.avazquez.askus.utils.AppConstants
 import kotlinx.android.synthetic.main.fragment_posts.*
+import kotlinx.android.synthetic.main.post_row.*
 
 /**
  * A simple [Fragment] subclass.
