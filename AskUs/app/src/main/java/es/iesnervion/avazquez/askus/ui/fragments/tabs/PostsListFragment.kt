@@ -10,22 +10,22 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import es.iesnervion.avazquez.askus.DTOs.PostCompletoParaMostrarDTO
 import es.iesnervion.avazquez.askus.DTOs.PublicacionDTO
 import es.iesnervion.avazquez.askus.R
 import es.iesnervion.avazquez.askus.adapters.PostAdapter
-import es.iesnervion.avazquez.askus.ui.fragments.tabs.viewmodel.PostViewModel
+import es.iesnervion.avazquez.askus.ui.fragments.tabs.viewmodel.MainViewModel
 import es.iesnervion.avazquez.askus.utils.AppConstants
 import kotlinx.android.synthetic.main.fragment_posts.*
-import kotlinx.android.synthetic.main.post_row.*
 
 /**
  * A simple [Fragment] subclass.
  */
 class PostsListFragment : Fragment() {
-    lateinit var viewModel: PostViewModel
+    lateinit var viewModel: MainViewModel
     lateinit var sharedPreference: SharedPreferences
     lateinit var adapter: PostAdapter
-    lateinit var observerPosts: Observer<List<PublicacionDTO>>
+    lateinit var observerPosts: Observer<List<PostCompletoParaMostrarDTO>>
     lateinit var observerLoadingData: Observer<Boolean>
     lateinit var filterType: String
 
@@ -47,20 +47,19 @@ class PostsListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sharedPreference =
-            activity!!.getSharedPreferences(AppConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
-        viewModel = ViewModelProviders.of(activity!!).get(PostViewModel::class.java)
+        viewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
         initViews()
         initObservers()
-        sharedPreference.getString("token", "")?.let {
-            viewModel.loadPosts(it)
-        }
+
     }
 
     private fun initObservers() {
-        observerPosts = Observer { publicacionDTO ->
-            adapter = context?.let { PostAdapter(publicacionDTO, it) }!!
-            recyclerView.adapter = adapter
+        observerPosts = Observer { post ->
+            if(post.isNotEmpty()){
+                adapter = context?.let { PostAdapter(post, it) }!!
+                recyclerView.adapter = adapter
+            }
+
         }
         observerLoadingData = Observer { loading ->
             if (loading) {
@@ -71,11 +70,16 @@ class PostsListFragment : Fragment() {
         }
         when (filterType) {
             "ALL" -> {
-                viewModel.allNonDeletedPostedPosts().observe(viewLifecycleOwner, observerPosts)
+                //TODO("esto no funciona, no cambia cuando seleccionas otro tag")
+                viewModel.allVisiblePostsByTag().observe(viewLifecycleOwner, observerPosts)
             }
-            "PUBLICS" -> {
-                viewModel.allNonDeletedPublicPostedPosts()
-                    .observe(viewLifecycleOwner, observerPosts)
+            "TOP_RATED" -> {
+//                viewModel.allNonDeletedPublicPostedPosts()
+//                    .observe(viewLifecycleOwner, observerPosts)
+            }
+            "TOP_COMMENTED" -> {
+                //                viewModel.allNonDeletedPublicPostedPosts()
+                //                    .observe(viewLifecycleOwner, observerPosts)
             }
         }
         viewModel.loadingLiveData().observe(viewLifecycleOwner, observerLoadingData)

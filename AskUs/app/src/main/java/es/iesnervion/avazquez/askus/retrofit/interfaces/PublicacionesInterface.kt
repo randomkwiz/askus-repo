@@ -1,9 +1,11 @@
 package es.iesnervion.avazquez.askus.retrofit.interfaces
 
+import es.iesnervion.avazquez.askus.DTOs.PostCompletoParaMostrarDTO
 import es.iesnervion.avazquez.askus.DTOs.PublicacionDTO
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.Query
 
 interface PublicacionesInterface {
     //Obtiene todos los posts, sin filtros
@@ -18,4 +20,18 @@ interface PublicacionesInterface {
     //Obtiene una lista de posts publicados y no borrados (privados y no privados)
     @GET("/api/publicaciones?isPublicado=true&isBorrado=false")
     fun getNonDeletedPostedPosts(@Header("Authorization") authToken:String): Call<List<PublicacionDTO>>
+
+    //Obtiene una lista de posts publicados y no borrados (privados y no privados)
+    //Los obtiene en formato PostVisibleParaMostrar con cantidad de comentarios
+    @GET("/api/Publicaciones?type=clsPostCompletoParaMostrarCantidadComentarios")
+    fun getListadoPostsCompletosParaMostrarCantidadComentarios(@Header("Authorization") authToken:String):
+            Call<List<PostCompletoParaMostrarDTO>>
+    //Obtiene una lista de posts publicados y no borrados (privados y no privados) que contengan un tag
+    //Los obtiene en formato PostVisibleParaMostrar con cantidad de comentarios
+    @GET("api/Publicaciones?type=clsPostCompletoParaMostrarCantidadComentarios")
+    fun getListadoPostsCompletosParaMostrarCantidadComentariosPorTag(
+        @Header("Authorization") authToken:String
+    ,@Query("idTag") idTag : Int
+    ):
+            Call<List<PostCompletoParaMostrarDTO>>
 }

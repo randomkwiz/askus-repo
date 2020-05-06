@@ -31,7 +31,7 @@
     <string name="tb_activity_main_title">Askus</string>
     <string name="drawer_opened">open</string>
     <string name="drawer_closed">close</string>
-    <string name="allPosts">All</string>
+    <string name="allPosts">Home</string>
     <string name="top_rated">Top rated</string>
-    <string name="public_posts">PUBLIC</string>
+    <string name="top_commented">Top commented</string>
 </resources>

@@ -15,4 +15,5 @@ class LoadUsersUseCase {
     init {
         GlobalApplication.applicationComponent?.inject(this)
     }
+
 }
