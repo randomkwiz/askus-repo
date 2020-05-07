@@ -39,7 +39,7 @@ class AuthActivity : AppCompatActivity()
         }
         // Create the observer which updates the UI.
         tokenObserver = Observer<List<Char>> {
-            if (it.size == TOKEN_LENGHT) {
+            if (it.size > TOKEN_LENGHT) {
                 editor.putString("token", it.joinToString(""))
                 editor.commit()
                 startActivity(Intent(this, HomeActivity::class.java))
