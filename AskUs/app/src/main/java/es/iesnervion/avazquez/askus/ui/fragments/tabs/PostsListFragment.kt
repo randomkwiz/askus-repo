@@ -1,7 +1,5 @@
 package es.iesnervion.avazquez.askus.ui.fragments.tabs
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,11 +9,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import es.iesnervion.avazquez.askus.DTOs.PostCompletoParaMostrarDTO
-import es.iesnervion.avazquez.askus.DTOs.PublicacionDTO
 import es.iesnervion.avazquez.askus.R
 import es.iesnervion.avazquez.askus.adapters.PostAdapter
 import es.iesnervion.avazquez.askus.ui.fragments.tabs.viewmodel.MainViewModel
-import es.iesnervion.avazquez.askus.utils.AppConstants
 import kotlinx.android.synthetic.main.fragment_posts.*
 
 /**
@@ -23,11 +19,11 @@ import kotlinx.android.synthetic.main.fragment_posts.*
  */
 class PostsListFragment : Fragment() {
     lateinit var viewModel: MainViewModel
-    lateinit var sharedPreference: SharedPreferences
     lateinit var adapter: PostAdapter
     lateinit var observerPosts: Observer<List<PostCompletoParaMostrarDTO>>
     lateinit var observerLoadingData: Observer<Boolean>
     lateinit var filterType: String
+    private var filteredList = listOf<PostCompletoParaMostrarDTO>()
 
     companion object {
         fun newInstance(txt: String): PostsListFragment {
@@ -50,16 +46,23 @@ class PostsListFragment : Fragment() {
         viewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
         initViews()
         initObservers()
-
     }
 
     private fun initObservers() {
         observerPosts = Observer { post ->
-            if(post.isNotEmpty()){
-                adapter = context?.let { PostAdapter(post, it) }!!
-                recyclerView.adapter = adapter
+            if (post.isNotEmpty()) {
+                when (filterType) {
+                    "ALL" -> {
+                        setAdapter(post)
+                    }
+                    "TOP_RATED" -> {
+                        setAdapter(post.sortedByDescending { it.cantidadVotosPositivos })
+                    }
+                    "TOP_COMMENTED" -> {
+                        setAdapter(post.sortedByDescending { it.cantidadComentarios })
+                    }
+                }
             }
-
         }
         observerLoadingData = Observer { loading ->
             if (loading) {
@@ -68,20 +71,7 @@ class PostsListFragment : Fragment() {
                 progressBar.visibility = View.GONE
             }
         }
-        when (filterType) {
-            "ALL" -> {
-                //TODO("esto no funciona, no cambia cuando seleccionas otro tag")
-                viewModel.allVisiblePostsByTag().observe(viewLifecycleOwner, observerPosts)
-            }
-            "TOP_RATED" -> {
-//                viewModel.allNonDeletedPublicPostedPosts()
-//                    .observe(viewLifecycleOwner, observerPosts)
-            }
-            "TOP_COMMENTED" -> {
-                //                viewModel.allNonDeletedPublicPostedPosts()
-                //                    .observe(viewLifecycleOwner, observerPosts)
-            }
-        }
+        viewModel.allVisiblePostsByTag().observe(viewLifecycleOwner, observerPosts)
         viewModel.loadingLiveData().observe(viewLifecycleOwner, observerLoadingData)
     }
 
@@ -89,5 +79,12 @@ class PostsListFragment : Fragment() {
         recyclerView.setHasFixedSize(true)
         val layoutManager = LinearLayoutManager(context)
         recyclerView.layoutManager = layoutManager
+    }
+
+    private fun setAdapter(list: List<PostCompletoParaMostrarDTO>) {
+        adapter = context?.let {
+            PostAdapter(list, it)
+        }!!
+        recyclerView.adapter = adapter
     }
 }
