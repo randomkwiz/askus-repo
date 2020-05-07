@@ -28,7 +28,7 @@ class HomeActivity : AppCompatActivity()
             if(it.isNotEmpty()){
                 val menu: Menu = navigation.menu
                 for(x in it.iterator()){
-                    menu.add(x.nombre)
+                    menu.add(x.nombre).isCheckable = true
                 }
             }
         }
@@ -48,9 +48,11 @@ class HomeActivity : AppCompatActivity()
         dlDrawerLayout.addDrawerListener(actionBarDrawerToggle)
         actionBarDrawerToggle.syncState()   //without this it doesn't show the hamburguer menu icon
         navigation.setNavigationItemSelectedListener(this)
-        val menuItem: MenuItem = navigation.menu.getItem(0)
-        onNavigationItemSelected(menuItem)
-        menuItem.isChecked = true
+        if (savedInstanceState == null) {
+            val menuItem: MenuItem = navigation.menu.getItem(0)
+            onNavigationItemSelected(menuItem)
+            menuItem.isChecked = true
+        }
     }
     private fun initObservers() {
         viewModel.allTags().observe(this,tagsObserver)
@@ -67,20 +69,22 @@ class HomeActivity : AppCompatActivity()
     private fun loadFragment(item: MenuItem) {
         when (item.itemId) {
             R.id.nav_home -> {
+                toolBar.title = resources.getText(R.string.menu_home)
                 loadFragmentLoader(HomeFragment.newInstance(0))
             }
             R.id.nav_account -> {
+                toolBar.title = resources.getText(R.string.menu_account)
                 Toast.makeText(this, getString(R.string.menu_account), Toast.LENGTH_SHORT).show()
             }
             R.id.nav_settings -> {
+                toolBar.title = resources.getText(R.string.menu_settings)
                 Toast.makeText(this, getString(R.string.menu_settings), Toast.LENGTH_SHORT)
                     .show()
             }
             else -> {
                 val tagSelected = tagList.first{ it.nombre == item.title }
+                toolBar.title = tagSelected.nombre
                 loadFragmentLoader(HomeFragment.newInstance(tagSelected.id))
-//                Toast.makeText(this, "Has hecho click en " + tagSelected.nombre + " con id = " + tagSelected.id  , Toast.LENGTH_SHORT)
-//                    .show()
             }
         }
     }
