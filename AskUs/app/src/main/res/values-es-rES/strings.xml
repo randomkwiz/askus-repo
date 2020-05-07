@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AskUs</string>
+    <string name="linkSignUp">¿No tienes una cuenta? <u>Créate una</u></string>
+    <string name="linkLogin">¿Ya tienes una cuenta? <u>Inicia sesión</u></string>
+    <string name="fillFields">No dejes ningún campo vacío</string>
+    <string name="signup">Registrarse</string>
+    <string name="login">Iniciar sesión</string>
+    <string name="invalidPassword">La contraseña debe tener al menos seis caracteres.</string>
+    <string name="password">Contraseña</string>
+    <string name="rememberPassword"><u>He olvidado mi contraseña</u></string>
+    <string name="emailSent">Correo enviado</string>
+    <string name="emailNeeded">Campo de correo electrónico obligatorio</string>
+    <string name="error_emailSent">Hubo un error al enviar el correo</string>
+    <string name="errorLogin">Error al iniciar sesión</string>
+    <string name="lblEmail_account">Correo</string>
+    <string name="lblNickname">Nick</string>
+    <string name="invalid_credentials">Credenciales no válidas</string>
+    <string name="error_login">Hubo un error.</string>
+    <string name="error_internet">Hubo un error. Revisa la conexión a internet.</string>
+    <string name="repeat_password">Repite la contraseña</string>
+    <string name="error_create_user">Error en la creación de usuario. Inténtelo de nuevo más tarde.</string>
+    <string name="error_sign_up">Revisa los campos. El correo debe ser un correo electrónico válido. La contraseña debe tener al menos seis caracteres. Los campos de contraseña deben coincidir.</string>
+    <string name="error_create_user_conflict">Falló la creación del usuario. El nick o correo ya existen.</string>
+    <string name="menu_home">Inicio</string>
+    <string name="menu_account">Perfil</string>
+    <string name="menu_settings">Ajustes</string>
+    <string name="drawer_opened">abrir</string>
+    <string name="drawer_closed">cerrar</string>
+    <string name="allPosts">Inicio</string>
+    <string name="top_rated">Mejor valorados</string>
+    <string name="top_commented">Más comentados</string>
+    <string name="message_dialog_password_lost">Si has olvidado la contraseña, ponte en contacto con el equipo de soporte en: avazquez.developer@gmail.com</string>
+</resources>

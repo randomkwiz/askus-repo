@@ -1,7 +1,6 @@
 <resources>
-    <string name="app_name">AskUs</string>
+    <string name="app_name" translatable="false">AskUs</string>
     <string name="linkSignUp">No account yet? <u>Create one</u></string>
-    <string name="linkLogin">Already have an account? <u>Log in</u></string>
     <string name="fillFields">Don\'t let any empty field</string>
     <string name="signup">Sign up</string>
     <string name="login">Login</string>
@@ -16,7 +15,6 @@
     <string name="lblNickname">Nickname</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="invalid_credentials">Invalid credentials.</string>
     <string name="error_login">There was an error.</string>
     <string name="error_internet">There was an error. Check internet connection.</string>
@@ -28,10 +26,12 @@
     <string name="menu_home">Home</string>
     <string name="menu_account">Account</string>
     <string name="menu_settings">Settings</string>
-    <string name="tb_activity_main_title">Askus</string>
-    <string name="drawer_opened">open</string>
+    <string name="tb_activity_main_title" translatable="false">Askus</string>
     <string name="drawer_closed">close</string>
     <string name="allPosts">Home</string>
     <string name="top_rated">Top rated</string>
     <string name="top_commented">Top commented</string>
+    <string name="linkLogin">Already have an account? <u>Log in</u></string>
+    <string name="drawer_opened">open</string>
+    <string name="message_dialog_password_lost">If you have forgotten your password, contact the support team at: avazquez.developer@gmail.com</string>
 </resources>

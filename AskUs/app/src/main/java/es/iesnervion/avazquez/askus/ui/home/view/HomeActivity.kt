@@ -27,7 +27,8 @@ class HomeActivity : AppCompatActivity()
             tagList = it
             if(it.isNotEmpty()){
                 val menu: Menu = navigation.menu
-                for(x in it.iterator()){
+                val sortedList = it.sortedBy { it.nombre }
+                for (x in sortedList.iterator()) {
                     menu.add(x.nombre).isCheckable = true
                 }
             }
