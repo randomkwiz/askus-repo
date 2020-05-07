@@ -2,6 +2,7 @@ package es.iesnervion.avazquez.askus.ui.repositories
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import es.iesnervion.avazquez.askus.DTOs.PostCompletoParaMostrarDTO
 import es.iesnervion.avazquez.askus.DTOs.PublicacionDTO
 import es.iesnervion.avazquez.askus.ui.usecase.LoadPostsUseCase
 import javax.inject.Inject
@@ -13,6 +14,8 @@ constructor() {
     private val loadingLiveData = MutableLiveData<Boolean>()
     private val showFinishMessage = MutableLiveData<Boolean>()
     private val allNonDeletedPublicPostedPosts = MutableLiveData<List<PublicacionDTO>>()
+    private val allVisiblePostsByGivenTag = MutableLiveData<List<PostCompletoParaMostrarDTO>>()
+    private val allNonDeletedPostedPosts = MutableLiveData<List<PostCompletoParaMostrarDTO>>()
 
     val finishMessage: LiveData<Boolean>
         get() = showFinishMessage
@@ -25,8 +28,24 @@ constructor() {
         return loadingLiveData
     }
 
-    fun useCaseLoadJSON() {
-        loadJSONUseCase.getNonDeletedPublicPostedPosts(object : RepositoryInterface {
+//    fun useCaseLoadNonDeletedPublicPostedPosts() {
+//        loadJSONUseCase.getNonDeletedPublicPostedPosts(object : RepositoryInterface {
+//            override fun showError(show: Boolean) {
+//                showFinishMessage.postValue(show)
+//            }
+//
+//            override fun onLoading(loading: Boolean) {
+//                loadingLiveData.postValue(loading)
+//            }
+//
+//            override fun <T> onSuccess(data: List<T>) {
+//                allNonDeletedPublicPostedPosts.postValue(data as List<PublicacionDTO>)
+//            }
+//        })
+//    }
+
+    fun useCaseLoadNonDeletedPostedPosts(token : String) {
+        loadJSONUseCase.getListadoPostsCompletosParaMostrarCantidadComentarios(object : RepositoryInterface {
             override fun showError(show: Boolean) {
                 showFinishMessage.postValue(show)
             }
@@ -36,13 +55,36 @@ constructor() {
             }
 
             override fun <T> onSuccess(data: List<T>) {
-                allNonDeletedPublicPostedPosts.value = (data as List<PublicacionDTO>)
+                allNonDeletedPostedPosts.postValue(data as List<PostCompletoParaMostrarDTO>)
+                allVisiblePostsByGivenTag.postValue(data as List<PostCompletoParaMostrarDTO>)
             }
-        })
+        }, token)
+    }
+
+    fun useCaseLoadNonDeletedPostedPostsByTag(token : String, idTag : Int) {
+        loadJSONUseCase.getListadoPostsCompletosParaMostrarCantidadComentariosTag(object : RepositoryInterface {
+            override fun showError(show: Boolean) {
+                showFinishMessage.postValue(show)
+            }
+
+            override fun onLoading(loading: Boolean) {
+                loadingLiveData.postValue(loading)
+            }
+
+            override fun <T> onSuccess(data: List<T>) {
+                allVisiblePostsByGivenTag.postValue(data as List<PostCompletoParaMostrarDTO>)
+            }
+        }, token, idTag)
     }
 
     fun getAllNonDeletedPublicPostedPosts(): LiveData<List<PublicacionDTO>> {
         return allNonDeletedPublicPostedPosts
+
+    }fun getAllNonDeletedPostedPosts(): LiveData<List<PostCompletoParaMostrarDTO>> {
+        return allNonDeletedPostedPosts
     }
 
+    fun getAllVisiblePostsByGivenTag():LiveData<List<PostCompletoParaMostrarDTO>> {
+        return allVisiblePostsByGivenTag
+    }
 }

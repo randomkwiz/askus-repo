@@ -6,5 +6,6 @@ object AppConstants {
     const val CONFLICT = 409
     const val OK = 200
     const val TOKEN_LENGHT = 269
+    const val PREFERENCE_NAME = "AskUsPreferences"
     const val PASSWORD_MIN_LENGHT = 3   //just for testing, this should be at least 6 char
 }

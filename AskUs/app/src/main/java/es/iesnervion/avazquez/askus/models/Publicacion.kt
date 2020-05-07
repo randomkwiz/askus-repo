@@ -2,7 +2,7 @@ package es.iesnervion.avazquez.askus.models
 
 import com.google.gson.annotations.SerializedName
 
-data class Publicacion(
+open class Publicacion(
     @SerializedName("id") var id: Int,
     @SerializedName("fechaCreacion") var fechaCreacion: String? = "",
     @SerializedName("fechaPublicacion ") var fechaPublicacion: String? = "",

@@ -7,3 +7,8 @@ data class TagDTO(
     @SerializedName("descripcion") val descripcion: String,
     @SerializedName("nombre") val nombre: String
 )
+{
+    override fun toString(): String {
+        return nombre
+    }
+}

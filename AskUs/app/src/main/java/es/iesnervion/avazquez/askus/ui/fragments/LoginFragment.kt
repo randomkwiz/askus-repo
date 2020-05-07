@@ -2,7 +2,6 @@ package es.iesnervion.avazquez.askus.ui.fragments
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -102,10 +101,10 @@ class LoginFragment : Fragment(),
             }
             R.id.rememberPassword -> {
                 val builder = AlertDialog.Builder(context)
-                builder.setTitle("Password issues")
-                builder.setPositiveButton("OK", DialogInterface.OnClickListener { _, _ ->
-                })
-                builder.setMessage("If you have forgotten your password, contact the support team at: avazquez.developer@gmail.com")
+                builder.setTitle(getString(R.string.password))
+                builder.setPositiveButton("OK") { _, _ ->
+                }
+                builder.setMessage(getString(R.string.message_dialog_password_lost))
                 //TODO("Mejorar esto del email con esto de stackoverflow -> https://stackoverflow.com/questions/40386812/open-email-client-in-alertdialog")
                 builder.show()
             }
