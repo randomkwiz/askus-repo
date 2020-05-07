@@ -33,6 +33,4 @@
         android:gravity="start"
         android:hint="What's up? ..."
         app:layout_constraintBottom_toBottomOf="parent" />
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
