@@ -16,4 +16,21 @@ class LoadUsersUseCase {
         GlobalApplication.applicationComponent?.inject(this)
     }
 
+    fun getIDUserByNickname(repositoryInterface: RepositoryInterface,
+        token: String,
+        nickname: String) {
+        val call = requestInterface.getIDUserByNickname(authToken = token, nickname = nickname)
+        repositoryInterface.onLoading(true)
+        call.enqueue(object : Callback<Int> {
+            override fun onFailure(call: Call<Int>, t: Throwable) {
+                repositoryInterface.onLoading(false)
+                repositoryInterface.showError(false)
+            }
+
+            override fun onResponse(call: Call<Int>, response: Response<Int>) {
+                repositoryInterface.onLoading(false)
+                repositoryInterface.onSuccess(listOf(response.body()))
+            }
+        })
+    }
 }

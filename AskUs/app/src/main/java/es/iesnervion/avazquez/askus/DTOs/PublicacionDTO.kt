@@ -2,7 +2,7 @@ package es.iesnervion.avazquez.askus.DTOs
 
 import com.google.gson.annotations.SerializedName
 
-data class PublicacionDTO(
+open class PublicacionDTO(
     @SerializedName("id") val id: Int,
     @SerializedName("fechaCreacion") val fechaCreacion: String?="",
     @SerializedName("fechaPublicacion ") val fechaPublicacion : String?="",

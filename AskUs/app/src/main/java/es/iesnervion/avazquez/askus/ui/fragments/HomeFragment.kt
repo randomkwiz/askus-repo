@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import es.iesnervion.avazquez.askus.R
 import es.iesnervion.avazquez.askus.adapters.TabAdapter
+import es.iesnervion.avazquez.askus.interfaces.HomeActivityCallback
 import es.iesnervion.avazquez.askus.ui.fragments.tabs.PostsListFragment
 import es.iesnervion.avazquez.askus.ui.fragments.tabs.viewmodel.MainViewModel
 import es.iesnervion.avazquez.askus.utils.AppConstants
@@ -18,7 +19,7 @@ import kotlinx.android.synthetic.main.fragment_home.*
 /**
  * A simple [Fragment] subclass.
  */
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), View.OnClickListener {
     lateinit var viewModel : MainViewModel
     lateinit var sharedPreference: SharedPreferences
     companion object {
@@ -43,6 +44,7 @@ class HomeFragment : Fragment() {
         sharedPreference.getString("token", "")?.let {
             arguments?.getInt("idTag")?.let { it1 -> viewModel.loadPostsByTag(it, it1) }
         }
+        fab_add_post.setOnClickListener(this)
         initViewPager()
     }
 
@@ -56,5 +58,10 @@ class HomeFragment : Fragment() {
             resources.getString(R.string.top_commented))
         viewPager.adapter = adapter
         tabLayout.setupWithViewPager(viewPager)
+    }
+
+    override fun onClick(v: View) {
+        if (context is HomeActivityCallback)
+            (context as HomeActivityCallback).onAddPostClicked()
     }
 }

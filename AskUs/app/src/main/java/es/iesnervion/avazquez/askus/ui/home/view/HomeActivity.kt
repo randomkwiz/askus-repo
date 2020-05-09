@@ -7,17 +7,21 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.navigation.NavigationView
 import es.iesnervion.avazquez.askus.DTOs.TagDTO
 import es.iesnervion.avazquez.askus.R
+import es.iesnervion.avazquez.askus.interfaces.HomeActivityCallback
+import es.iesnervion.avazquez.askus.ui.fragments.AddPostFragment
 import es.iesnervion.avazquez.askus.ui.fragments.HomeFragment
 import es.iesnervion.avazquez.askus.ui.fragments.tabs.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity()
-, NavigationView.OnNavigationItemSelectedListener{
+    , NavigationView.OnNavigationItemSelectedListener
+    , HomeActivityCallback {
     lateinit var viewModel : MainViewModel
     lateinit var tagList : List<TagDTO>
     lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
@@ -97,6 +101,15 @@ class HomeActivity : AppCompatActivity()
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.content_frame, fragment)
         //transaction.addToBackStack(null);
+        transaction.commit()
+    }
+
+    override fun onAddPostClicked() {
+        //No uso el método loadFragmentLoader porque aquí sí quiero añadir add to back stack
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.content_frame, AddPostFragment.newInstance())
+        transaction.addToBackStack(null);
+        transaction.setTransition(TRANSIT_FRAGMENT_FADE)
         transaction.commit()
     }
 }

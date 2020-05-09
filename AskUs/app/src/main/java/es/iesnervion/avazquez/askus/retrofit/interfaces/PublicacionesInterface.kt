@@ -1,11 +1,10 @@
 package es.iesnervion.avazquez.askus.retrofit.interfaces
 
+import es.iesnervion.avazquez.askus.DTOs.CreatePostRequestBody
 import es.iesnervion.avazquez.askus.DTOs.PostCompletoParaMostrarDTO
 import es.iesnervion.avazquez.askus.DTOs.PublicacionDTO
 import retrofit2.Call
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface PublicacionesInterface {
     //Obtiene todos los posts, sin filtros
@@ -34,4 +33,7 @@ interface PublicacionesInterface {
     ,@Query("idTag") idTag : Int
     ):
             Call<List<PostCompletoParaMostrarDTO>>
+
+    @POST("api/Publicaciones")
+    fun postNewPost(@Body post: CreatePostRequestBody): Call<Void>
 }

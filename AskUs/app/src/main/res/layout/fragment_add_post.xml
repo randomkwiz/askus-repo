@@ -1,36 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.fragments.AddPostFragment">
 
-    <TextView
-        android:id="@+id/lbl_author_nick"
-        android:text="randomkwiz"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <ScrollView
+        android:padding="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <EditText
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/lbl_author_nick"
-        android:id="@+id/input_title_post"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Title" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <EditText
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/input_title_post"
-        android:id="@+id/input_title_body"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:gravity="start"
-        android:hint="What's up? ..."
-        app:layout_constraintBottom_toBottomOf="parent" />
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/lbl_author_nick"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:text="randomkwiz" />
+
+                <ImageButton
+                    android:id="@+id/is_private"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:layout_weight="50"
+                    android:background="@null"
+                    android:scaleType="fitEnd"
+                    android:src="@drawable/ic_lock_open_black_24dp" />
+
+            </LinearLayout>
+
+
+            <EditText
+                android:layout_weight="1"
+                android:id="@+id/input_title_post"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Title"
+                android:scrollbars="vertical"
+                android:maxLength="300"
+                android:maxLines="2" />
+
+            <EditText
+                android:id="@+id/input_title_body"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:gravity="start"
+                android:hint="What's up? ..." />
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:id="@+id/spinner_container_linear_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@id/btnSend">
+
+                <Spinner
+                    android:id="@+id/spinner_tag_one"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    app:layout_constraintStart_toStartOf="parent"
+
+                    />
+
+                <Spinner
+                    android:id="@+id/spinner_tag_two"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    app:layout_constraintEnd_toEndOf="parent"
+
+                    />
+
+            </LinearLayout>
+
+            <Button
+                android:layout_weight="1"
+                android:id="@+id/btnSend"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginEnd="25dp"
+                android:layout_marginBottom="10dp"
+                android:text="@string/send_post" />
+        </LinearLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -25,4 +25,5 @@ interface ComponenTest {
     fun inject(createUserUseCase: CreateUserUseCase)
     fun inject(mainViewModel: MainViewModel)
     fun inject(loadTagsUseCase: LoadTagsUseCase)
+    fun inject(sendNewPostUseCase: SendNewPostUseCase)
 }

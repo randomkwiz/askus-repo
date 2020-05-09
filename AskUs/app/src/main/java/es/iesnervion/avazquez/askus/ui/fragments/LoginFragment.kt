@@ -26,7 +26,7 @@ class LoginFragment : Fragment(),
     lateinit var observerLoadingData: Observer<Boolean>
     lateinit var observerError: Observer<Boolean>
     lateinit var observerCredentials: Observer<List<Char>>
-
+    lateinit var observerUserID: Observer<List<Int>>
     companion object {
         fun newInstance(): LoginFragment {
             return LoginFragment()
@@ -76,6 +76,7 @@ class LoginFragment : Fragment(),
                 lbl_error_login.visibility = View.GONE
             }
         }
+
         viewModel.getToken().observe(viewLifecycleOwner, observerCredentials)
         viewModel.loadingLiveData().observe(viewLifecycleOwner, observerLoadingData)
         viewModel.errorLiveData().observe(viewLifecycleOwner, observerError)

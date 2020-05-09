@@ -24,6 +24,7 @@ class AuthActivity : AppCompatActivity()
     val signUpFragment: Fragment =
         SignUpFragment.newInstance()
     lateinit var tokenObserver: Observer<List<Char>>
+    lateinit var userIDObserver: Observer<List<Int>>
     lateinit var viewModel: AuthViewModel
     lateinit var sharedPreference: SharedPreferences
     lateinit var editor: SharedPreferences.Editor
@@ -37,16 +38,32 @@ class AuthActivity : AppCompatActivity()
         if (savedInstanceState == null) {
             loadFragmentLoader(loginFragment)
         }
+        initObservers()
+    }
+
+    private fun initObservers() {
         // Create the observer which updates the UI.
         tokenObserver = Observer<List<Char>> {
             if (it.size > TOKEN_LENGHT) {
-                editor.putString("token", it.joinToString(""))
+                val token = it.joinToString("")
+                editor.putString("token", token)
+                editor.putString("user_nickname", viewModel.login.nickname)
                 editor.commit()
-                startActivity(Intent(this, HomeActivity::class.java))
+                viewModel.loadUserIDByNickname(nickname = viewModel.login.nickname, token = token)
             }
         }
         viewModel.getToken()
             .observe(this, tokenObserver)
+        userIDObserver = Observer<List<Int>> {
+            if (it.isNotEmpty()) {
+                if (it.size == 1 && it[0] > 0) {
+                    editor.putInt("user_id", it.first().toInt())
+                    editor.commit()
+                    startActivity(Intent(this, HomeActivity::class.java))
+                }
+            }
+        }
+        viewModel.getIDUserByNickname().observe(this, userIDObserver)
     }
 
     /**
