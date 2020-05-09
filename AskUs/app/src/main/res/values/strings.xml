@@ -38,4 +38,5 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="send_post">Send post</string>
     <string name="anonymous">Anonymous</string>
+    <string name="post_sended">Post sended</string>
 </resources>

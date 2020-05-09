@@ -112,4 +112,8 @@ class HomeActivity : AppCompatActivity()
         transaction.setTransition(TRANSIT_FRAGMENT_FADE)
         transaction.commit()
     }
+
+    override fun onPostAdded() {
+        loadFragmentLoader(HomeFragment.newInstance(0))
+    }
 }

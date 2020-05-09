@@ -67,8 +67,10 @@ class PostsListFragment : Fragment() {
         observerLoadingData = Observer { loading ->
             if (loading) {
                 progressBar.visibility = View.VISIBLE
+                recyclerView.visibility = View.GONE
             } else {
                 progressBar.visibility = View.GONE
+                recyclerView.visibility = View.VISIBLE
             }
         }
         viewModel.allVisiblePostsByTag().observe(viewLifecycleOwner, observerPosts)

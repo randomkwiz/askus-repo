@@ -32,4 +32,6 @@
     <string name="top_commented">Más comentados</string>
     <string name="message_dialog_password_lost">Si has olvidado la contraseña, ponte en contacto con el equipo de soporte en: avazquez.developer@gmail.com</string>
     <string name="send_post">Enviar publicación</string>
+    <string name="anonymous">Anónimo</string>
+    <string name="post_sended">Publicación enviada</string>
 </resources>

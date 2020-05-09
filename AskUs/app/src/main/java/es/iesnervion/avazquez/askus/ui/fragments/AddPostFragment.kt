@@ -14,6 +14,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import es.iesnervion.avazquez.askus.DTOs.TagDTO
 import es.iesnervion.avazquez.askus.R
+import es.iesnervion.avazquez.askus.interfaces.HomeActivityCallback
 import es.iesnervion.avazquez.askus.ui.fragments.tabs.viewmodel.MainViewModel
 import es.iesnervion.avazquez.askus.utils.AppConstants
 import kotlinx.android.synthetic.main.fragment_add_post.*
@@ -128,10 +129,15 @@ class AddPostFragment : Fragment(), View.OnClickListener {
                 if (fieldsAreFilled()) {
                     setFieldsToViewModel()
                     viewModel.sendNewPost()
-                    Toast.makeText(context, "Se ha enviado la publicación", Toast.LENGTH_LONG)
+                    Toast.makeText(context, getString(R.string.post_sended), Toast.LENGTH_LONG)
                         .show()
+                    if (context is HomeActivityCallback) {
+                        (context as HomeActivityCallback).onPostAdded()
+                    }
                 } else {
-                    Toast.makeText(context, "Los campos NO están rellenos.", Toast.LENGTH_LONG)
+                    Toast.makeText(context,
+                        resources.getText(R.string.fillFields),
+                        Toast.LENGTH_LONG)
                         .show()
                 }
             }
