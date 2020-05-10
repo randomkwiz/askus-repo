@@ -18,7 +18,7 @@ constructor() {
     private val allNonDeletedPublicPostedPosts = MutableLiveData<List<PublicacionDTO>>()
     private val allVisiblePostsByGivenTag = MutableLiveData<List<PostCompletoParaMostrarDTO>>()
     private val allNonDeletedPostedPosts = MutableLiveData<List<PostCompletoParaMostrarDTO>>()
-
+    private val responseCode = MutableLiveData<Int>()
 
     val finishMessage: LiveData<Boolean>
         get() = showFinishMessage
@@ -76,6 +76,8 @@ constructor() {
             }
 
             override fun <T> onSuccess(data: List<T>) {
+                responseCode.postValue((data as List<Int>).firstOrNull())
+
             }
         }, post, tagList)
     }
@@ -91,5 +93,9 @@ constructor() {
 
     fun getAllVisiblePostsByGivenTag():LiveData<List<PostCompletoParaMostrarDTO>> {
         return allVisiblePostsByGivenTag
+    }
+
+    fun getResponseCodePostSent(): LiveData<Int> {
+        return responseCode
     }
 }

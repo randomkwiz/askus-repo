@@ -18,7 +18,7 @@ class MainViewModel : ViewModel() {
     lateinit var tagsRepository: TagsRepository
     var newPost: Publicacion = Publicacion(id = 0, idAutor = 0, texto = "")
     lateinit var tagList: List<Int>
-
+    var saveStateMenu = 0
 
     fun allVisiblePostsByTag(): LiveData<List<PostCompletoParaMostrarDTO>> {
         return postsRepository.getAllVisiblePostsByGivenTag()
@@ -38,6 +38,14 @@ class MainViewModel : ViewModel() {
 
     fun sendNewPost() {
         postsRepository.useCaseSendNewPosts(PublicacionMapper().modelToDto(newPost), tagList)
+    }
+
+    fun responseCodePostSent(): LiveData<Int> {
+        return postsRepository.getResponseCodePostSent()
+    }
+
+    fun getError(): LiveData<Boolean> {
+        return postsRepository.finishMessage
     }
 
     fun loadTags() {

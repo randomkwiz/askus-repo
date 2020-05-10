@@ -38,4 +38,5 @@
     <string name="post_body_hint">¿Qué está pasando? …</string>
     <string name="spinner_select_category">Elige una categoría</string>
     <string name="select_at_least_one_category">Elige al menos una categoría</string>
+    <string name="error_sending_post">Hubo un error enviando la publicación. Inténtalo de nuevo más tarde.</string>
 </resources>

@@ -32,6 +32,8 @@ class AddPostFragment : Fragment(), View.OnClickListener {
     lateinit var viewModel: MainViewModel
     lateinit var sharedPreference: SharedPreferences
     lateinit var tagsObserver: Observer<List<TagDTO>>
+    lateinit var postSentObserver: Observer<Int>
+    lateinit var errorObserver: Observer<Boolean>
     var tagNames = mutableListOf<String>()
     var tagIds = mutableListOf<Int>()
     var userID: Int = 0
@@ -72,6 +74,9 @@ class AddPostFragment : Fragment(), View.OnClickListener {
                 position: Int,
                 id: Long) {
                 spinner_tag_two.isEnabled = position != 0
+                if (!spinner_tag_two.isEnabled) {
+                    spinner_tag_two.setSelection(0)
+                }
             }
 
             override fun onNothingSelected(parentView: AdapterView<*>?) {
@@ -100,6 +105,29 @@ class AddPostFragment : Fragment(), View.OnClickListener {
             }
         }
         viewModel.allTags().observe(viewLifecycleOwner, tagsObserver)
+
+        postSentObserver = Observer {
+            if (it == 204) {
+                Toast.makeText(context, getString(R.string.post_sended), Toast.LENGTH_SHORT)
+                    .show()
+                if (context is HomeActivityCallback) {
+                    (context as HomeActivityCallback)
+                        .onPostAdded(arguments?.getInt("idTag") ?: 0)
+                }
+            } else {
+                Toast.makeText(context, getString(R.string.error_sending_post), Toast.LENGTH_LONG)
+                    .show()
+            }
+        }
+        viewModel.responseCodePostSent().observe(viewLifecycleOwner, postSentObserver)
+
+        errorObserver = Observer {
+            if (it) {
+                Toast.makeText(context, getString(R.string.error_internet), Toast.LENGTH_LONG)
+                    .show()
+            }
+        }
+        viewModel.getError().observe(viewLifecycleOwner, errorObserver)
     }
 
     private fun setPrivateBtnImg() {
@@ -111,17 +139,17 @@ class AddPostFragment : Fragment(), View.OnClickListener {
         is_private.scaleType = ImageView.ScaleType.FIT_END
     }
 
-    fun fieldsAreFilled(): Boolean {
+    private fun fieldsAreFilled(): Boolean {
         return input_title_post.text.isNotEmpty() &&
                 input_title_body.text.isNotEmpty() &&
                 spinner_tag_one.selectedItemPosition > 0
     }
 
-    fun setFieldsToViewModel() {
+    private fun setFieldsToViewModel() {
         viewModel.newPost.idAutor = userID
         viewModel.newPost.id = 0
-        viewModel.newPost.fechaCreacion = getFormatedDateTime()
-        viewModel.newPost.fechaPublicacion = getFormatedDateTime()
+        viewModel.newPost.fechaCreacion = getFormattedDateTime()
+        viewModel.newPost.fechaPublicacion = getFormattedDateTime()
         viewModel.newPost.texto = input_title_body.text.toString()
         viewModel.newPost.titulo = input_title_post.text.toString()
         val idTagOne = tagIds[spinner_tag_one.selectedItemPosition]
@@ -133,7 +161,7 @@ class AddPostFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    private fun getFormatedDateTime(): String {
+    private fun getFormattedDateTime(): String {
         val date = Calendar.getInstance().time
         val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
         val formatedDate = formatter.format(date)
@@ -151,12 +179,6 @@ class AddPostFragment : Fragment(), View.OnClickListener {
                 if (fieldsAreFilled()) {
                     setFieldsToViewModel()
                     viewModel.sendNewPost()
-                    Toast.makeText(context, getString(R.string.post_sended), Toast.LENGTH_LONG)
-                        .show()
-                    if (context is HomeActivityCallback) {
-                        (context as HomeActivityCallback).onPostAdded(arguments?.getInt("idTag")
-                            ?: 0)
-                    }
                 } else {
                     if (spinner_tag_one.selectedItemPosition == 0) {
                         lbl_select_one_category.setVisibilityToVisible()
