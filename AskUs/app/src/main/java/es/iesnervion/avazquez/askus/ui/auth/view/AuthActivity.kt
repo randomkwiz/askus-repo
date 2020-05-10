@@ -8,6 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.microsoft.appcenter.AppCenter
+import com.microsoft.appcenter.analytics.Analytics
+import com.microsoft.appcenter.crashes.Crashes
 import es.iesnervion.avazquez.askus.R
 import es.iesnervion.avazquez.askus.interfaces.AuthActivityInterface
 import es.iesnervion.avazquez.askus.ui.auth.viewmodel.AuthViewModel
@@ -39,6 +42,8 @@ class AuthActivity : AppCompatActivity()
             loadFragmentLoader(loginFragment)
         }
         initObservers()
+        AppCenter.start(application, "e5856b93-d2a9-4b5d-983a-6512e3b8190d",
+            Analytics::class.java, Crashes::class.java)
     }
 
     private fun initObservers() {
