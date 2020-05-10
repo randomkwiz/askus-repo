@@ -1,5 +1,7 @@
 package es.iesnervion.avazquez.askus.ui.fragments.tabs
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +14,7 @@ import es.iesnervion.avazquez.askus.DTOs.PostCompletoParaMostrarDTO
 import es.iesnervion.avazquez.askus.R
 import es.iesnervion.avazquez.askus.adapters.PostAdapter
 import es.iesnervion.avazquez.askus.ui.fragments.tabs.viewmodel.MainViewModel
+import es.iesnervion.avazquez.askus.utils.AppConstants
 import kotlinx.android.synthetic.main.fragment_posts.*
 import setVisibilityToGone
 import setVisibilityToVisible
@@ -25,28 +28,37 @@ class PostsListFragment : Fragment() {
     lateinit var observerPosts: Observer<List<PostCompletoParaMostrarDTO>>
     lateinit var observerLoadingData: Observer<Boolean>
     lateinit var filterType: String
-
+    lateinit var sharedPreference: SharedPreferences
     companion object {
-        fun newInstance(txt: String): PostsListFragment {
+        fun newInstance(filter: String, idTag: Int): PostsListFragment {
             val myFragment = PostsListFragment()
             val args = Bundle()
-            args.putString("txt", txt)
-            myFragment.setArguments(args)
+            args.putString("filter", filter)
+            args.putInt("idTag", idTag)
+            myFragment.arguments = args
             return myFragment
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
-        filterType = arguments?.getString("txt") ?: ""
+        filterType = arguments?.getString("filter") ?: ""
         return inflater.inflate(R.layout.fragment_posts, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
+        sharedPreference =
+            activity!!.getSharedPreferences(AppConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
         initViews()
         initObservers()
+        swipeRefreshLayout.setOnRefreshListener {
+            // Esto se ejecuta cada vez que se realiza el gesto
+            sharedPreference.getString("token", "")?.let {
+                arguments?.getInt("idTag")?.let { it1 -> viewModel.loadPostsByTag(it, it1) }
+            }
+        }
     }
 
     private fun initObservers() {
@@ -67,11 +79,14 @@ class PostsListFragment : Fragment() {
         }
         observerLoadingData = Observer { loading ->
             if (loading) {
-                progressBar.setVisibilityToVisible()
-                recyclerView.setVisibilityToGone()
+                if (!swipeRefreshLayout.isRefreshing) {
+                    progressBar.setVisibilityToVisible()
+                    recyclerView.setVisibilityToGone()
+                }
             } else {
                 progressBar.setVisibilityToGone()
                 recyclerView.setVisibilityToVisible()
+                swipeRefreshLayout.isRefreshing = false
             }
         }
         viewModel.allVisiblePostsByTag().observe(viewLifecycleOwner, observerPosts)

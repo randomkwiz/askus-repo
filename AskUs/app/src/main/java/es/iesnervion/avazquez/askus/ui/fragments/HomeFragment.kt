@@ -22,6 +22,7 @@ import kotlinx.android.synthetic.main.fragment_home.*
 class HomeFragment : Fragment(), View.OnClickListener {
     lateinit var viewModel : MainViewModel
     lateinit var sharedPreference: SharedPreferences
+    var idTag = 0
     companion object {
         fun newInstance(idTag: Int): HomeFragment {
             val myFragment = HomeFragment()
@@ -41,20 +42,19 @@ class HomeFragment : Fragment(), View.OnClickListener {
         viewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
         sharedPreference =
             activity!!.getSharedPreferences(AppConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
-        sharedPreference.getString("token", "")?.let {
-            arguments?.getInt("idTag")?.let { it1 -> viewModel.loadPostsByTag(it, it1) }
-        }
+        idTag = arguments?.getInt("idTag") ?: 0
+        sharedPreference.getString("token", "")?.let { viewModel.loadPostsByTag(it, idTag) }
         fab_add_post.setOnClickListener(this)
         initViewPager()
     }
 
     private fun initViewPager() {
         val adapter = TabAdapter(childFragmentManager)
-        adapter.addFragment(PostsListFragment.newInstance("ALL"),
+        adapter.addFragment(PostsListFragment.newInstance("ALL", idTag),
             resources.getString(R.string.allPosts))
-        adapter.addFragment(PostsListFragment.newInstance("TOP_RATED"),
+        adapter.addFragment(PostsListFragment.newInstance("TOP_RATED", idTag),
             resources.getString(R.string.top_rated))
-        adapter.addFragment(PostsListFragment.newInstance("TOP_COMMENTED"),
+        adapter.addFragment(PostsListFragment.newInstance("TOP_COMMENTED", idTag),
             resources.getString(R.string.top_commented))
         viewPager.adapter = adapter
         tabLayout.setupWithViewPager(viewPager)
