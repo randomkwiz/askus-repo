@@ -31,11 +31,11 @@ class HomeActivity : AppCompatActivity()
     init {
         tagsObserver = Observer { list ->
             tagList = list
-            if (list.isNotEmpty()) {
+            if (list.isNotEmpty() && navigation.menu.size() == 3) {
                 val menu: Menu = navigation.menu
                 val sortedList = list.sortedBy { it.nombre }
                 for (x in sortedList.iterator()) {
-                    menu.add(0, x.hashCode(), 0, x.nombre).isCheckable = true
+                    menu.add(0, x.id, 0, x.nombre).isCheckable = true
                 }
             }
         }
@@ -55,6 +55,7 @@ class HomeActivity : AppCompatActivity()
         dlDrawerLayout.addDrawerListener(actionBarDrawerToggle)
         actionBarDrawerToggle.syncState()   //without this it doesn't show the hamburguer menu icon
         navigation.setNavigationItemSelectedListener(this)
+        initMenu()
         if (savedInstanceState == null) {
             val menuItem: MenuItem = navigation.menu.getItem(0)
             onNavigationItemSelected(menuItem)
@@ -62,14 +63,23 @@ class HomeActivity : AppCompatActivity()
             selectedItemMenuTitle = navigation.menu.getItem(0).title as String
             viewModel.saveStateMenu = menuItem.itemId
         } else {
-            //val menuItem: MenuItem = navigation.menu.findItem(viewModel.saveStateMenu)
-            //onNavigationItemSelected(menuItem)
-            val menuItem: MenuItem = navigation.menu.getItem(0)
+            val menuItem: MenuItem = navigation.menu.findItem(viewModel.saveStateMenu)
             onNavigationItemSelected(menuItem)
             menuItem.isChecked = true
-            //TODO corregir esto para que persista bien
         }
     }
+
+    private fun initMenu() {
+        val menu: Menu = navigation.menu
+        tagList = viewModel.allTags().value ?: listOf()
+        val sortedList = viewModel.allTags().value?.sortedBy { it.nombre }
+        if (!sortedList.isNullOrEmpty()) {
+            for (x in sortedList.iterator()) {
+                menu.add(0, x.id, 0, x.nombre).isCheckable = true
+            }
+        }
+    }
+
     private fun initObservers() {
         viewModel.allTags().observe(this,tagsObserver)
     }

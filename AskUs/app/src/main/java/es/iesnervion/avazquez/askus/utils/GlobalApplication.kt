@@ -10,7 +10,8 @@ class GlobalApplication : Application() {
         super.onCreate()
         application = this
         applicationComponent =
-            DaggerComponenTest.builder().appModule(AppModule()).build()
+            DaggerComponenTest.builder()
+                .appModule(AppModule(this)).build()
     }
 
     companion object {
