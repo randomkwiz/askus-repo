@@ -59,6 +59,24 @@ class PostsListFragment : Fragment() {
                 arguments?.getInt("idTag")?.let { it1 -> viewModel.loadPostsByTag(it, it1) }
             }
         }
+        initContent()
+    }
+
+    private fun initContent() {
+        val post = viewModel.allVisiblePostsByTag().value
+        if (!post.isNullOrEmpty()) {
+            when (filterType) {
+                "ALL" -> {
+                    setAdapter(post)
+                }
+                "TOP_RATED" -> {
+                    setAdapter(post.sortedByDescending { it.cantidadVotosPositivos })
+                }
+                "TOP_COMMENTED" -> {
+                    setAdapter(post.sortedByDescending { it.cantidadComentarios })
+                }
+            }
+        }
     }
 
     private fun initObservers() {
