@@ -25,6 +25,8 @@ class HomeActivity : AppCompatActivity()
     lateinit var viewModel : MainViewModel
     lateinit var tagList : List<TagDTO>
     lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
+    lateinit var selectedItemMenuTitle: String
+    lateinit var selectedTag: TagDTO
     var tagsObserver: Observer<List<TagDTO>>
     init {
         tagsObserver = Observer {
@@ -57,6 +59,7 @@ class HomeActivity : AppCompatActivity()
             val menuItem: MenuItem = navigation.menu.getItem(0)
             onNavigationItemSelected(menuItem)
             menuItem.isChecked = true
+            selectedItemMenuTitle = navigation.menu.getItem(0).title as String
         }
     }
     private fun initObservers() {
@@ -87,11 +90,12 @@ class HomeActivity : AppCompatActivity()
                     .show()
             }
             else -> {
-                val tagSelected = tagList.first{ it.nombre == item.title }
-                toolBar.title = tagSelected.nombre
-                loadFragmentLoader(HomeFragment.newInstance(tagSelected.id))
+                selectedTag = tagList.first { it.nombre == item.title }
+                toolBar.title = selectedTag.nombre
+                loadFragmentLoader(HomeFragment.newInstance(selectedTag.id))
             }
         }
+        selectedItemMenuTitle = toolBar.title as String
     }
 
     /**
@@ -104,16 +108,25 @@ class HomeActivity : AppCompatActivity()
         transaction.commit()
     }
 
-    override fun onAddPostClicked() {
+    override fun onAddPostClicked(idTagUserWasSeeing: Int) {
         //No uso el método loadFragmentLoader porque aquí sí quiero añadir add to back stack
+        //supportActionBar?.hide() // -> queda un poco raro
+        toolBar.title = getString(R.string.send_post)
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.content_frame, AddPostFragment.newInstance())
-        transaction.addToBackStack(null);
+        transaction.replace(R.id.content_frame, AddPostFragment.newInstance(idTagUserWasSeeing))
+        transaction.addToBackStack("addPostFragment")
         transaction.setTransition(TRANSIT_FRAGMENT_FADE)
         transaction.commit()
     }
 
-    override fun onPostAdded() {
-        loadFragmentLoader(HomeFragment.newInstance(0))
+    override fun onPostAdded(idTagUserWasSeeing: Int) {
+        selectedTag = tagList.first { it.id == idTagUserWasSeeing }
+        toolBar.title = selectedTag.nombre
+        loadFragmentLoader(HomeFragment.newInstance(idTagUserWasSeeing))
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        toolBar.title = selectedItemMenuTitle
     }
 }

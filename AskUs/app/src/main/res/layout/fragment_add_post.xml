@@ -23,11 +23,11 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:layout_margin="5dp"
                     android:id="@+id/lbl_author_nick"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="50"
-                    android:text="randomkwiz" />
+                    android:layout_weight="50" />
 
                 <ImageButton
                     android:id="@+id/is_private"
@@ -47,9 +47,10 @@
                 android:id="@+id/input_title_post"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Title"
+                android:hint="@string/title"
                 android:scrollbars="vertical"
-                android:maxLength="300"
+                android:inputType="text"
+                android:maxLength="50"
                 android:maxLines="2" />
 
             <EditText
@@ -57,8 +58,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
                 android:gravity="start"
-                android:hint="What's up? ..." />
+                android:inputType="text"
+                android:maxLength="300"
+                android:hint="@string/post_body_hint" />
 
+            <TextView
+                android:id="@+id/lbl_select_one_category"
+                android:visibility="gone"
+                android:layout_marginStart="10dp"
+                android:text="@string/select_at_least_one_category"
+                android:textColor="#FF0000"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
             <LinearLayout
                 android:layout_weight="1"
                 android:id="@+id/spinner_container_linear_layout"

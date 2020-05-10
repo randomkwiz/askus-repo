@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.Toast
@@ -18,6 +20,8 @@ import es.iesnervion.avazquez.askus.interfaces.HomeActivityCallback
 import es.iesnervion.avazquez.askus.ui.fragments.tabs.viewmodel.MainViewModel
 import es.iesnervion.avazquez.askus.utils.AppConstants
 import kotlinx.android.synthetic.main.fragment_add_post.*
+import setVisibilityToGone
+import setVisibilityToVisible
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -33,8 +37,12 @@ class AddPostFragment : Fragment(), View.OnClickListener {
     var userID: Int = 0
 
     companion object {
-        fun newInstance(): AddPostFragment {
-            return AddPostFragment()
+        fun newInstance(idTagUserWasSeeing: Int): AddPostFragment {
+            val myFragment = AddPostFragment()
+            val args = Bundle()
+            args.putInt("idTag", idTagUserWasSeeing)
+            myFragment.arguments = args
+            return myFragment
         }
     }
 
@@ -57,6 +65,19 @@ class AddPostFragment : Fragment(), View.OnClickListener {
         btnSend.setOnClickListener(this)
         setPrivateBtnImg()
         initObservers()
+        spinner_tag_two.isEnabled = false
+        spinner_tag_one.onItemSelectedListener = object : OnItemSelectedListener {
+            override fun onItemSelected(parentView: AdapterView<*>?,
+                selectedItemView: View,
+                position: Int,
+                id: Long) {
+                spinner_tag_two.isEnabled = position != 0
+            }
+
+            override fun onNothingSelected(parentView: AdapterView<*>?) {
+                spinner_tag_two.isEnabled = false
+            }
+        }
     }
 
     private fun initObservers() {
@@ -64,7 +85,7 @@ class AddPostFragment : Fragment(), View.OnClickListener {
             if (it.isNotEmpty()) {
                 tagNames.clear()
                 tagIds.clear()
-                tagNames.add("Elige un tag")
+                tagNames.add(resources.getString(R.string.spinner_select_category))
                 tagIds.add(0)
                 for (x in it.iterator()) {
                     tagNames.add(x.nombre)
@@ -126,15 +147,20 @@ class AddPostFragment : Fragment(), View.OnClickListener {
                 setPrivateBtnImg()
             }
             R.id.btnSend -> {
+                lbl_select_one_category.setVisibilityToGone()
                 if (fieldsAreFilled()) {
                     setFieldsToViewModel()
                     viewModel.sendNewPost()
                     Toast.makeText(context, getString(R.string.post_sended), Toast.LENGTH_LONG)
                         .show()
                     if (context is HomeActivityCallback) {
-                        (context as HomeActivityCallback).onPostAdded()
+                        (context as HomeActivityCallback).onPostAdded(arguments?.getInt("idTag")
+                            ?: 0)
                     }
                 } else {
+                    if (spinner_tag_one.selectedItemPosition == 0) {
+                        lbl_select_one_category.setVisibilityToVisible()
+                    }
                     Toast.makeText(context,
                         resources.getText(R.string.fillFields),
                         Toast.LENGTH_LONG)

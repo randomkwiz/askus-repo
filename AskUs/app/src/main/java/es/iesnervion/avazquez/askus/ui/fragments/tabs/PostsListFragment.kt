@@ -13,6 +13,8 @@ import es.iesnervion.avazquez.askus.R
 import es.iesnervion.avazquez.askus.adapters.PostAdapter
 import es.iesnervion.avazquez.askus.ui.fragments.tabs.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.fragment_posts.*
+import setVisibilityToGone
+import setVisibilityToVisible
 
 /**
  * A simple [Fragment] subclass.
@@ -23,11 +25,10 @@ class PostsListFragment : Fragment() {
     lateinit var observerPosts: Observer<List<PostCompletoParaMostrarDTO>>
     lateinit var observerLoadingData: Observer<Boolean>
     lateinit var filterType: String
-    private var filteredList = listOf<PostCompletoParaMostrarDTO>()
 
     companion object {
         fun newInstance(txt: String): PostsListFragment {
-            var myFragment = PostsListFragment()
+            val myFragment = PostsListFragment()
             val args = Bundle()
             args.putString("txt", txt)
             myFragment.setArguments(args)
@@ -66,11 +67,11 @@ class PostsListFragment : Fragment() {
         }
         observerLoadingData = Observer { loading ->
             if (loading) {
-                progressBar.visibility = View.VISIBLE
-                recyclerView.visibility = View.GONE
+                progressBar.setVisibilityToVisible()
+                recyclerView.setVisibilityToGone()
             } else {
-                progressBar.visibility = View.GONE
-                recyclerView.visibility = View.VISIBLE
+                progressBar.setVisibilityToGone()
+                recyclerView.setVisibilityToVisible()
             }
         }
         viewModel.allVisiblePostsByTag().observe(viewLifecycleOwner, observerPosts)

@@ -17,6 +17,8 @@ import es.iesnervion.avazquez.askus.utils.AppConstants.CONFLICT
 import es.iesnervion.avazquez.askus.utils.AppConstants.OK
 import es.iesnervion.avazquez.askus.utils.AppConstants.PASSWORD_MIN_LENGHT
 import kotlinx.android.synthetic.main.fragment_sign_up.*
+import setVisibilityToGone
+import setVisibilityToVisible
 
 /**
  * A simple [Fragment] subclass.
@@ -37,7 +39,7 @@ class SignUpFragment : Fragment()
 
     override fun onStart() {
         super.onStart()
-        lbl_error_login.visibility = View.GONE
+        lbl_error_login.setVisibilityToGone()
     }
 
     override fun onCreateView(
@@ -59,28 +61,28 @@ class SignUpFragment : Fragment()
     private fun initObservers() {
         observerLoadingData = Observer { loading ->
             if (loading) {
-                progress_bar.visibility = View.VISIBLE
-                lbl_error_login.visibility = View.GONE
+                progress_bar.setVisibilityToVisible()
+                lbl_error_login.setVisibilityToGone()
             } else {
-                progress_bar.visibility = View.GONE
+                progress_bar.setVisibilityToGone()
             }
         }
         observerError = Observer { error ->
             if (error) {
-                lbl_error_login.visibility = View.VISIBLE
+                lbl_error_login.setVisibilityToVisible()
                 lbl_error_login.text = resources.getText(R.string.error_internet)
             }
         }
         observerCredentials = Observer {
             if (it == listOf(OK)) {
-                lbl_error_login.visibility = View.GONE
+                lbl_error_login.setVisibilityToGone()
             } else {
                 if (it == listOf(CONFLICT)) {
                     lbl_error_login.text = resources.getText(R.string.error_create_user_conflict)
                 } else {
                     lbl_error_login.text = resources.getText(R.string.error_create_user)
                 }
-                lbl_error_login.visibility = View.VISIBLE
+                lbl_error_login.setVisibilityToVisible()
             }
         }
         viewModel.getUserCreatedInfo().observe(viewLifecycleOwner, observerCredentials)
@@ -91,7 +93,7 @@ class SignUpFragment : Fragment()
     override fun onClick(v: View) {
         when (v.id) {
             R.id.btn_sign_up -> {
-                lbl_error_login.visibility = View.GONE
+                lbl_error_login.setVisibilityToGone()
                 //if there are any empty field
                 if (input_password.text.toString().trim({ it <= ' ' }).isEmpty()
                     ||
@@ -102,7 +104,7 @@ class SignUpFragment : Fragment()
                     input_nickname.text.toString().trim({ it <= ' ' }).isEmpty()
                 ) {
                     lbl_error_login.text = resources.getText(R.string.fillFields)
-                    lbl_error_login.visibility = View.VISIBLE
+                    lbl_error_login.setVisibilityToVisible()
                 } else
                 //Passwords fields must match and password must be > X characters
                 //Email pattern
@@ -116,7 +118,7 @@ class SignUpFragment : Fragment()
                         input_password.text.toString().trim({ it <= ' ' })
                             .equals(input_repeat_password.text.toString().trim({ it <= ' ' }))
                     ) {
-                        lbl_error_login.visibility = View.GONE
+                        lbl_error_login.setVisibilityToGone()
 
                         viewModel.newUser = User(
                             "",
@@ -134,7 +136,7 @@ class SignUpFragment : Fragment()
                         viewModel.createUser()
                     } else {
                         lbl_error_login.text = resources.getText(R.string.error_sign_up)
-                        lbl_error_login.visibility = View.VISIBLE
+                        lbl_error_login.setVisibilityToVisible()
                     }
             }
             R.id.link_login -> {

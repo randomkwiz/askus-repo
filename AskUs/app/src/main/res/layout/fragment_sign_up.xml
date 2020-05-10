@@ -35,6 +35,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/lblNickname"
+                android:inputType="text"
+                android:maxLength="25"
                 android:singleLine="true" />
 
             <!-- Email Label -->
@@ -44,6 +46,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/lblEmail_account"
+                android:inputType="textEmailAddress"
+                android:maxLength="254"
                 android:singleLine="true" />
 
 
@@ -54,6 +58,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/password"
+                android:maxLength="20"
                 android:inputType="textPassword" />
 
             <!-- Repeat Password Label -->
@@ -61,6 +66,7 @@
                 android:id="@+id/input_repeat_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:maxLength="20"
                 android:hint="@string/repeat_password"
                 android:inputType="textPassword" />
 
@@ -96,7 +102,7 @@
                 android:focusable="true"
                 android:gravity="center"
                 android:text="@string/linkLogin"
-                android:textSize="16dip"
+                android:textSize="16sp"
                 android:textStyle="bold" />
         </LinearLayout>
     </ScrollView>

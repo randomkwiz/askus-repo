@@ -15,6 +15,8 @@ import es.iesnervion.avazquez.askus.models.Login
 import es.iesnervion.avazquez.askus.ui.auth.viewmodel.AuthViewModel
 import es.iesnervion.avazquez.askus.utils.AppConstants.UNAUTHORIZED
 import kotlinx.android.synthetic.main.fragment_login.*
+import setVisibilityToGone
+import setVisibilityToVisible
 
 /**
  * A simple [Fragment] subclass.
@@ -52,15 +54,15 @@ class LoginFragment : Fragment(),
     private fun initObservers() {
         observerLoadingData = Observer { loading ->
             if (loading) {
-                progress_bar.visibility = View.VISIBLE
-                lbl_error_login.visibility = View.GONE
+                progress_bar.setVisibilityToVisible()
+                lbl_error_login.setVisibilityToGone()
             } else {
-                progress_bar.visibility = View.GONE
+                progress_bar.setVisibilityToGone()
             }
         }
         observerError = Observer { error ->
             if (error) {
-                lbl_error_login.visibility = View.VISIBLE
+                lbl_error_login.setVisibilityToVisible()
                 lbl_error_login.text = resources.getText(R.string.error_internet)
             }
         }
@@ -71,9 +73,9 @@ class LoginFragment : Fragment(),
                 } else {
                     lbl_error_login.text = resources.getText(R.string.error_login)
                 }
-                lbl_error_login.visibility = View.VISIBLE
+                lbl_error_login.setVisibilityToVisible()
             } else {
-                lbl_error_login.visibility = View.GONE
+                lbl_error_login.setVisibilityToGone()
             }
         }
 
@@ -90,11 +92,11 @@ class LoginFragment : Fragment(),
                     input_password.text.toString().trim({ it <= ' ' })
                 )
                 if (viewModel.login.nickname.isNotEmpty() && viewModel.login.password.isNotEmpty()) {
-                    lbl_error_login.visibility = View.GONE
+                    lbl_error_login.setVisibilityToGone()
                     viewModel.checkLogin()
                 } else {
                     lbl_error_login.text = resources.getText(R.string.fillFields)
-                    lbl_error_login.visibility = View.VISIBLE
+                    lbl_error_login.setVisibilityToVisible()
                 }
             }
             R.id.link_signup -> {

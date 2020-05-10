@@ -62,6 +62,6 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(v: View) {
         if (context is HomeActivityCallback)
-            (context as HomeActivityCallback).onAddPostClicked()
+            (context as HomeActivityCallback).onAddPostClicked(arguments?.getInt("idTag") ?: 0)
     }
 }
