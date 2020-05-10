@@ -12,7 +12,7 @@ constructor() {
     private val loadingLiveData = MutableLiveData<Boolean>()
     private val showFinishMessage = MutableLiveData<Boolean>()
     private val allUsers = MutableLiveData<List<UserDTO>>()
-
+    private val userIDByNickname = MutableLiveData<List<Int>>()
     val finishMessage: LiveData<Boolean>
         get() = showFinishMessage
 
@@ -24,5 +24,23 @@ constructor() {
         return loadingLiveData
     }
 
+    fun useCaseLoadUserIDByNickname(token: String, nickname: String) {
+        loadJSONUseCase.getIDUserByNickname(object : RepositoryInterface {
+            override fun showError(show: Boolean) {
+                showFinishMessage.postValue(show)
+            }
 
+            override fun onLoading(loading: Boolean) {
+                loadingLiveData.postValue(loading)
+            }
+
+            override fun <T> onSuccess(data: List<T>) {
+                userIDByNickname.postValue(data as List<Int>)
+            }
+        }, token, nickname)
+    }
+
+    fun getUserIDByNickname(): LiveData<List<Int>> {
+        return userIDByNickname
+    }
 }

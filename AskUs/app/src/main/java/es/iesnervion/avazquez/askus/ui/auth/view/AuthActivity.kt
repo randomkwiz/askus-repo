@@ -8,6 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.microsoft.appcenter.AppCenter
+import com.microsoft.appcenter.analytics.Analytics
+import com.microsoft.appcenter.crashes.Crashes
 import es.iesnervion.avazquez.askus.R
 import es.iesnervion.avazquez.askus.interfaces.AuthActivityInterface
 import es.iesnervion.avazquez.askus.ui.auth.viewmodel.AuthViewModel
@@ -24,6 +27,7 @@ class AuthActivity : AppCompatActivity()
     val signUpFragment: Fragment =
         SignUpFragment.newInstance()
     lateinit var tokenObserver: Observer<List<Char>>
+    lateinit var userIDObserver: Observer<List<Int>>
     lateinit var viewModel: AuthViewModel
     lateinit var sharedPreference: SharedPreferences
     lateinit var editor: SharedPreferences.Editor
@@ -37,16 +41,34 @@ class AuthActivity : AppCompatActivity()
         if (savedInstanceState == null) {
             loadFragmentLoader(loginFragment)
         }
+        initObservers()
+        AppCenter.start(application, "e5856b93-d2a9-4b5d-983a-6512e3b8190d",
+            Analytics::class.java, Crashes::class.java)
+    }
+
+    private fun initObservers() {
         // Create the observer which updates the UI.
         tokenObserver = Observer<List<Char>> {
             if (it.size > TOKEN_LENGHT) {
-                editor.putString("token", it.joinToString(""))
+                val token = it.joinToString("")
+                editor.putString("token", token)
+                editor.putString("user_nickname", viewModel.login.nickname)
                 editor.commit()
-                startActivity(Intent(this, HomeActivity::class.java))
+                viewModel.loadUserIDByNickname(nickname = viewModel.login.nickname, token = token)
             }
         }
         viewModel.getToken()
             .observe(this, tokenObserver)
+        userIDObserver = Observer<List<Int>> {
+            if (it.isNotEmpty()) {
+                if (it.size == 1 && it[0] > 0) {
+                    editor.putInt("user_id", it.first().toInt())
+                    editor.commit()
+                    startActivity(Intent(this, HomeActivity::class.java))
+                }
+            }
+        }
+        viewModel.getIDUserByNickname().observe(this, userIDObserver)
     }
 
     /**

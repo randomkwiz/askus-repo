@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import es.iesnervion.avazquez.askus.DTOs.PostCompletoParaMostrarDTO
 import es.iesnervion.avazquez.askus.DTOs.TagDTO
+import es.iesnervion.avazquez.askus.mappers.PublicacionMapper
+import es.iesnervion.avazquez.askus.models.Publicacion
 import es.iesnervion.avazquez.askus.ui.repositories.PostsRepository
 import es.iesnervion.avazquez.askus.ui.repositories.TagsRepository
 import es.iesnervion.avazquez.askus.utils.GlobalApplication
@@ -12,9 +14,12 @@ import javax.inject.Inject
 class MainViewModel : ViewModel() {
     @Inject
     lateinit var postsRepository: PostsRepository
-
     @Inject
     lateinit var tagsRepository: TagsRepository
+    var newPost: Publicacion = Publicacion(id = 0, idAutor = 0, texto = "")
+    lateinit var tagList: List<Int>
+    var saveStateMenu = 0
+
     fun allVisiblePostsByTag(): LiveData<List<PostCompletoParaMostrarDTO>> {
         return postsRepository.getAllVisiblePostsByGivenTag()
     }
@@ -29,6 +34,18 @@ class MainViewModel : ViewModel() {
         } else {
             postsRepository.useCaseLoadNonDeletedPostedPostsByTag(token, idTag)
         }
+    }
+
+    fun sendNewPost() {
+        postsRepository.useCaseSendNewPosts(PublicacionMapper().modelToDto(newPost), tagList)
+    }
+
+    fun responseCodePostSent(): LiveData<Int> {
+        return postsRepository.getResponseCodePostSent()
+    }
+
+    fun getError(): LiveData<Boolean> {
+        return postsRepository.finishMessage
     }
 
     fun loadTags() {

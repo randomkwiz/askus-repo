@@ -34,4 +34,14 @@
     <string name="linkLogin">Already have an account? <u>Log in</u></string>
     <string name="drawer_opened">open</string>
     <string name="message_dialog_password_lost">If you have forgotten your password, contact the support team at: avazquez.developer@gmail.com</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="send_post">Send post</string>
+    <string name="anonymous">Anonymous</string>
+    <string name="post_sended">Post sent</string>
+    <string name="title">Title</string>
+    <string name="post_body_hint">What\'s up? …</string>
+    <string name="spinner_select_category">Select category</string>
+    <string name="select_at_least_one_category">Select at least one category</string>
+    <string name="error_sending_post">There was an error sending your post. Try again later.</string>
 </resources>
