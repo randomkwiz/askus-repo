@@ -141,7 +141,7 @@ class PostsListFragment : Fragment() {
                         ).show()
                     }
                     NO_CONTENT -> {
-                        //todo ok
+                        //ok
                         Snackbar.make(
                             recyclerView, // Parent view
                             getString(R.string.processed_vote), // Message to show
