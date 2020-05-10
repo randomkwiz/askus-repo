@@ -16,7 +16,7 @@
     <string name="lblEmail_account">Correo</string>
     <string name="lblNickname">Nick</string>
     <string name="invalid_credentials">Credenciales no válidas</string>
-    <string name="error_login">Hubo un error.</string>
+    <string name="there_was_an_error">Hubo un error.</string>
     <string name="error_internet">Hubo un error. Revisa la conexión a internet.</string>
     <string name="repeat_password">Repite la contraseña</string>
     <string name="error_create_user">Error en la creación de usuario. Inténtelo de nuevo más tarde.</string>
@@ -39,4 +39,6 @@
     <string name="spinner_select_category">Elige una categoría</string>
     <string name="select_at_least_one_category">Elige al menos una categoría</string>
     <string name="error_sending_post">Hubo un error enviando la publicación. Inténtalo de nuevo más tarde.</string>
+    <string name="you_cant_vote_twice">Ya has votado aquí</string>
+    <string name="processed_vote">Voto enviado</string>
 </resources>

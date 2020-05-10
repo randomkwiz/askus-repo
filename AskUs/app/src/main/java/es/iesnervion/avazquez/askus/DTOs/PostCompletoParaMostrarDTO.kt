@@ -2,10 +2,9 @@ package es.iesnervion.avazquez.askus.DTOs
 
 import com.google.gson.annotations.SerializedName
 
-data class PostCompletoParaMostrarDTO (
-    @SerializedName("id") val id: Int,
+class PostCompletoParaMostrarDTO(
+    @SerializedName("IdPost") val IdPost: Int,
     @SerializedName("cantidadComentarios") val cantidadComentarios: Int,
-    @SerializedName("IdPost ") val IdPost : Int,
     @SerializedName("tituloPost") val tituloPost: String,
     @SerializedName("cuerpoPost") val cuerpoPost: String,
     @SerializedName("nickAutor") val nickAutor: String,

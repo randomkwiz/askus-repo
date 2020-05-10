@@ -10,11 +10,17 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import es.iesnervion.avazquez.askus.DTOs.PostCompletoParaMostrarDTO
+import es.iesnervion.avazquez.askus.DTOs.VotoPublicacionDTO
 import es.iesnervion.avazquez.askus.R
 import es.iesnervion.avazquez.askus.adapters.PostAdapter
+import es.iesnervion.avazquez.askus.interfaces.RecyclerViewClickListener
 import es.iesnervion.avazquez.askus.ui.fragments.tabs.viewmodel.MainViewModel
 import es.iesnervion.avazquez.askus.utils.AppConstants
+import es.iesnervion.avazquez.askus.utils.AppConstants.INTERNAL_SERVER_ERROR
+import es.iesnervion.avazquez.askus.utils.AppConstants.NO_CONTENT
+import es.iesnervion.avazquez.askus.utils.UtilClass.Companion.getFormattedCurrentDatetime
 import kotlinx.android.synthetic.main.fragment_posts.*
 import setVisibilityToGone
 import setVisibilityToVisible
@@ -27,8 +33,13 @@ class PostsListFragment : Fragment() {
     lateinit var adapter: PostAdapter
     lateinit var observerPosts: Observer<List<PostCompletoParaMostrarDTO>>
     lateinit var observerLoadingData: Observer<Boolean>
+    lateinit var observerResponseCodeVote: Observer<Int>
     lateinit var filterType: String
     lateinit var sharedPreference: SharedPreferences
+    lateinit var token: String
+    var imgBtnUpDownVoteHasBeenClicked = false
+    var idCurrentUser = 0
+
     companion object {
         fun newInstance(filter: String, idTag: Int): PostsListFragment {
             val myFragment = PostsListFragment()
@@ -51,8 +62,11 @@ class PostsListFragment : Fragment() {
         viewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
         sharedPreference =
             activity!!.getSharedPreferences(AppConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
+        token = sharedPreference.getString("token", "").toString()
+        idCurrentUser = sharedPreference.getInt("user_id", 0)
         initViews()
         initObservers()
+        setListeners()
         swipeRefreshLayout.setOnRefreshListener {
             // Esto se ejecuta cada vez que se realiza el gesto
             sharedPreference.getString("token", "")?.let {
@@ -60,6 +74,9 @@ class PostsListFragment : Fragment() {
             }
         }
         initContent()
+    }
+
+    private fun setListeners() {
     }
 
     private fun initContent() {
@@ -107,6 +124,45 @@ class PostsListFragment : Fragment() {
                 swipeRefreshLayout.isRefreshing = false
             }
         }
+
+        observerResponseCodeVote = Observer {
+            //Hago esto de imgBtnUpDownVoteHasBeenClicked porque
+            //si no, entra aquí cada vez que cambias de pestaña en el view pager
+            //y te muestra el snackbar aunque no hayas pulsado el boton
+            //porque el observer entra con el ultimo dato del live data
+            if (imgBtnUpDownVoteHasBeenClicked) {
+                when (it) {
+                    INTERNAL_SERVER_ERROR -> {
+                        //ya has votado aqui
+                        Snackbar.make(
+                            recyclerView, // Parent view
+                            getString(R.string.you_cant_vote_twice), // Message to show
+                            Snackbar.LENGTH_SHORT // How long to display the message.
+                        ).show()
+                    }
+                    NO_CONTENT -> {
+                        //todo ok
+                        Snackbar.make(
+                            recyclerView, // Parent view
+                            getString(R.string.processed_vote), // Message to show
+                            Snackbar.LENGTH_SHORT // How long to display the message.
+                        ).show()
+                    }
+                    else -> {
+                        //error
+                        Snackbar.make(
+                            recyclerView, // Parent view
+                            getString(R.string.there_was_an_error), // Message to show
+                            Snackbar.LENGTH_SHORT // How long to display the message.
+                        ).show()
+                    }
+                }
+            }
+            imgBtnUpDownVoteHasBeenClicked = false
+        }
+
+        viewModel.responseCodeVotoPublicacionSent()
+            .observe(viewLifecycleOwner, observerResponseCodeVote)
         viewModel.allVisiblePostsByTag().observe(viewLifecycleOwner, observerPosts)
         viewModel.loadingLiveData().observe(viewLifecycleOwner, observerLoadingData)
     }
@@ -118,9 +174,25 @@ class PostsListFragment : Fragment() {
     }
 
     private fun setAdapter(list: List<PostCompletoParaMostrarDTO>) {
-        adapter = context?.let {
-            PostAdapter(list, it)
-        }!!
+        adapter = PostAdapter(list, object : RecyclerViewClickListener {
+            override fun onClick(view: View, position: Int) {
+                imgBtnUpDownVoteHasBeenClicked = true
+                val valoracion: Boolean = when (view.id) {
+                    R.id.arrow_up -> {
+                        true
+                    }
+                    else -> {
+                        false
+                    }
+                }
+                val votoPublicacionDTO =
+                    VotoPublicacionDTO(idCurrentUser, list[position].IdPost, valoracion,
+                        getFormattedCurrentDatetime()
+                    )
+                viewModel.insertVotoPublicacion(token = token,
+                    votoPublicacionDTO = votoPublicacionDTO)
+            }
+        })
         recyclerView.adapter = adapter
     }
 }

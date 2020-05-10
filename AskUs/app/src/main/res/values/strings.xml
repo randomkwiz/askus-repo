@@ -13,10 +13,8 @@
     <string name="errorLogin">Error login</string>
     <string name="lblEmail_account">Email</string>
     <string name="lblNickname">Nickname</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="invalid_credentials">Invalid credentials.</string>
-    <string name="error_login">There was an error.</string>
+    <string name="there_was_an_error">There was an error.</string>
     <string name="error_internet">There was an error. Check internet connection.</string>
     <string name="repeat_password">Repeat password</string>
     <string name="error_create_user">Error creating user. Try again later.</string>
@@ -44,4 +42,6 @@
     <string name="spinner_select_category">Select category</string>
     <string name="select_at_least_one_category">Select at least one category</string>
     <string name="error_sending_post">There was an error sending your post. Try again later.</string>
+    <string name="you_cant_vote_twice">You cannot vote twice on the same post.</string>
+    <string name="processed_vote">Your vote has been processed.</string>
 </resources>

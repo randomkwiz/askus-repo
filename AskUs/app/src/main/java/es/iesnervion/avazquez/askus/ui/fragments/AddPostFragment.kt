@@ -19,11 +19,10 @@ import es.iesnervion.avazquez.askus.R
 import es.iesnervion.avazquez.askus.interfaces.HomeActivityCallback
 import es.iesnervion.avazquez.askus.ui.fragments.tabs.viewmodel.MainViewModel
 import es.iesnervion.avazquez.askus.utils.AppConstants
+import es.iesnervion.avazquez.askus.utils.UtilClass.Companion.getFormattedCurrentDatetime
 import kotlinx.android.synthetic.main.fragment_add_post.*
 import setVisibilityToGone
 import setVisibilityToVisible
-import java.text.SimpleDateFormat
-import java.util.*
 
 /**
  * A simple [Fragment] subclass.
@@ -148,8 +147,8 @@ class AddPostFragment : Fragment(), View.OnClickListener {
     private fun setFieldsToViewModel() {
         viewModel.newPost.idAutor = userID
         viewModel.newPost.id = 0
-        viewModel.newPost.fechaCreacion = getFormattedDateTime()
-        viewModel.newPost.fechaPublicacion = getFormattedDateTime()
+        viewModel.newPost.fechaCreacion = getFormattedCurrentDatetime()
+        viewModel.newPost.fechaPublicacion = getFormattedCurrentDatetime()
         viewModel.newPost.texto = input_title_body.text.toString()
         viewModel.newPost.titulo = input_title_post.text.toString()
         val idTagOne = tagIds[spinner_tag_one.selectedItemPosition]
@@ -160,14 +159,6 @@ class AddPostFragment : Fragment(), View.OnClickListener {
             viewModel.tagList = listOf(idTagOne, idTagTwo)
         }
     }
-
-    private fun getFormattedDateTime(): String {
-        val date = Calendar.getInstance().time
-        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
-        val formatedDate = formatter.format(date)
-        return formatedDate
-    }
-
     override fun onClick(v: View) {
         when (v.id) {
             R.id.is_private -> {
