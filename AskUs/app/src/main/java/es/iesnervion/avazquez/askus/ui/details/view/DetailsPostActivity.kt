@@ -55,6 +55,9 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
         arrow_up.setOnClickListener(this)
         arrow_down.setOnClickListener(this)
         btn_send_comment.setOnClickListener(this)
+        appbar.setNavigationOnClickListener {
+            onBackPressed()
+        }
     }
 
     private fun initObservers() {
@@ -80,6 +83,8 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
                     }
                 }
             }
+            btnSendHasBeenClicked = false
+            //TODO creo que no hace falta esto del btn has been clicked porque esto es una activity
         }
         viewModel.getInsertedCommentResponseCode().observe(this, commentSentObserver)
     }
@@ -114,8 +119,8 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
                         ComentarioDTO(0,
                             getFormattedCurrentDatetime(),
                             0,
-                            idCurrentUser
-                            ,
+                            idCurrentUser,
+                            idPost,
                             false,
                             false,
                             comment_text.text.toString(),
