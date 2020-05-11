@@ -41,4 +41,7 @@
     <string name="error_sending_post">Hubo un error enviando la publicación. Inténtalo de nuevo más tarde.</string>
     <string name="you_cant_vote_twice">Ya has votado aquí</string>
     <string name="processed_vote">Voto enviado</string>
+    <string name="send">Enviar</string>
+    <string name="comment_sent">Comentario enviado</string>
+    <string name="error_sending_comment">Erro al enviar el comentario</string>
 </resources>

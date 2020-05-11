@@ -4,30 +4,34 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import es.iesnervion.avazquez.askus.DTOs.ComentarioDTO
+import androidx.recyclerview.widget.DividerItemDecoration
 import es.iesnervion.avazquez.askus.DTOs.PostCompletoListadoComentariosDTO
 import es.iesnervion.avazquez.askus.DTOs.VotoPublicacionDTO
 import es.iesnervion.avazquez.askus.R
 import es.iesnervion.avazquez.askus.adapters.CommentsAdapter
+import es.iesnervion.avazquez.askus.models.Comentario
 import es.iesnervion.avazquez.askus.ui.details.viewmodel.DetailsViewModel
 import es.iesnervion.avazquez.askus.utils.AppConstants
 import es.iesnervion.avazquez.askus.utils.AppConstants.NO_CONTENT
 import es.iesnervion.avazquez.askus.utils.UtilClass.Companion.getFormattedCurrentDatetime
 import kotlinx.android.synthetic.main.activity_details_post.*
+import setVisibilityToGone
+import setVisibilityToVisible
 
 class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
     var idPost: Int = 0
     lateinit var token: String
     lateinit var sharedPreference: SharedPreferences
     lateinit var viewModel: DetailsViewModel
+    lateinit var observerLoadingData: Observer<Boolean>
     lateinit var currentPostObserver: Observer<PostCompletoListadoComentariosDTO>
     lateinit var commentSentObserver: Observer<Int>
     lateinit var commentsAdapter: CommentsAdapter
-    var btnSendHasBeenClicked = false
     var idCurrentUser: Int = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,9 +41,7 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
         idPost = intent.getIntExtra("idPost", 0)
         token = sharedPreference.getString("token", "").toString()
         idCurrentUser = sharedPreference.getInt("user_id", 0)
-        if (token.isNotEmpty()) {
-            viewModel.loadPostData(token, idPost)
-        }
+        loadData()
         setSupportActionBar(appbar);
         recyclerView_comments.setHasFixedSize(true)
         //this line shows back button
@@ -49,6 +51,9 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
         }
         initObservers()
         initListeners()
+        val dividerItemDecoration =
+            DividerItemDecoration(recyclerView_comments.context, LinearLayout.VERTICAL)
+        recyclerView_comments.addItemDecoration(dividerItemDecoration)
     }
 
     private fun initListeners() {
@@ -57,6 +62,16 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
         btn_send_comment.setOnClickListener(this)
         appbar.setNavigationOnClickListener {
             onBackPressed()
+        }
+        swipeRefreshLayout.setOnRefreshListener {
+            // Esto se ejecuta cada vez que se realiza el gesto
+            loadData()
+        }
+    }
+
+    private fun loadData() {
+        if (token.isNotEmpty()) {
+            viewModel.loadPostData(token, idPost)
         }
     }
 
@@ -69,24 +84,53 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
         viewModel.getPostWithComments().observe(this, currentPostObserver)
 
         commentSentObserver = Observer {
-            if (btnSendHasBeenClicked) {
+
                 when (it) {
                     NO_CONTENT -> {
-                        Toast.makeText(applicationContext, "Comment sent", Toast.LENGTH_SHORT)
+                        Toast.makeText(applicationContext,
+                            getString(R.string.comment_sent),
+                            Toast.LENGTH_SHORT)
                             .show()
+                        clearCommentEditText()
                     }
                     else -> {
                         Toast.makeText(applicationContext,
-                            "Error sending comment",
+                            getString(R.string.error_sending_comment),
                             Toast.LENGTH_SHORT)
                             .show()
+                        btn_send_comment.isEnabled = true
                     }
                 }
-            }
-            btnSendHasBeenClicked = false
-            //TODO creo que no hace falta esto del btn has been clicked porque esto es una activity
         }
         viewModel.getInsertedCommentResponseCode().observe(this, commentSentObserver)
+
+        observerLoadingData = Observer { loading ->
+            if (loading) {
+                if (!swipeRefreshLayout.isRefreshing) {
+                    progressBar.setVisibilityToVisible()
+                    recyclerView_comments.setVisibilityToGone()
+                    ctlLayout.setVisibilityToGone()
+                    create_comment_content_l_layout.setVisibilityToGone()
+                }
+            } else {
+                progressBar.setVisibilityToGone()
+                recyclerView_comments.setVisibilityToVisible()
+                ctlLayout.setVisibilityToVisible()
+                create_comment_content_l_layout.setVisibilityToVisible()
+                swipeRefreshLayout.isRefreshing = false
+            }
+        }
+        viewModel.loadingLiveData().observe(this, observerLoadingData)
+    }
+
+    private fun clearCommentEditText() {
+        comment_title.text.clear()
+        comment_text.text.clear()
+        viewModel.commentToSend.idPublicacion = 0
+        viewModel.commentToSend.fechaPublicacion = ""
+        viewModel.commentToSend.texto = ""
+        viewModel.commentToSend.titulo = ""
+        btn_send_comment.isEnabled = true
     }
 
     private fun setData(currentPost: PostCompletoListadoComentariosDTO) {
@@ -115,8 +159,9 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
             }
             R.id.btn_send_comment -> {
                 if (fieldsAreFilled()) {
+                    btn_send_comment.isEnabled = false
                     viewModel.commentToSend =
-                        ComentarioDTO(0,
+                        Comentario(0,
                             getFormattedCurrentDatetime(),
                             0,
                             idCurrentUser,
@@ -126,7 +171,11 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
                             comment_text.text.toString(),
                             comment_title.text.toString())
                     viewModel.insertComment()
-                    btnSendHasBeenClicked = true
+                } else {
+                    Toast.makeText(applicationContext,
+                        getString(R.string.fillFields),
+                        Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
         }

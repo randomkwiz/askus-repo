@@ -2,9 +2,10 @@ package es.iesnervion.avazquez.askus.ui.details.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import es.iesnervion.avazquez.askus.DTOs.ComentarioDTO
 import es.iesnervion.avazquez.askus.DTOs.PostCompletoListadoComentariosDTO
 import es.iesnervion.avazquez.askus.DTOs.VotoPublicacionDTO
+import es.iesnervion.avazquez.askus.mappers.ComentarioMapper
+import es.iesnervion.avazquez.askus.models.Comentario
 import es.iesnervion.avazquez.askus.ui.repositories.CommentsRepository
 import es.iesnervion.avazquez.askus.ui.repositories.PostsRepository
 import es.iesnervion.avazquez.askus.ui.repositories.VotesRepository
@@ -21,7 +22,7 @@ class DetailsViewModel : ViewModel() {
     @Inject
     lateinit var commentsRepository: CommentsRepository
     var currentPost: PostCompletoListadoComentariosDTO? = null
-    lateinit var commentToSend: ComentarioDTO
+    lateinit var commentToSend: Comentario
 
     init {
         GlobalApplication.applicationComponent?.inject(this)
@@ -40,8 +41,11 @@ class DetailsViewModel : ViewModel() {
             token = token)
     }
 
+    fun loadingLiveData(): LiveData<Boolean> {
+        return postsRepository.getLoadingLiveData()
+    }
     fun insertComment() {
-        commentsRepository.useCaseInsertComment(commentToSend)
+        commentsRepository.useCaseInsertComment(ComentarioMapper().modelToDto(commentToSend))
     }
 
     fun getInsertedCommentResponseCode(): LiveData<Int> {
