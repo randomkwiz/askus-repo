@@ -33,6 +33,7 @@ class AddPostFragment : Fragment(), View.OnClickListener {
     lateinit var tagsObserver: Observer<List<TagDTO>>
     lateinit var postSentObserver: Observer<Int>
     lateinit var errorObserver: Observer<Boolean>
+    var btnSendHasBeenClicked = false
     var tagNames = mutableListOf<String>()
     var tagIds = mutableListOf<Int>()
     var userID: Int = 0
@@ -106,17 +107,22 @@ class AddPostFragment : Fragment(), View.OnClickListener {
         viewModel.allTags().observe(viewLifecycleOwner, tagsObserver)
 
         postSentObserver = Observer {
-            if (it == 204) {
-                Toast.makeText(context, getString(R.string.post_sended), Toast.LENGTH_SHORT)
-                    .show()
-                if (context is HomeActivityCallback) {
-                    (context as HomeActivityCallback)
-                        .onPostAdded(arguments?.getInt("idTag") ?: 0)
+            if (btnSendHasBeenClicked) {
+                if (it == 204) {
+                    Toast.makeText(context, getString(R.string.post_sended), Toast.LENGTH_SHORT)
+                        .show()
+                    if (context is HomeActivityCallback) {
+                        (context as HomeActivityCallback)
+                            .onPostAdded(arguments?.getInt("idTag") ?: 0)
+                    }
+                } else {
+                    Toast.makeText(context,
+                        getString(R.string.error_sending_post),
+                        Toast.LENGTH_LONG)
+                        .show()
                 }
-            } else {
-                Toast.makeText(context, getString(R.string.error_sending_post), Toast.LENGTH_LONG)
-                    .show()
             }
+            btnSendHasBeenClicked = false
         }
         viewModel.responseCodePostSent().observe(viewLifecycleOwner, postSentObserver)
 
@@ -166,6 +172,7 @@ class AddPostFragment : Fragment(), View.OnClickListener {
                 setPrivateBtnImg()
             }
             R.id.btnSend -> {
+                btnSendHasBeenClicked = true
                 lbl_select_one_category.setVisibilityToGone()
                 if (fieldsAreFilled()) {
                     setFieldsToViewModel()
