@@ -1,6 +1,7 @@
 package es.iesnervion.avazquez.askus.DTOs
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 class PostCompletoParaMostrarDTO(
     @SerializedName("IdPost") val IdPost: Int,
@@ -15,4 +16,4 @@ class PostCompletoParaMostrarDTO(
     @SerializedName("cantidadVotosNegativos") val cantidadVotosNegativos: Int,
     @SerializedName("isPostPrivado") val isPostPrivado: Boolean,
     @SerializedName("listadoTags") val listadoTags: List<TagDTO>
-)
+) : Serializable

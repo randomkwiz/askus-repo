@@ -1,5 +1,6 @@
 package es.iesnervion.avazquez.askus.ui.home.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -11,9 +12,11 @@ import androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.navigation.NavigationView
+import es.iesnervion.avazquez.askus.DTOs.PostCompletoParaMostrarDTO
 import es.iesnervion.avazquez.askus.DTOs.TagDTO
 import es.iesnervion.avazquez.askus.R
 import es.iesnervion.avazquez.askus.interfaces.HomeActivityCallback
+import es.iesnervion.avazquez.askus.ui.details.view.DetailsPostActivity
 import es.iesnervion.avazquez.askus.ui.fragments.AddPostFragment
 import es.iesnervion.avazquez.askus.ui.fragments.HomeFragment
 import es.iesnervion.avazquez.askus.ui.fragments.tabs.viewmodel.MainViewModel
@@ -147,6 +150,12 @@ class HomeActivity : AppCompatActivity()
         //        }
         toolBar.title = selectedItemMenuTitle
         loadFragmentLoader(HomeFragment.newInstance(idTagUserWasSeeing))
+    }
+
+    override fun onPostClicked(post: PostCompletoParaMostrarDTO) {
+        val intent = Intent(this, DetailsPostActivity::class.java)
+        intent.putExtra("post", post)
+        startActivity(intent)
     }
 
     override fun onBackPressed() {

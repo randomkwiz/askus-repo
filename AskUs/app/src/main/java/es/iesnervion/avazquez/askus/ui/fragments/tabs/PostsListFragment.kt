@@ -15,6 +15,7 @@ import es.iesnervion.avazquez.askus.DTOs.PostCompletoParaMostrarDTO
 import es.iesnervion.avazquez.askus.DTOs.VotoPublicacionDTO
 import es.iesnervion.avazquez.askus.R
 import es.iesnervion.avazquez.askus.adapters.PostAdapter
+import es.iesnervion.avazquez.askus.interfaces.HomeActivityCallback
 import es.iesnervion.avazquez.askus.interfaces.RecyclerViewClickListener
 import es.iesnervion.avazquez.askus.ui.fragments.tabs.viewmodel.MainViewModel
 import es.iesnervion.avazquez.askus.utils.AppConstants
@@ -77,6 +78,7 @@ class PostsListFragment : Fragment() {
     }
 
     private fun setListeners() {
+
     }
 
     private fun initContent() {
@@ -176,21 +178,33 @@ class PostsListFragment : Fragment() {
     private fun setAdapter(list: List<PostCompletoParaMostrarDTO>) {
         adapter = PostAdapter(list, object : RecyclerViewClickListener {
             override fun onClick(view: View, position: Int) {
-                imgBtnUpDownVoteHasBeenClicked = true
-                val valoracion: Boolean = when (view.id) {
+                var valoracion: Boolean = false
+                when (view.id) {
                     R.id.arrow_up -> {
-                        true
+                        imgBtnUpDownVoteHasBeenClicked = true
+                        valoracion = true
                     }
-                    else -> {
-                        false
+                    R.id.arrow_down -> {
+                        imgBtnUpDownVoteHasBeenClicked = true
+                        valoracion = false
+                    }
+                    R.id.lbl_post_title -> {
+                        if (context is HomeActivityCallback) {
+                            //TODO cambiar esto y enviar solo la ID, porque luego en la actividad detalles haras una peticion para recibir
+                            //el objeto post completo con listado de comentarios
+                            (context as HomeActivityCallback).onPostClicked(list[position])
+                        }
                     }
                 }
-                val votoPublicacionDTO =
-                    VotoPublicacionDTO(idCurrentUser, list[position].IdPost, valoracion,
-                        getFormattedCurrentDatetime()
-                    )
-                viewModel.insertVotoPublicacion(token = token,
-                    votoPublicacionDTO = votoPublicacionDTO)
+                if (imgBtnUpDownVoteHasBeenClicked) {
+                    val votoPublicacionDTO =
+                        VotoPublicacionDTO(idCurrentUser, list[position].IdPost, valoracion,
+                            getFormattedCurrentDatetime()
+                        )
+                    viewModel.insertVotoPublicacion(token = token,
+                        votoPublicacionDTO = votoPublicacionDTO)
+                }
+
             }
         })
         recyclerView.adapter = adapter
