@@ -13,6 +13,9 @@ class DetailsPostActivity : AppCompatActivity() {
         setContentView(R.layout.activity_details_post)
         currentPost = intent.getSerializableExtra("post") as PostCompletoParaMostrarDTO
         //ctlLayout.title = currentPost.tituloPost
+        setSupportActionBar(appbar);
+        //this line shows back button
+        supportActionBar?.setDisplayHomeAsUpEnabled(true);
         appbar.title = currentPost.tituloPost
     }
 }
