@@ -3,6 +3,7 @@ package es.iesnervion.avazquez.askus.dagger
 import dagger.Component
 import es.iesnervion.avazquez.askus.dagger.modules.AppModule
 import es.iesnervion.avazquez.askus.ui.auth.viewmodel.AuthViewModel
+import es.iesnervion.avazquez.askus.ui.details.viewmodel.DetailsViewModel
 import es.iesnervion.avazquez.askus.ui.fragments.tabs.viewmodel.MainViewModel
 import es.iesnervion.avazquez.askus.ui.repositories.*
 import es.iesnervion.avazquez.askus.ui.usecase.*
@@ -25,4 +26,6 @@ interface ComponenTest {
     fun inject(loadTagsUseCase: LoadTagsUseCase)
     fun inject(sendNewPostUseCase: SendNewPostUseCase)
     fun inject(createVotesUseCase: CreateVotesUseCase)
+    fun inject(detailsViewModel: DetailsViewModel)
+    fun inject(createCommentUseCase: CreateCommentUseCase)
 }

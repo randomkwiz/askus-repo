@@ -39,6 +39,8 @@ class PostAdapter(posts: List<PostCompletoParaMostrarDTO>,
             arrowUp.setOnClickListener(this)
             arrowDown.setOnClickListener(this)
             title.setOnClickListener(this)
+            text.setOnClickListener(this)
+            author.setOnClickListener(this)
         }
 
         override fun onClick(v: View) {

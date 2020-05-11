@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -190,10 +191,20 @@ class PostsListFragment : Fragment() {
                     }
                     R.id.lbl_post_title -> {
                         if (context is HomeActivityCallback) {
-                            //TODO cambiar esto y enviar solo la ID, porque luego en la actividad detalles haras una peticion para recibir
-                            //el objeto post completo con listado de comentarios
-                            (context as HomeActivityCallback).onPostClicked(list[position])
+                            (context as HomeActivityCallback).onPostClicked(list[position].IdPost)
                         }
+                    }
+                    R.id.lbl_post_text -> {
+                        if (context is HomeActivityCallback) {
+                            (context as HomeActivityCallback).onPostClicked(list[position].IdPost)
+                        }
+                    }
+                    R.id.lbl_author_nick -> {
+                        //TODO que hacer cuando el usuario clicka en el nick del autor
+                        Toast.makeText(context,
+                            "Has clickado en " + list[position].nickAutor,
+                            Toast.LENGTH_LONG)
+                            .show()
                     }
                 }
                 if (imgBtnUpDownVoteHasBeenClicked) {

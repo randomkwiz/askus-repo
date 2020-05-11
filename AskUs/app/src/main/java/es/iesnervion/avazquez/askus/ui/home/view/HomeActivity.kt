@@ -12,7 +12,6 @@ import androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.navigation.NavigationView
-import es.iesnervion.avazquez.askus.DTOs.PostCompletoParaMostrarDTO
 import es.iesnervion.avazquez.askus.DTOs.TagDTO
 import es.iesnervion.avazquez.askus.R
 import es.iesnervion.avazquez.askus.interfaces.HomeActivityCallback
@@ -152,9 +151,9 @@ class HomeActivity : AppCompatActivity()
         loadFragmentLoader(HomeFragment.newInstance(idTagUserWasSeeing))
     }
 
-    override fun onPostClicked(post: PostCompletoParaMostrarDTO) {
+    override fun onPostClicked(idPost: Int) {
         val intent = Intent(this, DetailsPostActivity::class.java)
-        intent.putExtra("post", post)
+        intent.putExtra("idPost", idPost)
         startActivity(intent)
     }
 

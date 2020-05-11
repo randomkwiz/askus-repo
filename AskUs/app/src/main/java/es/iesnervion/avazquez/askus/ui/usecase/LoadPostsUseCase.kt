@@ -1,5 +1,6 @@
 package es.iesnervion.avazquez.askus.ui.usecase
 
+import es.iesnervion.avazquez.askus.DTOs.PostCompletoListadoComentariosDTO
 import es.iesnervion.avazquez.askus.DTOs.PostCompletoParaMostrarDTO
 import es.iesnervion.avazquez.askus.DTOs.PublicacionDTO
 import es.iesnervion.avazquez.askus.retrofit.interfaces.PublicacionesInterface
@@ -57,6 +58,29 @@ class LoadPostsUseCase {
 
         })
     }
+
+    /*Get one post with all its comments*/
+    fun getPublicacionParaMostrarConComentarios(repositoryInterface: RepositoryInterface,
+        token: String,
+        idPost: Int) {
+        val call = requestInterface.getPostParaMostrarConListadoComentarios(authToken = token,
+            idPost = idPost)
+        repositoryInterface.onLoading(true)
+        call.enqueue(object : Callback<PostCompletoListadoComentariosDTO> {
+            override fun onFailure(call: Call<PostCompletoListadoComentariosDTO>, t: Throwable) {
+                repositoryInterface.onLoading(false)
+                repositoryInterface.showError(false)
+            }
+
+            override fun onResponse(call: Call<PostCompletoListadoComentariosDTO>,
+                response: Response<PostCompletoListadoComentariosDTO>) {
+                repositoryInterface.onLoading(false)
+                response.body()?.let { repositoryInterface.onSuccess(listOf(it)) }
+            }
+        })
+    }
+
+
 
 
     /*Gets public posted posts*/

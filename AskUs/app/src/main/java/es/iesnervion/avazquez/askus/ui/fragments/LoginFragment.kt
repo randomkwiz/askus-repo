@@ -116,6 +116,7 @@ class LoginFragment : Fragment(),
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        //TODO cambiar esto - memory leak
         if (context is AuthActivityInterface)
             this.authActivityInterface = context
     }
