@@ -62,6 +62,8 @@
 
             <TextView
                 android:id="@+id/lbl_post_title"
+                android:clickable="true"
+                android:focusable="true"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
@@ -79,6 +81,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
+                android:clickable="true"
+                android:focusable="true"
                 android:text="author"
                 android:textStyle="italic"
                 app:layout_constrainedHeight="true"
@@ -92,6 +96,8 @@
 
             <TextView
                 android:id="@+id/lbl_post_text"
+                android:clickable="true"
+                android:focusable="true"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginStart="5dp"

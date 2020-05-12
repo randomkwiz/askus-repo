@@ -2,6 +2,7 @@ package es.iesnervion.avazquez.askus.ui.repositories
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import es.iesnervion.avazquez.askus.DTOs.PostCompletoListadoComentariosDTO
 import es.iesnervion.avazquez.askus.DTOs.PostCompletoParaMostrarDTO
 import es.iesnervion.avazquez.askus.DTOs.PublicacionDTO
 import es.iesnervion.avazquez.askus.ui.usecase.LoadPostsUseCase
@@ -18,6 +19,7 @@ constructor() {
     private val allNonDeletedPublicPostedPosts = MutableLiveData<List<PublicacionDTO>>()
     private val allVisiblePostsByGivenTag = MutableLiveData<List<PostCompletoParaMostrarDTO>>()
     private val allNonDeletedPostedPosts = MutableLiveData<List<PostCompletoParaMostrarDTO>>()
+    private val postWithComments = MutableLiveData<PostCompletoListadoComentariosDTO>()
     private val responseCode = MutableLiveData<Int>()
 
     val finishMessage: LiveData<Boolean>
@@ -65,6 +67,22 @@ constructor() {
         }, token, idTag)
     }
 
+    fun useCaseLoadPostWithAllComments(token: String, idPost: Int) {
+        loadJSONUseCase.getPublicacionParaMostrarConComentarios(object : RepositoryInterface {
+            override fun showError(show: Boolean) {
+                showFinishMessage.postValue(show)
+            }
+
+            override fun onLoading(loading: Boolean) {
+                loadingLiveData.postValue(loading)
+            }
+
+            override fun <T> onSuccess(data: List<T>) {
+                postWithComments.postValue((data as List<PostCompletoListadoComentariosDTO>).firstOrNull())
+            }
+        }, token = token, idPost = idPost)
+    }
+
     fun useCaseSendNewPosts(post: PublicacionDTO, tagList: List<Int>) {
         sendPostJSONUseCase.postNewPost(object : RepositoryInterface {
             override fun showError(show: Boolean) {
@@ -81,8 +99,9 @@ constructor() {
             }
         }, post, tagList)
     }
-
-
+    /*Estas propiedades tienen getters porque devuelven LiveData y en la clase son MutableLiveData
+    * Si no, no harían falta getters por la filosofía de Kotlin.
+    * */
 
     fun getAllNonDeletedPublicPostedPosts(): LiveData<List<PublicacionDTO>> {
         return allNonDeletedPublicPostedPosts
@@ -97,5 +116,9 @@ constructor() {
 
     fun getResponseCodePostSent(): LiveData<Int> {
         return responseCode
+    }
+
+    fun getPostWithAllComments(): LiveData<PostCompletoListadoComentariosDTO> {
+        return postWithComments
     }
 }

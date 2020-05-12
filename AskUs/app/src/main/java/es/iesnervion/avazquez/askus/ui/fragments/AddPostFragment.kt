@@ -19,11 +19,10 @@ import es.iesnervion.avazquez.askus.R
 import es.iesnervion.avazquez.askus.interfaces.HomeActivityCallback
 import es.iesnervion.avazquez.askus.ui.fragments.tabs.viewmodel.MainViewModel
 import es.iesnervion.avazquez.askus.utils.AppConstants
+import es.iesnervion.avazquez.askus.utils.UtilClass.Companion.getFormattedCurrentDatetime
 import kotlinx.android.synthetic.main.fragment_add_post.*
 import setVisibilityToGone
 import setVisibilityToVisible
-import java.text.SimpleDateFormat
-import java.util.*
 
 /**
  * A simple [Fragment] subclass.
@@ -34,6 +33,7 @@ class AddPostFragment : Fragment(), View.OnClickListener {
     lateinit var tagsObserver: Observer<List<TagDTO>>
     lateinit var postSentObserver: Observer<Int>
     lateinit var errorObserver: Observer<Boolean>
+    var btnSendHasBeenClicked = false
     var tagNames = mutableListOf<String>()
     var tagIds = mutableListOf<Int>()
     var userID: Int = 0
@@ -107,17 +107,22 @@ class AddPostFragment : Fragment(), View.OnClickListener {
         viewModel.allTags().observe(viewLifecycleOwner, tagsObserver)
 
         postSentObserver = Observer {
-            if (it == 204) {
-                Toast.makeText(context, getString(R.string.post_sended), Toast.LENGTH_SHORT)
-                    .show()
-                if (context is HomeActivityCallback) {
-                    (context as HomeActivityCallback)
-                        .onPostAdded(arguments?.getInt("idTag") ?: 0)
+            if (btnSendHasBeenClicked) {
+                if (it == 204) {
+                    Toast.makeText(context, getString(R.string.post_sended), Toast.LENGTH_SHORT)
+                        .show()
+                    if (context is HomeActivityCallback) {
+                        (context as HomeActivityCallback)
+                            .onPostAdded(arguments?.getInt("idTag") ?: 0)
+                    }
+                } else {
+                    Toast.makeText(context,
+                        getString(R.string.error_sending_post),
+                        Toast.LENGTH_LONG)
+                        .show()
                 }
-            } else {
-                Toast.makeText(context, getString(R.string.error_sending_post), Toast.LENGTH_LONG)
-                    .show()
             }
+            btnSendHasBeenClicked = false
         }
         viewModel.responseCodePostSent().observe(viewLifecycleOwner, postSentObserver)
 
@@ -148,8 +153,8 @@ class AddPostFragment : Fragment(), View.OnClickListener {
     private fun setFieldsToViewModel() {
         viewModel.newPost.idAutor = userID
         viewModel.newPost.id = 0
-        viewModel.newPost.fechaCreacion = getFormattedDateTime()
-        viewModel.newPost.fechaPublicacion = getFormattedDateTime()
+        viewModel.newPost.fechaCreacion = getFormattedCurrentDatetime()
+        viewModel.newPost.fechaPublicacion = getFormattedCurrentDatetime()
         viewModel.newPost.texto = input_title_body.text.toString()
         viewModel.newPost.titulo = input_title_post.text.toString()
         val idTagOne = tagIds[spinner_tag_one.selectedItemPosition]
@@ -160,14 +165,6 @@ class AddPostFragment : Fragment(), View.OnClickListener {
             viewModel.tagList = listOf(idTagOne, idTagTwo)
         }
     }
-
-    private fun getFormattedDateTime(): String {
-        val date = Calendar.getInstance().time
-        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
-        val formatedDate = formatter.format(date)
-        return formatedDate
-    }
-
     override fun onClick(v: View) {
         when (v.id) {
             R.id.is_private -> {
@@ -175,6 +172,7 @@ class AddPostFragment : Fragment(), View.OnClickListener {
                 setPrivateBtnImg()
             }
             R.id.btnSend -> {
+                btnSendHasBeenClicked = true
                 lbl_select_one_category.setVisibilityToGone()
                 if (fieldsAreFilled()) {
                     setFieldsToViewModel()

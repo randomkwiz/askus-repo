@@ -1,5 +1,6 @@
 package es.iesnervion.avazquez.askus.ui.home.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -14,6 +15,7 @@ import com.google.android.material.navigation.NavigationView
 import es.iesnervion.avazquez.askus.DTOs.TagDTO
 import es.iesnervion.avazquez.askus.R
 import es.iesnervion.avazquez.askus.interfaces.HomeActivityCallback
+import es.iesnervion.avazquez.askus.ui.details.view.DetailsPostActivity
 import es.iesnervion.avazquez.askus.ui.fragments.AddPostFragment
 import es.iesnervion.avazquez.askus.ui.fragments.HomeFragment
 import es.iesnervion.avazquez.askus.ui.fragments.tabs.viewmodel.MainViewModel
@@ -22,12 +24,13 @@ import kotlinx.android.synthetic.main.activity_home.*
 class HomeActivity : AppCompatActivity()
     , NavigationView.OnNavigationItemSelectedListener
     , HomeActivityCallback {
-    lateinit var viewModel : MainViewModel
-    lateinit var tagList : List<TagDTO>
+    lateinit var viewModel: MainViewModel
+    lateinit var tagList: List<TagDTO>
     lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     lateinit var selectedItemMenuTitle: String
     lateinit var selectedTag: TagDTO
     var tagsObserver: Observer<List<TagDTO>>
+
     init {
         tagsObserver = Observer { list ->
             tagList = list
@@ -40,6 +43,7 @@ class HomeActivity : AppCompatActivity()
             }
         }
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -63,7 +67,8 @@ class HomeActivity : AppCompatActivity()
             selectedItemMenuTitle = navigation.menu.getItem(0).title as String
             viewModel.saveStateMenu = menuItem.itemId
         } else {
-            val menuItem: MenuItem = navigation.menu.findItem(viewModel.saveStateMenu)
+            val menuItem: MenuItem =
+                navigation.menu.findItem(viewModel.saveStateMenu) ?: navigation.menu.getItem(0)
             onNavigationItemSelected(menuItem)
             menuItem.isChecked = true
         }
@@ -81,7 +86,7 @@ class HomeActivity : AppCompatActivity()
     }
 
     private fun initObservers() {
-        viewModel.allTags().observe(this,tagsObserver)
+        viewModel.allTags().observe(this, tagsObserver)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -89,6 +94,7 @@ class HomeActivity : AppCompatActivity()
         dlDrawerLayout.closeDrawers()
         return true
     }
+
     /**
      * This will change the fragment according to the selected menu item
      */
@@ -147,6 +153,12 @@ class HomeActivity : AppCompatActivity()
         //        }
         toolBar.title = selectedItemMenuTitle
         loadFragmentLoader(HomeFragment.newInstance(idTagUserWasSeeing))
+    }
+
+    override fun onPostClicked(idPost: Int) {
+        val intent = Intent(this, DetailsPostActivity::class.java)
+        intent.putExtra("idPost", idPost)
+        startActivity(intent)
     }
 
     override fun onBackPressed() {

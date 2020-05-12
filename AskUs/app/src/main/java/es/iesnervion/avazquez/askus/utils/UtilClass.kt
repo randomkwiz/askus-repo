@@ -3,6 +3,8 @@ package es.iesnervion.avazquez.askus.utils
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
+import java.text.SimpleDateFormat
+import java.util.*
 
 class UtilClass {
     companion object {
@@ -18,6 +20,12 @@ class UtilClass {
                 e.printStackTrace()
             }
             return success
+        }
+
+        fun getFormattedCurrentDatetime(): String {
+            val date = Calendar.getInstance().time
+            val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
+            return formatter.format(date)
         }
     }
 }

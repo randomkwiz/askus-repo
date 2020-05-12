@@ -7,6 +7,7 @@ data class Comentario(
     @SerializedName("fechaPublicacion") var fechaPublicacion: String,
     @SerializedName("idComentarioAlQueResponde ") var idComentarioAlQueResponde: Int? = 0,
     @SerializedName("idUsuario") var idUsuario: Int,
+    @SerializedName("idPublicacion") var idPublicacion: Int,
     @SerializedName("isBanned") var isBanned: Boolean? = false,
     @SerializedName("isBorrado") var isBorrado: Boolean? = false,
     @SerializedName("texto") var texto: String,

@@ -71,7 +71,7 @@ class LoginFragment : Fragment(),
                 if (it == listOf(UNAUTHORIZED)) {
                     lbl_error_login.text = resources.getText(R.string.invalid_credentials)
                 } else {
-                    lbl_error_login.text = resources.getText(R.string.error_login)
+                    lbl_error_login.text = resources.getText(R.string.there_was_an_error)
                 }
                 lbl_error_login.setVisibilityToVisible()
             } else {
@@ -116,6 +116,7 @@ class LoginFragment : Fragment(),
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        //TODO cambiar esto - memory leak
         if (context is AuthActivityInterface)
             this.authActivityInterface = context
     }

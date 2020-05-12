@@ -4,10 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import es.iesnervion.avazquez.askus.DTOs.PostCompletoParaMostrarDTO
 import es.iesnervion.avazquez.askus.DTOs.TagDTO
+import es.iesnervion.avazquez.askus.DTOs.VotoPublicacionDTO
 import es.iesnervion.avazquez.askus.mappers.PublicacionMapper
 import es.iesnervion.avazquez.askus.models.Publicacion
 import es.iesnervion.avazquez.askus.ui.repositories.PostsRepository
 import es.iesnervion.avazquez.askus.ui.repositories.TagsRepository
+import es.iesnervion.avazquez.askus.ui.repositories.VotesRepository
 import es.iesnervion.avazquez.askus.utils.GlobalApplication
 import javax.inject.Inject
 
@@ -16,6 +18,10 @@ class MainViewModel : ViewModel() {
     lateinit var postsRepository: PostsRepository
     @Inject
     lateinit var tagsRepository: TagsRepository
+
+    @Inject
+    lateinit var votesRepository: VotesRepository
+
     var newPost: Publicacion = Publicacion(id = 0, idAutor = 0, texto = "")
     lateinit var tagList: List<Int>
     var saveStateMenu = 0
@@ -54,6 +60,15 @@ class MainViewModel : ViewModel() {
 
     fun allTags(): LiveData<List<TagDTO>> {
         return tagsRepository.getAllTags()
+    }
+
+    fun insertVotoPublicacion(token: String, votoPublicacionDTO: VotoPublicacionDTO) {
+        votesRepository.useCaseInsertVotoPublicacion(votoPublicacion = votoPublicacionDTO,
+            token = token)
+    }
+
+    fun responseCodeVotoPublicacionSent(): LiveData<Int> {
+        return votesRepository.getResponseCodeVotoPublicacionSent()
     }
 
     init {
