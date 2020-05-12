@@ -172,7 +172,6 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
-
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
@@ -186,33 +185,37 @@
             android:layout_margin="5dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-
     <LinearLayout
         app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
         android:id="@+id/create_comment_content_l_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        android:background="#CBFFFFFF"
+        android:layout_margin="5dp"
         android:orientation="vertical"
         app:layout_anchor="@id/recyclerView_comments"
         app:layout_anchorGravity="bottom|right|end">
 
         <EditText
+            android:layout_margin="1dp"
             android:id="@+id/comment_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Titulo comentario"
-            android:inputType="textMultiLine"
+            android:inputType="text"
+            android:padding="1dp"
+            android:background="@drawable/roundedshape"
             android:maxLength="30"
-            android:maxLines="2" />
+            android:maxLines="1" />
 
         <EditText
+            android:layout_margin="1dp"
             android:id="@+id/comment_text"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
+            android:gravity="start"
+            android:padding="1dp"
             android:hint="Escribe aquí"
+            android:background="@drawable/roundedshape"
             android:inputType="textMultiLine"
             android:maxLines="4" />
 
@@ -223,4 +226,11 @@
             android:layout_gravity="end"
             android:text="@string/send" />
     </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/gradient"
+        app:layout_anchor="@id/create_comment_content_l_layout"
+        app:layout_anchorGravity="bottom" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

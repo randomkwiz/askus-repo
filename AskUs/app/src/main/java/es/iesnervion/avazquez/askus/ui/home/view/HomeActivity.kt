@@ -24,12 +24,13 @@ import kotlinx.android.synthetic.main.activity_home.*
 class HomeActivity : AppCompatActivity()
     , NavigationView.OnNavigationItemSelectedListener
     , HomeActivityCallback {
-    lateinit var viewModel : MainViewModel
-    lateinit var tagList : List<TagDTO>
+    lateinit var viewModel: MainViewModel
+    lateinit var tagList: List<TagDTO>
     lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     lateinit var selectedItemMenuTitle: String
     lateinit var selectedTag: TagDTO
     var tagsObserver: Observer<List<TagDTO>>
+
     init {
         tagsObserver = Observer { list ->
             tagList = list
@@ -42,6 +43,7 @@ class HomeActivity : AppCompatActivity()
             }
         }
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -65,7 +67,8 @@ class HomeActivity : AppCompatActivity()
             selectedItemMenuTitle = navigation.menu.getItem(0).title as String
             viewModel.saveStateMenu = menuItem.itemId
         } else {
-            val menuItem: MenuItem = navigation.menu.findItem(viewModel.saveStateMenu)
+            val menuItem: MenuItem =
+                navigation.menu.findItem(viewModel.saveStateMenu) ?: navigation.menu.getItem(0)
             onNavigationItemSelected(menuItem)
             menuItem.isChecked = true
         }
@@ -83,7 +86,7 @@ class HomeActivity : AppCompatActivity()
     }
 
     private fun initObservers() {
-        viewModel.allTags().observe(this,tagsObserver)
+        viewModel.allTags().observe(this, tagsObserver)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -91,6 +94,7 @@ class HomeActivity : AppCompatActivity()
         dlDrawerLayout.closeDrawers()
         return true
     }
+
     /**
      * This will change the fragment according to the selected menu item
      */
