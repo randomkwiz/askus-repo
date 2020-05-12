@@ -2,11 +2,9 @@ package es.iesnervion.avazquez.askus.ui.repositories
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import es.iesnervion.avazquez.askus.DTOs.PublicacionDTO
 import es.iesnervion.avazquez.askus.models.Login
 import es.iesnervion.avazquez.askus.models.User
 import es.iesnervion.avazquez.askus.ui.usecase.CreateUserUseCase
-import es.iesnervion.avazquez.askus.ui.usecase.LoadPostsUseCase
 import es.iesnervion.avazquez.askus.ui.usecase.SendAuthUseCase
 import javax.inject.Inject
 
@@ -41,7 +39,7 @@ constructor() {
                 loadingLiveData.postValue(loading)
             }
 
-            override fun <T> onSuccess(data: List<T>) {
+            override fun <T, I> onSuccess(data: List<T>, moreInfo: I?) {
                 userCreated.postValue(data as List<Char>)
             }
         }, user)
@@ -58,7 +56,7 @@ constructor() {
                 loadingLiveData.postValue(loading)
             }
 
-            override fun <T> onSuccess(data: List<T>) {
+            override fun <T, I> onSuccess(data: List<T>, moreInfo: I?) {
                 token.postValue(data as List<Char>)
             }
         }, login)

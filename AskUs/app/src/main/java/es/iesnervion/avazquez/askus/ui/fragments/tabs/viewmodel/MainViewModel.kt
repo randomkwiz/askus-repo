@@ -2,6 +2,7 @@ package es.iesnervion.avazquez.askus.ui.fragments.tabs.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import es.iesnervion.avazquez.askus.DTOs.PaginHeader
 import es.iesnervion.avazquez.askus.DTOs.PostCompletoParaMostrarDTO
 import es.iesnervion.avazquez.askus.DTOs.TagDTO
 import es.iesnervion.avazquez.askus.DTOs.VotoPublicacionDTO
@@ -34,11 +35,13 @@ class MainViewModel : ViewModel() {
         return postsRepository.getLoadingLiveData()
     }
 
-    fun loadPostsByTag(token: String, idTag: Int) {
+    fun loadPostsByTag(token: String, idTag: Int, pageNumber: Int, pageSize: Int) {
         if (idTag == 0) {
-            postsRepository.useCaseLoadNonDeletedPostedPosts(token)
+            postsRepository.useCaseLoadNonDeletedPostedPosts(token, pageSize = pageSize,
+                pageNumber = pageNumber)
         } else {
-            postsRepository.useCaseLoadNonDeletedPostedPostsByTag(token, idTag)
+            postsRepository.useCaseLoadNonDeletedPostedPostsByTag(token, idTag,
+                pageNumber = pageNumber, pageSize = pageSize)
         }
     }
 
@@ -60,6 +63,10 @@ class MainViewModel : ViewModel() {
 
     fun allTags(): LiveData<List<TagDTO>> {
         return tagsRepository.getAllTags()
+    }
+
+    fun getPaginHeaders(): LiveData<PaginHeader> {
+        return postsRepository.getPaginHeaders()
     }
 
     fun insertVotoPublicacion(token: String, votoPublicacionDTO: VotoPublicacionDTO) {

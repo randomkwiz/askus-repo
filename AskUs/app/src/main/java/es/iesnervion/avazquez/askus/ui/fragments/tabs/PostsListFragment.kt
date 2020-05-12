@@ -11,7 +11,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
+import es.iesnervion.avazquez.askus.DTOs.PaginHeader
 import es.iesnervion.avazquez.askus.DTOs.PostCompletoParaMostrarDTO
 import es.iesnervion.avazquez.askus.DTOs.VotoPublicacionDTO
 import es.iesnervion.avazquez.askus.R
@@ -22,6 +24,9 @@ import es.iesnervion.avazquez.askus.ui.fragments.tabs.viewmodel.MainViewModel
 import es.iesnervion.avazquez.askus.utils.AppConstants
 import es.iesnervion.avazquez.askus.utils.AppConstants.INTERNAL_SERVER_ERROR
 import es.iesnervion.avazquez.askus.utils.AppConstants.NO_CONTENT
+import es.iesnervion.avazquez.askus.utils.PaginationScrollListener
+import es.iesnervion.avazquez.askus.utils.PaginationScrollListener.Companion.PAGE_SIZE
+import es.iesnervion.avazquez.askus.utils.PaginationScrollListener.Companion.PAGE_START
 import es.iesnervion.avazquez.askus.utils.UtilClass.Companion.getFormattedCurrentDatetime
 import kotlinx.android.synthetic.main.fragment_posts.*
 import setVisibilityToGone
@@ -30,7 +35,7 @@ import setVisibilityToVisible
 /**
  * A simple [Fragment] subclass.
  */
-class PostsListFragment : Fragment() {
+class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     lateinit var viewModel: MainViewModel
     lateinit var adapter: PostAdapter
     lateinit var observerPosts: Observer<List<PostCompletoParaMostrarDTO>>
@@ -39,8 +44,17 @@ class PostsListFragment : Fragment() {
     lateinit var filterType: String
     lateinit var sharedPreference: SharedPreferences
     lateinit var token: String
+    var idTag: Int = 0
     var imgBtnUpDownVoteHasBeenClicked = false
     var idCurrentUser = 0
+
+    //Pagination
+    private var currentPage: Int = PAGE_START
+    private var mIsLastPage = false
+    private var totalPage = 0
+    private var mIsLoading = false
+    lateinit var observerTotalPage: Observer<PaginHeader>
+    var itemCount = 0
 
     companion object {
         fun newInstance(filter: String, idTag: Int): PostsListFragment {
@@ -66,20 +80,46 @@ class PostsListFragment : Fragment() {
             activity!!.getSharedPreferences(AppConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
         token = sharedPreference.getString("token", "").toString()
         idCurrentUser = sharedPreference.getInt("user_id", 0)
+        idTag = arguments?.getInt("idTag") ?: 0
+        setAdapter(listOf())
         initViews()
         initObservers()
         setListeners()
-        swipeRefreshLayout.setOnRefreshListener {
-            // Esto se ejecuta cada vez que se realiza el gesto
-            sharedPreference.getString("token", "")?.let {
-                arguments?.getInt("idTag")?.let { it1 -> viewModel.loadPostsByTag(it, it1) }
-            }
-        }
+        swipeRefreshLayout.setOnRefreshListener(this)
         initContent()
     }
 
-    private fun setListeners() {
+    override fun onRefresh() {
+        itemCount = 0;
+        currentPage = PAGE_START;
+        mIsLastPage = false;
+        adapter.clear();
+        doApiCall();
+    }
 
+
+
+    private fun setListeners() {
+        recyclerView.addOnScrollListener(object :
+            PaginationScrollListener(recyclerView.layoutManager as LinearLayoutManager) {
+            override fun loadMoreItems() {
+                isLoading = true
+                currentPage++
+                doApiCall()
+            }
+
+            override val isLastPage: Boolean
+                get() = mIsLastPage
+            override var isLoading: Boolean
+                get() = mIsLoading
+                set(value) {
+                    mIsLoading = value
+                }
+        })
+    }
+
+    private fun doApiCall() {
+        viewModel.loadPostsByTag(token, idTag, currentPage, PAGE_SIZE)
     }
 
     private fun initContent() {
@@ -87,13 +127,17 @@ class PostsListFragment : Fragment() {
         if (!post.isNullOrEmpty()) {
             when (filterType) {
                 "ALL" -> {
-                    setAdapter(post)
+                    // setAdapter(post)
+                    addElements(post.toMutableList())
                 }
                 "TOP_RATED" -> {
-                    setAdapter(post.sortedByDescending { it.cantidadVotosPositivos })
+                    // setAdapter(post.sortedByDescending { it.cantidadVotosPositivos })
+                    addElements(
+                        post.sortedByDescending { it.cantidadVotosPositivos }.toMutableList())
                 }
                 "TOP_COMMENTED" -> {
-                    setAdapter(post.sortedByDescending { it.cantidadComentarios })
+                    //setAdapter(post.sortedByDescending { it.cantidadComentarios })
+                    addElements(post.sortedByDescending { it.cantidadComentarios }.toMutableList())
                 }
             }
         }
@@ -104,13 +148,18 @@ class PostsListFragment : Fragment() {
             if (post.isNotEmpty()) {
                 when (filterType) {
                     "ALL" -> {
-                        setAdapter(post)
+                        // setAdapter(post)
+                        addElements(post.toMutableList())
                     }
                     "TOP_RATED" -> {
-                        setAdapter(post.sortedByDescending { it.cantidadVotosPositivos })
+                        // setAdapter(post.sortedByDescending { it.cantidadVotosPositivos })
+                        addElements(
+                            post.sortedByDescending { it.cantidadVotosPositivos }.toMutableList())
                     }
                     "TOP_COMMENTED" -> {
-                        setAdapter(post.sortedByDescending { it.cantidadComentarios })
+                        //setAdapter(post.sortedByDescending { it.cantidadComentarios })
+                        addElements(
+                            post.sortedByDescending { it.cantidadComentarios }.toMutableList())
                     }
                 }
             }
@@ -164,6 +213,12 @@ class PostsListFragment : Fragment() {
             imgBtnUpDownVoteHasBeenClicked = false
         }
 
+        observerTotalPage = Observer {
+            this.totalPage = it.totalPages
+            this.currentPage = it.currentPage
+        }
+
+        viewModel.getPaginHeaders().observe(viewLifecycleOwner, observerTotalPage)
         viewModel.responseCodeVotoPublicacionSent()
             .observe(viewLifecycleOwner, observerResponseCodeVote)
         viewModel.allVisiblePostsByTag().observe(viewLifecycleOwner, observerPosts)
@@ -219,5 +274,19 @@ class PostsListFragment : Fragment() {
             }
         })
         recyclerView.adapter = adapter
+    }
+
+    private fun addElements(items: List<PostCompletoParaMostrarDTO>) {
+        if (currentPage != PAGE_START) {
+            adapter.removeLoading()
+        }
+        adapter.addItems(items)
+        swipeRefreshLayout.isRefreshing = false
+        //check weather is last page or not
+        if (currentPage < totalPage) {
+            adapter.addLoading()
+        } else {
+            mIsLastPage = true
+        }
     }
 }

@@ -71,7 +71,8 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun loadData() {
         if (token.isNotEmpty()) {
-            viewModel.loadPostData(token, idPost)
+            //TODO cambiar esto
+            viewModel.loadPostData(token, idPost, pageSize = 10, pageNumber = 1)
         }
     }
 

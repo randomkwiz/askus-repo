@@ -28,8 +28,9 @@ class DetailsViewModel : ViewModel() {
         GlobalApplication.applicationComponent?.inject(this)
     }
 
-    fun loadPostData(token: String, idPost: Int) {
-        postsRepository.useCaseLoadPostWithAllComments(token, idPost)
+    fun loadPostData(token: String, idPost: Int, pageNumber: Int, pageSize: Int) {
+        postsRepository.useCaseLoadPostWithAllComments(token, idPost, pageNumber = pageNumber,
+            pageSize = pageSize)
     }
 
     fun getPostWithComments(): LiveData<PostCompletoListadoComentariosDTO> {

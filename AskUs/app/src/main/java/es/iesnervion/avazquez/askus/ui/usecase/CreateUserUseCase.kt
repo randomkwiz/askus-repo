@@ -1,6 +1,5 @@
 package es.iesnervion.avazquez.askus.ui.usecase
 
-import es.iesnervion.avazquez.askus.models.Login
 import es.iesnervion.avazquez.askus.models.User
 import es.iesnervion.avazquez.askus.retrofit.interfaces.AuthInterface
 import es.iesnervion.avazquez.askus.ui.repositories.RepositoryInterface
@@ -24,7 +23,7 @@ class CreateUserUseCase {
         call.enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 repositoryInterface.onLoading(false)
-                repositoryInterface.onSuccess(listOf(response.code()))
+                repositoryInterface.onSuccess(listOf(response.code()), null)
             }
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
