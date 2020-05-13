@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -47,11 +46,10 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     var idTag: Int = 0
     var imgBtnUpDownVoteHasBeenClicked = false
     var idCurrentUser = 0
-
     //Pagination
     private var currentPage: Int = PAGE_START
     private var mIsLastPage = false
-    private var totalPage = 0
+    private var totalPage = 2
     private var mIsLoading = false
     lateinit var observerTotalPage: Observer<PaginHeader>
     var itemCount = 0
@@ -75,20 +73,21 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
+        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        //viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
         sharedPreference =
-            activity!!.getSharedPreferences(AppConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
+                activity!!.getSharedPreferences(AppConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
         token = sharedPreference.getString("token", "").toString()
         idCurrentUser = sharedPreference.getInt("user_id", 0)
         idTag = arguments?.getInt("idTag") ?: 0
-        setAdapter(listOf())
+
         initViews()
         initObservers()
         setListeners()
         swipeRefreshLayout.setOnRefreshListener(this)
-        initContent()
+        initAdapter()
+        doApiCall()
     }
-
     override fun onRefresh() {
         itemCount = 0;
         currentPage = PAGE_START;
@@ -97,48 +96,35 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         doApiCall();
     }
 
-
-
     private fun setListeners() {
         recyclerView.addOnScrollListener(object :
             PaginationScrollListener(recyclerView.layoutManager as LinearLayoutManager) {
             override fun loadMoreItems() {
-                isLoading = true
+                mIsLoading = true
                 currentPage++
                 doApiCall()
             }
 
-            override val isLastPage: Boolean
-                get() = mIsLastPage
-            override var isLoading: Boolean
-                get() = mIsLoading
-                set(value) {
-                    mIsLoading = value
-                }
+            override fun getIsLastPage(): Boolean {
+                return mIsLastPage
+            }
+
+            override fun getIsLoading(): Boolean {
+                return mIsLoading
+            }
         })
     }
 
     private fun doApiCall() {
-        viewModel.loadPostsByTag(token, idTag, currentPage, PAGE_SIZE)
-    }
-
-    private fun initContent() {
-        val post = viewModel.allVisiblePostsByTag().value
-        if (!post.isNullOrEmpty()) {
-            when (filterType) {
-                "ALL" -> {
-                    // setAdapter(post)
-                    addElements(post.toMutableList())
-                }
-                "TOP_RATED" -> {
-                    // setAdapter(post.sortedByDescending { it.cantidadVotosPositivos })
-                    addElements(
-                        post.sortedByDescending { it.cantidadVotosPositivos }.toMutableList())
-                }
-                "TOP_COMMENTED" -> {
-                    //setAdapter(post.sortedByDescending { it.cantidadComentarios })
-                    addElements(post.sortedByDescending { it.cantidadComentarios }.toMutableList())
-                }
+        when (filterType) {
+            "ALL"           -> {
+                viewModel.loadPostsByTag(token, idTag, currentPage, PAGE_SIZE)
+            }
+            "TOP_RATED"     -> {
+                viewModel.loadPostsByTag(token, idTag, currentPage, PAGE_SIZE)
+            }
+            "TOP_COMMENTED" -> {
+                viewModel.loadPostsByTag(token, idTag, currentPage, PAGE_SIZE)
             }
         }
     }
@@ -147,11 +133,11 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         observerPosts = Observer { post ->
             if (post.isNotEmpty()) {
                 when (filterType) {
-                    "ALL" -> {
+                    "ALL"           -> {
                         // setAdapter(post)
                         addElements(post.toMutableList())
                     }
-                    "TOP_RATED" -> {
+                    "TOP_RATED"     -> {
                         // setAdapter(post.sortedByDescending { it.cantidadVotosPositivos })
                         addElements(
                             post.sortedByDescending { it.cantidadVotosPositivos }.toMutableList())
@@ -167,8 +153,10 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         observerLoadingData = Observer { loading ->
             if (loading) {
                 if (!swipeRefreshLayout.isRefreshing) {
-                    progressBar.setVisibilityToVisible()
-                    recyclerView.setVisibilityToGone()
+                    if (adapter.itemCount == 0) {
+                        progressBar.setVisibilityToVisible()
+                        recyclerView.setVisibilityToGone()
+                    }
                 }
             } else {
                 progressBar.setVisibilityToGone()
@@ -186,24 +174,21 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 when (it) {
                     INTERNAL_SERVER_ERROR -> {
                         //ya has votado aqui
-                        Snackbar.make(
-                            recyclerView, // Parent view
+                        Snackbar.make(recyclerView, // Parent view
                             getString(R.string.you_cant_vote_twice), // Message to show
                             Snackbar.LENGTH_SHORT // How long to display the message.
                         ).show()
                     }
-                    NO_CONTENT -> {
+                    NO_CONTENT            -> {
                         //ok
-                        Snackbar.make(
-                            recyclerView, // Parent view
+                        Snackbar.make(recyclerView, // Parent view
                             getString(R.string.processed_vote), // Message to show
                             Snackbar.LENGTH_SHORT // How long to display the message.
                         ).show()
                     }
-                    else -> {
+                    else                  -> {
                         //error
-                        Snackbar.make(
-                            recyclerView, // Parent view
+                        Snackbar.make(recyclerView, // Parent view
                             getString(R.string.there_was_an_error), // Message to show
                             Snackbar.LENGTH_SHORT // How long to display the message.
                         ).show()
@@ -215,7 +200,6 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         observerTotalPage = Observer {
             this.totalPage = it.totalPages
-            this.currentPage = it.currentPage
         }
 
         viewModel.getPaginHeaders().observe(viewLifecycleOwner, observerTotalPage)
@@ -231,46 +215,46 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         recyclerView.layoutManager = layoutManager
     }
 
-    private fun setAdapter(list: List<PostCompletoParaMostrarDTO>) {
-        adapter = PostAdapter(list, object : RecyclerViewClickListener {
+    private fun initAdapter() {
+        adapter = PostAdapter(object : RecyclerViewClickListener {
             override fun onClick(view: View, position: Int) {
                 var valoracion: Boolean = false
                 when (view.id) {
-                    R.id.arrow_up -> {
+                    R.id.arrow_up        -> {
                         imgBtnUpDownVoteHasBeenClicked = true
                         valoracion = true
                     }
-                    R.id.arrow_down -> {
+                    R.id.arrow_down      -> {
                         imgBtnUpDownVoteHasBeenClicked = true
                         valoracion = false
                     }
-                    R.id.lbl_post_title -> {
+                    R.id.lbl_post_title  -> {
                         if (context is HomeActivityCallback) {
-                            (context as HomeActivityCallback).onPostClicked(list[position].IdPost)
+                            (context as HomeActivityCallback).onPostClicked(
+                                adapter.getItem(position).IdPost)
                         }
                     }
-                    R.id.lbl_post_text -> {
+                    R.id.lbl_post_text   -> {
                         if (context is HomeActivityCallback) {
-                            (context as HomeActivityCallback).onPostClicked(list[position].IdPost)
+                            (context as HomeActivityCallback).onPostClicked(
+                                adapter.getItem(position).IdPost)
                         }
                     }
                     R.id.lbl_author_nick -> {
                         //TODO que hacer cuando el usuario clicka en el nick del autor
-                        Toast.makeText(context,
-                            "Has clickado en " + list[position].nickAutor,
-                            Toast.LENGTH_LONG)
-                            .show()
+                        //                        Toast.makeText(context,
+                        //                            "Has clickado en " + list[position].nickAutor,
+                        //                            Toast.LENGTH_LONG)
+                        //                            .show()
                     }
                 }
                 if (imgBtnUpDownVoteHasBeenClicked) {
                     val votoPublicacionDTO =
-                        VotoPublicacionDTO(idCurrentUser, list[position].IdPost, valoracion,
-                            getFormattedCurrentDatetime()
-                        )
+                            VotoPublicacionDTO(idCurrentUser, adapter.getItem(position).IdPost,
+                                valoracion, getFormattedCurrentDatetime())
                     viewModel.insertVotoPublicacion(token = token,
                         votoPublicacionDTO = votoPublicacionDTO)
                 }
-
             }
         })
         recyclerView.adapter = adapter
@@ -280,7 +264,7 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         if (currentPage != PAGE_START) {
             adapter.removeLoading()
         }
-        adapter.addItems(items)
+        adapter.addItems(items.toMutableList())
         swipeRefreshLayout.isRefreshing = false
         //check weather is last page or not
         if (currentPage < totalPage) {
@@ -288,5 +272,6 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         } else {
             mIsLastPage = true
         }
+        mIsLoading = false
     }
 }

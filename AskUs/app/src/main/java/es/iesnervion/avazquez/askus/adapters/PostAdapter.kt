@@ -1,5 +1,6 @@
 package es.iesnervion.avazquez.askus.adapters
 
+import android.os.Build
 import android.text.method.ScrollingMovementMethod
 import android.view.View
 import android.view.ViewGroup
@@ -8,32 +9,31 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import es.iesnervion.avazquez.askus.DTOs.PostCompletoParaMostrarDTO
 import es.iesnervion.avazquez.askus.R
+import es.iesnervion.avazquez.askus.adapters.viewholders.BaseViewHolder
+import es.iesnervion.avazquez.askus.adapters.viewholders.ProgressHolder
 import es.iesnervion.avazquez.askus.interfaces.RecyclerViewClickListener
 import inflate
 
-class PostAdapter(posts: List<PostCompletoParaMostrarDTO>, listener: RecyclerViewClickListener) :
-    RecyclerView.Adapter<BaseViewHolder>(), View.OnClickListener {
+class PostAdapter(listener: RecyclerViewClickListener) : RecyclerView.Adapter<BaseViewHolder>(),
+    View.OnClickListener {
     private val VIEW_TYPE_LOADING = 0
     private val VIEW_TYPE_NORMAL = 1
     private var isLoaderVisible = false
     private lateinit var listener: View.OnClickListener
     private var recyclerViewClickListener: RecyclerViewClickListener = listener
     private var posts: MutableList<PostCompletoParaMostrarDTO> = mutableListOf()
-
-    init {
-        this.posts = posts.toMutableList()
-    }
-
     override fun getItemViewType(position: Int): Int {
         return if (isLoaderVisible) {
-            if (position == posts.size - 1) VIEW_TYPE_LOADING else VIEW_TYPE_NORMAL
+            val pos = (posts.size - 1)
+            if (position == pos) VIEW_TYPE_LOADING
+            else VIEW_TYPE_NORMAL
         } else {
             VIEW_TYPE_NORMAL
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
-        var itemView: View? = null
+        var itemView: View?
         return when (viewType) {
             VIEW_TYPE_NORMAL -> {
                 itemView = parent.inflate(R.layout.post_row)
@@ -55,23 +55,30 @@ class PostAdapter(posts: List<PostCompletoParaMostrarDTO>, listener: RecyclerVie
         listener.onClick(v)
     }
 
-    fun addItems(postItems: List<PostCompletoParaMostrarDTO>) {
+    fun addItems(postItems: MutableList<PostCompletoParaMostrarDTO>) {
         posts.addAll(postItems)
         notifyDataSetChanged()
     }
 
     fun addLoading() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            posts.removeIf {
+                it.IdPost == 0
+            }
+        }
         isLoaderVisible = true
         posts.add(PostCompletoParaMostrarDTO(0, 0, "", "", "", 0, "", "", 0, 0, false, listOf()))
-        notifyItemInserted(posts.size - 1)
+        val pos = (posts.size - 1)
+        notifyItemInserted(pos)
     }
 
     fun removeLoading() {
         isLoaderVisible = false
-        val position: Int = posts.size - 1
-        val item: PostCompletoParaMostrarDTO = getItem(position)
-        posts.removeAt(position)
-        notifyItemRemoved(position)
+        val position: Int = (posts.size - 1)
+        if (position >= 0) {
+            posts.removeAt(position)
+            notifyItemRemoved(position)
+        }
     }
 
     fun clear() {
@@ -121,11 +128,6 @@ class PostAdapter(posts: List<PostCompletoParaMostrarDTO>, listener: RecyclerVie
             tagList.text = currentPost.listadoTags.joinToString()
             upvotes.text = currentPost.cantidadVotosPositivos.toString()
             downvotes.text = currentPost.cantidadVotosNegativos.toString()
-        }
-    }
-
-    inner class ProgressHolder(itemView: View) : BaseViewHolder(itemView) {
-        override fun clear() {
         }
     }
 }

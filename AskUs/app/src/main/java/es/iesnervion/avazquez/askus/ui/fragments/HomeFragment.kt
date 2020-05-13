@@ -1,21 +1,16 @@
 package es.iesnervion.avazquez.askus.ui.fragments
 
-import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
 import es.iesnervion.avazquez.askus.R
 import es.iesnervion.avazquez.askus.adapters.TabAdapter
 import es.iesnervion.avazquez.askus.interfaces.HomeActivityCallback
 import es.iesnervion.avazquez.askus.ui.fragments.tabs.PostsListFragment
 import es.iesnervion.avazquez.askus.ui.fragments.tabs.viewmodel.MainViewModel
-import es.iesnervion.avazquez.askus.utils.AppConstants
-import es.iesnervion.avazquez.askus.utils.PaginationScrollListener.Companion.PAGE_SIZE
-import es.iesnervion.avazquez.askus.utils.PaginationScrollListener.Companion.PAGE_START
 import kotlinx.android.synthetic.main.fragment_home.*
 
 /**
@@ -41,13 +36,13 @@ class HomeFragment : Fragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
-        sharedPreference =
-            activity!!.getSharedPreferences(AppConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
         idTag = arguments?.getInt("idTag") ?: 0
-        //TODO cambiar esto
-        sharedPreference.getString("token", "")
-            ?.let { viewModel.loadPostsByTag(it, idTag, PAGE_SIZE, PAGE_START) }
+        //        viewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
+        //        sharedPreference =
+        //            activity!!.getSharedPreferences(AppConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
+        //        //TODO cambiar esto
+        //        sharedPreference.getString("token", "")
+        //            ?.let { viewModel.loadPostsByTag(it, idTag, pageSize = 10, pageNumber = PAGE_START) }
         fab_add_post.setOnClickListener(this)
         initViewPager()
     }
