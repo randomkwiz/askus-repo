@@ -22,6 +22,7 @@ class PostsRepository
     private val postWithComments = MutableLiveData<PostCompletoListadoComentariosDTO>()
     private val responseCode = MutableLiveData<Int>()
     private val paginHeader = MutableLiveData<PaginHeader>()
+    private val commentPaginHeader = MutableLiveData<PaginHeader>()
 
 
     val finishMessage: LiveData<Boolean>
@@ -86,7 +87,7 @@ class PostsRepository
 
             override fun <T, I> onSuccess(data: List<T>, moreInfo: I?) {
                 postWithComments.postValue((data as List<PostCompletoListadoComentariosDTO>).firstOrNull())
-                paginHeader.postValue(moreInfo as PaginHeader)
+                commentPaginHeader.postValue(moreInfo as PaginHeader)
             }
         }, token = token, idPost = idPost, pageSize = pageSize, pageNumber = pageNumber)
     }
@@ -132,5 +133,9 @@ class PostsRepository
 
     fun getPaginHeaders(): LiveData<PaginHeader> {
         return paginHeader
+    }
+
+    fun getCommentsPaginHeaders(): LiveData<PaginHeader> {
+        return commentPaginHeader
     }
 }

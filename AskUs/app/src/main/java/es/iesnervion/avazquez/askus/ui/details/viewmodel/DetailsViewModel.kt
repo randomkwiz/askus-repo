@@ -1,7 +1,9 @@
 package es.iesnervion.avazquez.askus.ui.details.viewmodel
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
+import es.iesnervion.avazquez.askus.DTOs.PaginHeader
 import es.iesnervion.avazquez.askus.DTOs.PostCompletoListadoComentariosDTO
 import es.iesnervion.avazquez.askus.DTOs.VotoPublicacionDTO
 import es.iesnervion.avazquez.askus.mappers.ComentarioMapper
@@ -23,14 +25,28 @@ class DetailsViewModel : ViewModel() {
     lateinit var commentsRepository: CommentsRepository
     var currentPost: PostCompletoListadoComentariosDTO? = null
     lateinit var commentToSend: Comentario
+    var totalPages = 0
+    lateinit var postWithComments: PostCompletoListadoComentariosDTO
+    var areValuesReady = MediatorLiveData<Boolean>()
 
     init {
         GlobalApplication.applicationComponent?.inject(this)
+        //TODO vas por aqui con lo del MediatorLiveData
+        areValuesReady.addSource(getPaginHeaders()) {
+            totalPages = it.totalPages
+        }
+        areValuesReady.addSource(getPostWithComments()) {
+            postWithComments = it
+        }
     }
 
     fun loadPostData(token: String, idPost: Int, pageNumber: Int, pageSize: Int) {
         postsRepository.useCaseLoadPostWithAllComments(token, idPost, pageNumber = pageNumber,
             pageSize = pageSize)
+    }
+
+    fun getPaginHeaders(): LiveData<PaginHeader> {
+        return postsRepository.getCommentsPaginHeaders()
     }
 
     fun getPostWithComments(): LiveData<PostCompletoListadoComentariosDTO> {
@@ -47,6 +63,10 @@ class DetailsViewModel : ViewModel() {
     }
     fun insertComment() {
         commentsRepository.useCaseInsertComment(ComentarioMapper().modelToDto(commentToSend))
+    }
+
+    fun areValuesReady(): LiveData<Boolean> {
+        return areValuesReady
     }
 
     fun getInsertedCommentResponseCode(): LiveData<Int> {
