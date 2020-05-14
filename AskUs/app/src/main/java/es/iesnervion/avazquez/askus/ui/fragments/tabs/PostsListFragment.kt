@@ -75,7 +75,7 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        viewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
         //viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
         sharedPreference =
                 activity!!.getSharedPreferences(AppConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
@@ -120,13 +120,16 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private fun doApiCall() {
         when (filterType) {
             "ALL"           -> {
-                viewModel.loadPostsByTag(token, idTag, currentPage, PAGE_SIZE)
+                viewModel.loadPostsByTag(token, idTag, pageNumber = currentPage,
+                    pageSize = PAGE_SIZE)
             }
             "TOP_RATED"     -> {
-                viewModel.loadPostsByTagTopRated(token, idTag, currentPage, PAGE_SIZE)
+                viewModel.loadPostsByTagTopRated(token, idTag, pageNumber = currentPage,
+                    pageSize = PAGE_SIZE)
             }
             "TOP_COMMENTED" -> {
-                viewModel.loadPostsByTagTopCommented(token, idTag, currentPage, PAGE_SIZE)
+                viewModel.loadPostsByTagTopCommented(token, idTag, pageNumber = currentPage,
+                    pageSize = PAGE_SIZE)
             }
         }
     }

@@ -1,6 +1,5 @@
 package es.iesnervion.avazquez.askus.ui.fragments
 
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,15 +9,12 @@ import es.iesnervion.avazquez.askus.R
 import es.iesnervion.avazquez.askus.adapters.TabAdapter
 import es.iesnervion.avazquez.askus.interfaces.HomeActivityCallback
 import es.iesnervion.avazquez.askus.ui.fragments.tabs.PostsListFragment
-import es.iesnervion.avazquez.askus.ui.fragments.tabs.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.fragment_home.*
 
 /**
  * A simple [Fragment] subclass.
  */
 class HomeFragment : Fragment(), View.OnClickListener {
-    lateinit var viewModel : MainViewModel
-    lateinit var sharedPreference: SharedPreferences
     var idTag = 0
     companion object {
         fun newInstance(idTag: Int): HomeFragment {
@@ -37,12 +33,6 @@ class HomeFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         idTag = arguments?.getInt("idTag") ?: 0
-        //        viewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
-        //        sharedPreference =
-        //            activity!!.getSharedPreferences(AppConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
-        //        //TODO cambiar esto
-        //        sharedPreference.getString("token", "")
-        //            ?.let { viewModel.loadPostsByTag(it, idTag, pageSize = 10, pageNumber = PAGE_START) }
         fab_add_post.setOnClickListener(this)
         initViewPager()
     }

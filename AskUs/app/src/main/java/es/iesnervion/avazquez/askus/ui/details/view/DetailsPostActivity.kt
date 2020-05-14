@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import es.iesnervion.avazquez.askus.DTOs.ComentarioParaMostrarDTO
-import es.iesnervion.avazquez.askus.DTOs.PostCompletoListadoComentariosDTO
 import es.iesnervion.avazquez.askus.DTOs.PostCompletoParaMostrarDTO
 import es.iesnervion.avazquez.askus.DTOs.VotoPublicacionDTO
 import es.iesnervion.avazquez.askus.R
@@ -26,6 +25,8 @@ import es.iesnervion.avazquez.askus.utils.PaginationScrollListener.Companion.PAG
 import es.iesnervion.avazquez.askus.utils.PaginationScrollListener.Companion.PAGE_START
 import es.iesnervion.avazquez.askus.utils.UtilClass.Companion.getFormattedCurrentDatetime
 import kotlinx.android.synthetic.main.activity_details_post.*
+import setVisibilityToGone
+import setVisibilityToVisible
 
 class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
     lateinit var intentPost: PostCompletoParaMostrarDTO
@@ -59,7 +60,6 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
         idCurrentUser = sharedPreference.getInt("user_id", 0)
         commentsAdapter = CommentsAdapter()
         recyclerView_comments.adapter = commentsAdapter
-        //viewModel.loadPostData(token, idPost, pageSize = PAGE_SIZE, pageNumber = currentPage)
         setSupportActionBar(appbar);
         recyclerView_comments.setHasFixedSize(true)
         //this line shows back button
@@ -80,9 +80,7 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
         recyclerView_comments.addOnScrollListener(object :
             PaginationScrollListener(recyclerView_comments.layoutManager as LinearLayoutManager) {
             override fun loadMoreItems() {
-                mIsLoading = true
-                currentPage++
-                loadData()
+                loadItems()
             }
 
             override fun getIsLastPage(): Boolean {
@@ -101,6 +99,11 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    fun loadItems() {
+        mIsLoading = true
+        currentPage++
+        loadData()
+    }
     private fun onRefresh() {
         itemCount = 0;
         currentPage = PAGE_START;
@@ -160,17 +163,6 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
         viewModel.commentToSend.titulo = ""
         btn_send_comment.isEnabled = true
     }
-
-    private fun setData(currentPost: PostCompletoListadoComentariosDTO) {
-        appbar.title = currentPost.tituloPost
-        lbl_post_title.text = currentPost.tituloPost
-        lbl_post_text.text = currentPost.cuerpoPost
-        upvotes_count.text = currentPost.cantidadVotosPositivos.toString()
-        downvotes_count.text = currentPost.cantidadVotosNegativos.toString()
-        lbl_tag_lists.text = currentPost.listadoTags.joinToString()
-        lbl_author_nick.text = currentPost.nickAutor
-    }
-
     private fun setDataFromPost(currentPost: PostCompletoParaMostrarDTO) {
         appbar.title = currentPost.tituloPost
         lbl_post_title.text = currentPost.tituloPost
@@ -179,17 +171,6 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
         downvotes_count.text = currentPost.cantidadVotosNegativos.toString()
         lbl_tag_lists.text = currentPost.listadoTags.joinToString()
         lbl_author_nick.text = currentPost.nickAutor
-    }
-
-    private fun clearData() {
-        appbar.title = ""
-        lbl_post_title.text = ""
-        lbl_post_text.text = ""
-        upvotes_count.text = 0.toString()
-        downvotes_count.text = 0.toString()
-        lbl_tag_lists.text = ""
-        lbl_author_nick.text = ""
-        commentsAdapter.clear()
     }
 
     override fun onClick(v: View) {
@@ -249,11 +230,18 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
         if (commentsAdapter.itemCount >= viewModel.currentPaginHeader.totalCount) {
             commentsAdapter.removeLoading()
         }
+        addImgIfNoContent()
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        clearData()
-        finish()
+    private fun addImgIfNoContent() {
+        if (commentsAdapter.itemCount == 0) {
+            no_comments_to_show.setVisibilityToVisible()
+            progressBar_comments.setVisibilityToGone()
+            recyclerView_comments.setVisibilityToGone()
+        } else {
+            no_comments_to_show.setVisibilityToGone()
+            progressBar_comments.setVisibilityToGone()
+            recyclerView_comments.setVisibilityToVisible()
+        }
     }
 }

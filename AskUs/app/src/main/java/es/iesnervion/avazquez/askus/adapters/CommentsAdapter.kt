@@ -17,7 +17,7 @@ class CommentsAdapter() : RecyclerView.Adapter<BaseViewHolder>() {
     private var comments: MutableList<ComentarioParaMostrarDTO> = mutableListOf()
     private val VIEW_TYPE_LOADING = 0
     private val VIEW_TYPE_NORMAL = 1
-    private var isLoaderVisible = false
+    var isLoaderVisible = false
     override fun getItemViewType(position: Int): Int {
         return if (isLoaderVisible) {
             val pos = (comments.size - 1)
@@ -71,11 +71,19 @@ class CommentsAdapter() : RecyclerView.Adapter<BaseViewHolder>() {
 
     fun addItems(postItems: MutableList<ComentarioParaMostrarDTO>) {
         //checkear que el item a añadir no exista ya
-        val listaConItemsSinRepetir = postItems.filter {
-            !comments.contains(it)
+        //        for(i in postItems){
+        //            for(c in comments){
+        //                if(i.id == c.id){
+        //                    postItems.remove(i)
+        //                }
+        //            }
+        //        }
+        val idInTheList = comments.map { it.id }
+        postItems.removeAll {
+            it.id in idInTheList
         }
-        if (listaConItemsSinRepetir.isNotEmpty()) {
-            comments.addAll(listaConItemsSinRepetir)
+        if (postItems.isNotEmpty()) {
+            comments.addAll(postItems)
             notifyDataSetChanged()
         }
     }

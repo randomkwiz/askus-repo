@@ -25,6 +25,6 @@ abstract class PaginationScrollListener
 
     companion object {
         const val PAGE_START = 1
-        const val PAGE_SIZE = 5
+        const val PAGE_SIZE = 10
     }
 }

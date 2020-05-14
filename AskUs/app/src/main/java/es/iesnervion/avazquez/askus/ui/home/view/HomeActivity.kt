@@ -145,13 +145,6 @@ class HomeActivity : AppCompatActivity()
     }
 
     override fun onPostAdded(idTagUserWasSeeing: Int) {
-        //        if(idTagUserWasSeeing > 0){
-        //            selectedTag =
-        //                tagList.first{ it.id == idTagUserWasSeeing }
-        //            toolBar.title = selectedTag.nombre
-        //        }else{
-        //            toolBar.title = resources.getText(R.string.menu_home)
-        //        }
         toolBar.title = selectedItemMenuTitle
         loadFragmentLoader(HomeFragment.newInstance(idTagUserWasSeeing))
     }

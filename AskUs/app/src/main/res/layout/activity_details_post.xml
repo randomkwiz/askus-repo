@@ -172,14 +172,29 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
+
+    <ProgressBar
+        android:visibility="visible"
+        android:id="@+id/progressBar_comments"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/no_comments_to_show"
+        android:visibility="gone"
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:src="@drawable/nothingtoshow" />
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView_comments"
+            tools:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:itemCount="5"
