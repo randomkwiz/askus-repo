@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/comment_row_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -7,6 +8,7 @@
     android:orientation="vertical">
 
     <TextView
+        tools:text="@tools:sample/first_names"
         android:id="@+id/lbl_author_nick"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,12 +16,14 @@
         android:textStyle="italic" />
 
     <TextView
+        tools:text="@tools:sample/lorem"
         android:id="@+id/lbl_comment_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textStyle="bold" />
 
     <TextView
+        tools:text="@tools:sample/lorem/random"
         android:id="@+id/lbl_comment_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -12,8 +12,8 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import es.iesnervion.avazquez.askus.DTOs.ComentarioParaMostrarDTO
-import es.iesnervion.avazquez.askus.DTOs.PaginHeader
 import es.iesnervion.avazquez.askus.DTOs.PostCompletoListadoComentariosDTO
+import es.iesnervion.avazquez.askus.DTOs.PostCompletoParaMostrarDTO
 import es.iesnervion.avazquez.askus.DTOs.VotoPublicacionDTO
 import es.iesnervion.avazquez.askus.R
 import es.iesnervion.avazquez.askus.adapters.CommentsAdapter
@@ -26,45 +26,40 @@ import es.iesnervion.avazquez.askus.utils.PaginationScrollListener.Companion.PAG
 import es.iesnervion.avazquez.askus.utils.PaginationScrollListener.Companion.PAGE_START
 import es.iesnervion.avazquez.askus.utils.UtilClass.Companion.getFormattedCurrentDatetime
 import kotlinx.android.synthetic.main.activity_details_post.*
-import setVisibilityToGone
-import setVisibilityToVisible
 
 class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
-    var idPost: Int = 0
+    lateinit var intentPost: PostCompletoParaMostrarDTO
     lateinit var token: String
     lateinit var sharedPreference: SharedPreferences
     lateinit var viewModel: DetailsViewModel
     lateinit var observerLoadingData: Observer<Boolean>
-    lateinit var currentPostObserver: Observer<PostCompletoListadoComentariosDTO>
+
+    //   lateinit var currentPostObserver: Observer<PostCompletoListadoComentariosDTO>
     lateinit var commentSentObserver: Observer<Int>
     lateinit var areValuesReadyObserver: Observer<Boolean>
     lateinit var commentsAdapter: CommentsAdapter
     var idCurrentUser: Int = 0
 
     //Pagination
-    private var currentPage: Int = PaginationScrollListener.PAGE_START
+    private var currentPage: Int = PAGE_START
     private var mIsLastPage = false
     private var totalPage = -1
     private var mIsLoading = false
-    lateinit var observerTotalPage: Observer<PaginHeader>
 
-    //    var areTotalPagesReady = false
-    //    var isCurrentPostReady = false
-    //    var isCurrentPageAlreadyPosted = false
+    //    lateinit var observerTotalPage: Observer<PaginHeader>
     var itemCount = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_details_post)
         sharedPreference = getSharedPreferences(AppConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
         viewModel = ViewModelProviders.of(this).get(DetailsViewModel::class.java)
-        idPost = intent.getIntExtra("idPost", 0)
+        intentPost = intent.getSerializableExtra("post") as PostCompletoParaMostrarDTO
+        setDataFromPost(intentPost)
         token = sharedPreference.getString("token", "").toString()
         idCurrentUser = sharedPreference.getInt("user_id", 0)
-
         commentsAdapter = CommentsAdapter()
-        commentsAdapter.clear()
         recyclerView_comments.adapter = commentsAdapter
-        viewModel.loadPostData(token, idPost, pageSize = PAGE_SIZE, pageNumber = currentPage)
+        //viewModel.loadPostData(token, idPost, pageSize = PAGE_SIZE, pageNumber = currentPage)
         setSupportActionBar(appbar);
         recyclerView_comments.setHasFixedSize(true)
         //this line shows back button
@@ -74,6 +69,8 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
         val dividerItemDecoration =
                 DividerItemDecoration(recyclerView_comments.context, LinearLayout.VERTICAL)
         recyclerView_comments.addItemDecoration(dividerItemDecoration)
+        loadDataFirstTime()
+
     }
 
     private fun initListeners() {
@@ -98,42 +95,43 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
         })
         appbar.setNavigationOnClickListener {
             onBackPressed()
-            finish()
         }
         swipeRefreshLayout.setOnRefreshListener {
-            itemCount = 0;
-            currentPage = PAGE_START;
-            mIsLastPage = false;
-            commentsAdapter.clear();
-            loadData()
+            onRefresh()
         }
     }
 
+    private fun onRefresh() {
+        itemCount = 0;
+        currentPage = PAGE_START;
+        mIsLastPage = false;
+        commentsAdapter.clear();
+        loadData()
+    }
+
+    private fun loadDataFirstTime() {
+        commentsAdapter.clear()
+        loadData()
+    }
+
     private fun loadData() {
-        if (token.isNotEmpty() && totalPage > -1) {
-            viewModel.loadPostData(token, idPost, pageSize = PAGE_SIZE, pageNumber = currentPage)
+        if (token.isNotEmpty()) {
+            viewModel.loadPostData(token, intentPost.IdPost, pageSize = PAGE_SIZE,
+                pageNumber = currentPage)
         }
     }
 
     private fun initObservers() {
         areValuesReadyObserver = Observer {
             if (it) {
-                viewModel.currentPost?.let { it1 -> setData(it1) }
-                viewModel.currentPost?.listadoComentarios?.let { it1 -> addElements(it1) }
+                //Si llega aquí significa que ya están seteados ambos valores
+                if (viewModel.currentPost?.IdPost == intentPost.IdPost) {
+                    this.totalPage = viewModel.currentPaginHeader.totalPages
+                    viewModel.currentPost?.listadoComentarios?.let { it1 -> addElements(it1) }
+                }
             }
         }
         viewModel.areValuesReady().observe(this, areValuesReadyObserver)
-
-        observerTotalPage = Observer {
-            if (it.totalPages != this.totalPage) {
-                this.totalPage = it.totalPages
-            }
-        }
-        viewModel.getPaginHeaders().observe(this, observerTotalPage)
-        currentPostObserver = Observer {
-            viewModel.currentPost = it
-        }
-        viewModel.getPostWithComments().observe(this, currentPostObserver)
 
         commentSentObserver = Observer {
             when (it) {
@@ -151,23 +149,6 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
         }
         viewModel.getInsertedCommentResponseCode().observe(this, commentSentObserver)
 
-        observerLoadingData = Observer { loading ->
-            if (loading) {
-                if (!swipeRefreshLayout.isRefreshing) {
-                    progressBar.setVisibilityToVisible()
-                    recyclerView_comments.setVisibilityToGone()
-                    ctlLayout.setVisibilityToGone()
-                    create_comment_content_l_layout.setVisibilityToGone()
-                }
-            } else {
-                progressBar.setVisibilityToGone()
-                recyclerView_comments.setVisibilityToVisible()
-                ctlLayout.setVisibilityToVisible()
-                create_comment_content_l_layout.setVisibilityToVisible()
-                swipeRefreshLayout.isRefreshing = false
-            }
-        }
-        //viewModel.loadingLiveData().observe(this, observerLoadingData)
     }
 
     private fun clearCommentEditText() {
@@ -190,6 +171,16 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
         lbl_author_nick.text = currentPost.nickAutor
     }
 
+    private fun setDataFromPost(currentPost: PostCompletoParaMostrarDTO) {
+        appbar.title = currentPost.tituloPost
+        lbl_post_title.text = currentPost.tituloPost
+        lbl_post_text.text = currentPost.cuerpoPost
+        upvotes_count.text = currentPost.cantidadVotosPositivos.toString()
+        downvotes_count.text = currentPost.cantidadVotosNegativos.toString()
+        lbl_tag_lists.text = currentPost.listadoTags.joinToString()
+        lbl_author_nick.text = currentPost.nickAutor
+    }
+
     private fun clearData() {
         appbar.title = ""
         lbl_post_title.text = ""
@@ -198,10 +189,11 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
         downvotes_count.text = 0.toString()
         lbl_tag_lists.text = ""
         lbl_author_nick.text = ""
+        commentsAdapter.clear()
     }
 
     override fun onClick(v: View) {
-        var valoracion: Boolean = false
+        var valoracion = false
         var isBtnVoteClicked = false
         when (v.id) {
             R.id.arrow_up         -> {
@@ -216,7 +208,8 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
                 if (fieldsAreFilled()) {
                     btn_send_comment.isEnabled = false
                     viewModel.commentToSend =
-                            Comentario(0, getFormattedCurrentDatetime(), 0, idCurrentUser, idPost,
+                            Comentario(0, getFormattedCurrentDatetime(), 0, idCurrentUser,
+                                intentPost.IdPost,
                                 false, false, comment_text.text.toString(),
                                 comment_title.text.toString())
                     viewModel.insertComment()
@@ -227,7 +220,8 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
         if (isBtnVoteClicked) {
-            val votoPublicacionDTO = VotoPublicacionDTO(idCurrentUser, idPost, valoracion,
+            val votoPublicacionDTO =
+                    VotoPublicacionDTO(idCurrentUser, intentPost.IdPost, valoracion,
                 getFormattedCurrentDatetime())
             viewModel.insertVotoPublicacion(token = token, votoPublicacionDTO = votoPublicacionDTO)
         }
@@ -241,25 +235,25 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
         if (currentPage != PAGE_START) {
             commentsAdapter.removeLoading()
         }
+
         commentsAdapter.addItems(items.toMutableList())
         swipeRefreshLayout.isRefreshing = false
         //check weather is last page or not
-        if (totalPage == -1) {
-            totalPage = viewModel.getPaginHeaders().value?.totalPages ?: -1
-        }
-
         if (currentPage < totalPage) {
             commentsAdapter.addLoading()
         } else {
             mIsLastPage = true
         }
         mIsLoading = false
+
+        if (commentsAdapter.itemCount >= viewModel.currentPaginHeader.totalCount) {
+            commentsAdapter.removeLoading()
+        }
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onBackPressed() {
+        super.onBackPressed()
         clearData()
-        commentsAdapter.clear()
-        viewModel.currentPost = null
+        finish()
     }
 }

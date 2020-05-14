@@ -23,6 +23,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    tools:text="@tools:sample/first_names"
                     android:layout_margin="5dp"
                     android:id="@+id/lbl_author_nick"
                     android:layout_width="wrap_content"
@@ -78,6 +79,7 @@
                 app:layout_constraintBottom_toTopOf="@id/btnSend">
 
                 <Spinner
+                    tools:listitem="@layout/support_simple_spinner_dropdown_item"
                     android:id="@+id/spinner_tag_one"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -87,6 +89,7 @@
                     />
 
                 <Spinner
+                    tools:listitem="@layout/support_simple_spinner_dropdown_item"
                     android:id="@+id/spinner_tag_two"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

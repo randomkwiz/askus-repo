@@ -56,8 +56,14 @@ class PostAdapter(listener: RecyclerViewClickListener) : RecyclerView.Adapter<Ba
     }
 
     fun addItems(postItems: MutableList<PostCompletoParaMostrarDTO>) {
-        posts.addAll(postItems)
-        notifyDataSetChanged()
+        //checkear que el item a añadir no exista ya
+        val listaConItemsSinRepetir = postItems.filter {
+            !posts.contains(it)
+        }
+        if (listaConItemsSinRepetir.isNotEmpty()) {
+            posts.addAll(listaConItemsSinRepetir)
+            notifyDataSetChanged()
+        }
     }
 
     fun addLoading() {

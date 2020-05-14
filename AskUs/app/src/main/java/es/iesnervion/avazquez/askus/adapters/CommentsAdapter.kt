@@ -70,8 +70,14 @@ class CommentsAdapter() : RecyclerView.Adapter<BaseViewHolder>() {
     }
 
     fun addItems(postItems: MutableList<ComentarioParaMostrarDTO>) {
-        comments.addAll(postItems)
-        notifyDataSetChanged()
+        //checkear que el item a añadir no exista ya
+        val listaConItemsSinRepetir = postItems.filter {
+            !comments.contains(it)
+        }
+        if (listaConItemsSinRepetir.isNotEmpty()) {
+            comments.addAll(listaConItemsSinRepetir)
+            notifyDataSetChanged()
+        }
     }
 
     fun addLoading() {
@@ -81,9 +87,9 @@ class CommentsAdapter() : RecyclerView.Adapter<BaseViewHolder>() {
             }
         }
         isLoaderVisible = true
-        comments.add(
-            ComentarioParaMostrarDTO(0, "", 0, 0, isBanned = true, isBorrado = true, texto = "",
-                titulo = "", nickAutor = ""))
+        comments.add(ComentarioParaMostrarDTO(id = 0, idPublicacion = 0, fechaPublicacion = "",
+            idComentarioAlQueResponde = 0, idUsuario = 0, isBanned = true, isBorrado = true,
+            texto = "", titulo = "", nickAutor = ""))
         val pos = (comments.size - 1)
         notifyItemInserted(pos)
     }
@@ -92,8 +98,11 @@ class CommentsAdapter() : RecyclerView.Adapter<BaseViewHolder>() {
         isLoaderVisible = false
         val position: Int = (comments.size - 1)
         if (position >= 0) {
-            comments.removeAt(position)
-            notifyItemRemoved(position)
+            val item = getItem(position)
+            if (item.id == 0) {
+                comments.removeAt(position)
+                notifyItemRemoved(position)
+            }
         }
     }
 

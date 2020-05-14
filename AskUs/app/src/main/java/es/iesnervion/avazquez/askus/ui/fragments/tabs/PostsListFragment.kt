@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -46,6 +47,7 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     var idTag: Int = 0
     var imgBtnUpDownVoteHasBeenClicked = false
     var idCurrentUser = 0
+
     //Pagination
     private var currentPage: Int = PAGE_START
     private var mIsLastPage = false
@@ -80,14 +82,14 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         token = sharedPreference.getString("token", "").toString()
         idCurrentUser = sharedPreference.getInt("user_id", 0)
         idTag = arguments?.getInt("idTag") ?: 0
-
         initViews()
-        initObservers()
         setListeners()
         swipeRefreshLayout.setOnRefreshListener(this)
         initAdapter()
+        initObservers()
         doApiCall()
     }
+
     override fun onRefresh() {
         itemCount = 0;
         currentPage = PAGE_START;
@@ -121,34 +123,18 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 viewModel.loadPostsByTag(token, idTag, currentPage, PAGE_SIZE)
             }
             "TOP_RATED"     -> {
-                viewModel.loadPostsByTag(token, idTag, currentPage, PAGE_SIZE)
+                viewModel.loadPostsByTagTopRated(token, idTag, currentPage, PAGE_SIZE)
             }
             "TOP_COMMENTED" -> {
-                viewModel.loadPostsByTag(token, idTag, currentPage, PAGE_SIZE)
+                viewModel.loadPostsByTagTopCommented(token, idTag, currentPage, PAGE_SIZE)
             }
         }
     }
 
     private fun initObservers() {
+        adapter.clear()
         observerPosts = Observer { post ->
-            if (post.isNotEmpty()) {
-                when (filterType) {
-                    "ALL"           -> {
-                        // setAdapter(post)
-                        addElements(post.toMutableList())
-                    }
-                    "TOP_RATED"     -> {
-                        // setAdapter(post.sortedByDescending { it.cantidadVotosPositivos })
-                        addElements(
-                            post.sortedByDescending { it.cantidadVotosPositivos }.toMutableList())
-                    }
-                    "TOP_COMMENTED" -> {
-                        //setAdapter(post.sortedByDescending { it.cantidadComentarios })
-                        addElements(
-                            post.sortedByDescending { it.cantidadComentarios }.toMutableList())
-                    }
-                }
-            }
+            addElements(post.toMutableList())
         }
         observerLoadingData = Observer { loading ->
             if (loading) {
@@ -205,8 +191,19 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         viewModel.getPaginHeaders().observe(viewLifecycleOwner, observerTotalPage)
         viewModel.responseCodeVotoPublicacionSent()
             .observe(viewLifecycleOwner, observerResponseCodeVote)
-        viewModel.allVisiblePostsByTag().observe(viewLifecycleOwner, observerPosts)
         viewModel.loadingLiveData().observe(viewLifecycleOwner, observerLoadingData)
+        when (filterType) {
+            "ALL"           -> {
+                viewModel.allVisiblePostsByTag().observe(viewLifecycleOwner, observerPosts)
+            }
+            "TOP_RATED"     -> {
+                viewModel.allVisiblePostsByTagTopRated().observe(viewLifecycleOwner, observerPosts)
+            }
+            "TOP_COMMENTED" -> {
+                viewModel.allVisiblePostsByTagTopCommented()
+                    .observe(viewLifecycleOwner, observerPosts)
+            }
+        }
     }
 
     private fun initViews() {
@@ -229,23 +226,16 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                         valoracion = false
                     }
                     R.id.lbl_post_title  -> {
-                        if (context is HomeActivityCallback) {
-                            (context as HomeActivityCallback).onPostClicked(
-                                adapter.getItem(position).IdPost)
-                        }
+                        postClicked(adapter.getItem(position))
                     }
                     R.id.lbl_post_text   -> {
-                        if (context is HomeActivityCallback) {
-                            (context as HomeActivityCallback).onPostClicked(
-                                adapter.getItem(position).IdPost)
-                        }
+                        postClicked(adapter.getItem(position))
                     }
                     R.id.lbl_author_nick -> {
                         //TODO que hacer cuando el usuario clicka en el nick del autor
-                        //                        Toast.makeText(context,
-                        //                            "Has clickado en " + list[position].nickAutor,
-                        //                            Toast.LENGTH_LONG)
-                        //                            .show()
+                        Toast.makeText(context,
+                            "Has clickado en " + adapter.getItem(position).nickAutor,
+                            Toast.LENGTH_LONG).show()
                     }
                 }
                 if (imgBtnUpDownVoteHasBeenClicked) {
@@ -273,5 +263,24 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             mIsLastPage = true
         }
         mIsLoading = false
+        addImgIfNoContent()
+    }
+
+    private fun addImgIfNoContent() {
+        if (adapter.itemCount == 0) {
+            img_nothing_to_show.setVisibilityToVisible()
+            progressBar.setVisibilityToGone()
+            recyclerView.setVisibilityToGone()
+        } else {
+            img_nothing_to_show.setVisibilityToGone()
+            progressBar.setVisibilityToGone()
+            recyclerView.setVisibilityToVisible()
+        }
+    }
+
+    private fun postClicked(post: PostCompletoParaMostrarDTO) {
+        if (context is HomeActivityCallback) {
+            (context as HomeActivityCallback).onPostClicked(post)
+        }
     }
 }

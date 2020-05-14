@@ -30,10 +30,48 @@ interface PublicacionesInterface {
         @Query("pageNumber") pageNumber: Int,
         @Query("pageSize") pageSize: Int): Call<List<PostCompletoParaMostrarDTO>>
 
+    //Obtiene una lista de posts publicados y no borrados (privados y no privados)
+    //Los obtiene en formato PostVisibleParaMostrar con cantidad de comentarios
+    //Top rated
+    @GET("/api/Publicaciones?pagination=true&top=TOP_RATED")
+    fun getListadoPostsCompletosParaMostrarCantidadComentariosTopRated(
+        @Header("Authorization") authToken: String,
+        @Query("pageNumber") pageNumber: Int,
+        @Query("pageSize") pageSize: Int): Call<List<PostCompletoParaMostrarDTO>>
+
+    //Obtiene una lista de posts publicados y no borrados (privados y no privados)
+    //Los obtiene en formato PostVisibleParaMostrar con cantidad de comentarios
+    //Top commented
+    @GET("/api/Publicaciones?pagination=true&top=TOP_COMMENTED")
+    fun getListadoPostsCompletosParaMostrarCantidadComentariosTopCommented(
+        @Header("Authorization") authToken: String,
+        @Query("pageNumber") pageNumber: Int,
+        @Query("pageSize") pageSize: Int): Call<List<PostCompletoParaMostrarDTO>>
+
     //Obtiene una lista de posts publicados y no borrados (privados y no privados) que contengan un tag
     //Los obtiene en formato PostVisibleParaMostrar con cantidad de comentarios
-    @GET("api/Publicaciones?type=clsPostCompletoParaMostrarCantidadComentarios")
+    @GET("api/Publicaciones?type=clsPostCompletoParaMostrarCantidadComentarios&top=ALL")
     fun getListadoPostsCompletosParaMostrarCantidadComentariosPorTag(
+        @Header("Authorization") authToken: String,
+        @Query("pageNumber") pageNumber: Int,
+        @Query("pageSize") pageSize: Int,
+        @Query("idTag") idTag: Int): Call<List<PostCompletoParaMostrarDTO>>
+
+    //Obtiene una lista de posts publicados y no borrados (privados y no privados) que contengan un tag
+    //Los obtiene en formato PostVisibleParaMostrar con cantidad de comentarios
+    //Top rated
+    @GET("api/Publicaciones?type=clsPostCompletoParaMostrarCantidadComentarios&top=TOP_RATED")
+    fun getListadoPostsCompletosParaMostrarCantidadComentariosPorTagTopRated(
+        @Header("Authorization") authToken: String,
+        @Query("pageNumber") pageNumber: Int,
+        @Query("pageSize") pageSize: Int,
+        @Query("idTag") idTag: Int): Call<List<PostCompletoParaMostrarDTO>>
+
+    //Obtiene una lista de posts publicados y no borrados (privados y no privados) que contengan un tag
+    //Los obtiene en formato PostVisibleParaMostrar con cantidad de comentarios
+    //Top commented
+    @GET("api/Publicaciones?type=clsPostCompletoParaMostrarCantidadComentarios&top=TOP_COMMENTED")
+    fun getListadoPostsCompletosParaMostrarCantidadComentariosPorTagTopCommented(
         @Header("Authorization") authToken: String,
         @Query("pageNumber") pageNumber: Int,
         @Query("pageSize") pageSize: Int,

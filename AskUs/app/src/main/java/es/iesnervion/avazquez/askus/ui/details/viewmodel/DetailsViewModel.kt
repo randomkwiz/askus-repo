@@ -25,18 +25,33 @@ class DetailsViewModel : ViewModel() {
     lateinit var commentsRepository: CommentsRepository
     var currentPost: PostCompletoListadoComentariosDTO? = null
     lateinit var commentToSend: Comentario
-    var totalPages = 0
-    lateinit var postWithComments: PostCompletoListadoComentariosDTO
     var areValuesReady = MediatorLiveData<Boolean>()
+    lateinit var currentPaginHeader: PaginHeader
 
     init {
         GlobalApplication.applicationComponent?.inject(this)
-        //TODO vas por aqui con lo del MediatorLiveData
-        areValuesReady.addSource(getPaginHeaders()) {
-            totalPages = it.totalPages
-        }
-        areValuesReady.addSource(getPostWithComments()) {
-            postWithComments = it
+        areValuesReady = MediatorLiveData<Boolean>().apply {
+            var totalPagesFlag = false
+            var postWithCommentFlag = false
+            value = false
+            addSource(getPaginHeaders()) { x ->
+                x?.let {
+                    totalPagesFlag = x.totalPages >= 0
+                    currentPaginHeader = x
+                    if (totalPagesFlag && postWithCommentFlag) {
+                        value = true
+                    }
+                }
+            }
+            addSource(getPostWithComments()) { x ->
+                x?.let {
+                    postWithCommentFlag = x.IdPost > 0
+                    currentPost = x
+                    if (totalPagesFlag && postWithCommentFlag) {
+                        value = true
+                    }
+                }
+            }
         }
     }
 

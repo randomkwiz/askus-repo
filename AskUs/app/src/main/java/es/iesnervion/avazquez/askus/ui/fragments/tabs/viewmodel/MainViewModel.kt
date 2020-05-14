@@ -31,6 +31,14 @@ class MainViewModel : ViewModel() {
         return postsRepository.getAllVisiblePostsByGivenTag()
     }
 
+    fun allVisiblePostsByTagTopRated(): LiveData<List<PostCompletoParaMostrarDTO>> {
+        return postsRepository.getAllVisiblePostsByGivenTagTopRated()
+    }
+
+    fun allVisiblePostsByTagTopCommented(): LiveData<List<PostCompletoParaMostrarDTO>> {
+        return postsRepository.getAllVisiblePostsByGivenTagTopCommented()
+    }
+
     fun loadingLiveData(): LiveData<Boolean> {
         return postsRepository.getLoadingLiveData()
     }
@@ -41,6 +49,26 @@ class MainViewModel : ViewModel() {
                 pageNumber = pageNumber)
         } else {
             postsRepository.useCaseLoadNonDeletedPostedPostsByTag(token, idTag,
+                pageNumber = pageNumber, pageSize = pageSize)
+        }
+    }
+
+    fun loadPostsByTagTopRated(token: String, idTag: Int, pageNumber: Int, pageSize: Int) {
+        if (idTag == 0) {
+            postsRepository.useCaseLoadNonDeletedPostedPostsTopRated(token, pageSize = pageSize,
+                pageNumber = pageNumber)
+        } else {
+            postsRepository.useCaseLoadNonDeletedPostedPostsByTagTopRated(token, idTag,
+                pageNumber = pageNumber, pageSize = pageSize)
+        }
+    }
+
+    fun loadPostsByTagTopCommented(token: String, idTag: Int, pageNumber: Int, pageSize: Int) {
+        if (idTag == 0) {
+            postsRepository.useCaseLoadNonDeletedPostedPostsTopCommented(token, pageSize = pageSize,
+                pageNumber = pageNumber)
+        } else {
+            postsRepository.useCaseLoadNonDeletedPostedPostsByTagTopCommented(token, idTag,
                 pageNumber = pageNumber, pageSize = pageSize)
         }
     }
