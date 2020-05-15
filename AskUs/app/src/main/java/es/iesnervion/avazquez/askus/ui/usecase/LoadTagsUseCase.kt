@@ -1,8 +1,6 @@
 package es.iesnervion.avazquez.askus.ui.usecase
 
-import es.iesnervion.avazquez.askus.DTOs.PostCompletoParaMostrarDTO
 import es.iesnervion.avazquez.askus.DTOs.TagDTO
-import es.iesnervion.avazquez.askus.retrofit.interfaces.PublicacionesInterface
 import es.iesnervion.avazquez.askus.retrofit.interfaces.TagsInterface
 import es.iesnervion.avazquez.askus.ui.repositories.RepositoryInterface
 import es.iesnervion.avazquez.askus.utils.GlobalApplication
@@ -30,8 +28,7 @@ class LoadTagsUseCase {
 
             override fun onResponse(call: Call<List<TagDTO>>, response: Response<List<TagDTO>>) {
                 repositoryInterface.onLoading(false)
-                response.body()?.toList()
-                    ?.let { repositoryInterface.onSuccess(it) }
+                response.body()?.toList()?.let { repositoryInterface.onSuccess(it, null) }
             }
 
         })

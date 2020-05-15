@@ -76,6 +76,7 @@ class LoginFragment : Fragment(),
                 lbl_error_login.setVisibilityToVisible()
             } else {
                 lbl_error_login.setVisibilityToGone()
+                progress_bar.setVisibilityToVisible()
             }
         }
 

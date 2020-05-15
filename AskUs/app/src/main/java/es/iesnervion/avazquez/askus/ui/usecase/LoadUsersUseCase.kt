@@ -29,7 +29,7 @@ class LoadUsersUseCase {
 
             override fun onResponse(call: Call<Int>, response: Response<Int>) {
                 repositoryInterface.onLoading(false)
-                repositoryInterface.onSuccess(listOf(response.body()))
+                repositoryInterface.onSuccess(listOf(response.body()), null)
             }
         })
     }

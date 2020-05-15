@@ -44,4 +44,5 @@
     <string name="send">Enviar</string>
     <string name="comment_sent">Comentario enviado</string>
     <string name="error_sending_comment">Erro al enviar el comentario</string>
+    <string name="what_s_going_on">¿Qué opinas de este post?</string>
 </resources>

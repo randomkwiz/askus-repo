@@ -1,7 +1,9 @@
 package es.iesnervion.avazquez.askus.ui.details.viewmodel
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
+import es.iesnervion.avazquez.askus.DTOs.PaginHeader
 import es.iesnervion.avazquez.askus.DTOs.PostCompletoListadoComentariosDTO
 import es.iesnervion.avazquez.askus.DTOs.VotoPublicacionDTO
 import es.iesnervion.avazquez.askus.mappers.ComentarioMapper
@@ -23,13 +25,47 @@ class DetailsViewModel : ViewModel() {
     lateinit var commentsRepository: CommentsRepository
     var currentPost: PostCompletoListadoComentariosDTO? = null
     lateinit var commentToSend: Comentario
+    var areValuesReady = MediatorLiveData<Boolean>()
+    lateinit var currentPaginHeader: PaginHeader
 
     init {
         GlobalApplication.applicationComponent?.inject(this)
+        areValuesReady = MediatorLiveData<Boolean>().apply {
+            var totalPagesFlag = false
+            var postWithCommentFlag = false
+            value = false
+            addSource(getPaginHeaders()) { x ->
+                x?.let {
+                    totalPagesFlag = x.totalPages >= 0
+                    currentPaginHeader = x
+                    if (totalPagesFlag && postWithCommentFlag) {
+                        value = true
+                    }
+                }
+            }
+            addSource(getPostWithComments()) { x ->
+                x?.let {
+                    postWithCommentFlag = x.IdPost > 0
+                    currentPost = x
+                    if (totalPagesFlag && postWithCommentFlag) {
+                        value = true
+                    }
+                }
+            }
+        }
     }
 
-    fun loadPostData(token: String, idPost: Int) {
-        postsRepository.useCaseLoadPostWithAllComments(token, idPost)
+    fun loadPostData(token: String, idPost: Int, pageNumber: Int, pageSize: Int) {
+        postsRepository.useCaseLoadPostWithAllComments(token, idPost, pageNumber = pageNumber,
+            pageSize = pageSize)
+    }
+
+    fun responseCodeVotoPublicacionSent(): LiveData<Int> {
+        return votesRepository.getResponseCodeVotoPublicacionSent()
+    }
+
+    fun getPaginHeaders(): LiveData<PaginHeader> {
+        return postsRepository.getCommentsPaginHeaders()
     }
 
     fun getPostWithComments(): LiveData<PostCompletoListadoComentariosDTO> {
@@ -46,6 +82,10 @@ class DetailsViewModel : ViewModel() {
     }
     fun insertComment() {
         commentsRepository.useCaseInsertComment(ComentarioMapper().modelToDto(commentToSend))
+    }
+
+    fun areValuesReady(): LiveData<Boolean> {
+        return areValuesReady
     }
 
     fun getInsertedCommentResponseCode(): LiveData<Int> {

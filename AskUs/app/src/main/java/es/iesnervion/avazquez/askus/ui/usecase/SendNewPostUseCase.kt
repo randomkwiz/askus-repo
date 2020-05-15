@@ -28,7 +28,7 @@ class SendNewPostUseCase {
         call.enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 repositoryInterface.onLoading(false)
-                repositoryInterface.onSuccess(listOf(response.code()))
+                repositoryInterface.onSuccess(listOf(response.code()), null)
             }
 
             override fun onFailure(call: Call<Void>, t: Throwable) {

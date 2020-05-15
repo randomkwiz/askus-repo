@@ -65,6 +65,7 @@ class AuthActivity : AppCompatActivity()
                     editor.putInt("user_id", it.first().toInt())
                     editor.commit()
                     startActivity(Intent(this, HomeActivity::class.java))
+                    finish()
                 }
             }
         }

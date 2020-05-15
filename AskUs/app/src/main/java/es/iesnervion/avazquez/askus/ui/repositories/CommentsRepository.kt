@@ -34,7 +34,7 @@ constructor() {
                 loadingLiveData.postValue(loading)
             }
 
-            override fun <T> onSuccess(data: List<T>) {
+            override fun <T, I> onSuccess(data: List<T>, moreInfo: I?) {
                 responseCode.postValue(((data as List<Int>).firstOrNull()))
             }
         }, comment)

@@ -37,7 +37,6 @@
     <string name="send_post">Send post</string>
     <string name="anonymous">Anonymous</string>
     <string name="post_sended">Post sent</string>
-    <string name="title">Title</string>
     <string name="post_body_hint">What\'s up? …</string>
     <string name="spinner_select_category">Select category</string>
     <string name="select_at_least_one_category">Select at least one category</string>
@@ -48,4 +47,6 @@
     <string name="send">Send</string>
     <string name="comment_sent">Comment sent</string>
     <string name="error_sending_comment">Error sending comment</string>
+    <string name="title">Title</string>
+    <string name="what_s_going_on">What\'s going on?</string>
 </resources>

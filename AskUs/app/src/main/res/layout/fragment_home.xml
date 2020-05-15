@@ -8,6 +8,7 @@
     tools:context=".ui.fragments.HomeFragment">
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
+        tools:background="@color/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="?actionBarSize"
@@ -24,6 +25,7 @@
         android:layout_height="wrap_content">
 
         <androidx.viewpager.widget.ViewPager
+            tools:background="@tools:sample/backgrounds/scenic"
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
