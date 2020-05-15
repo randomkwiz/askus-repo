@@ -60,6 +60,10 @@ class DetailsViewModel : ViewModel() {
             pageSize = pageSize)
     }
 
+    fun responseCodeVotoPublicacionSent(): LiveData<Int> {
+        return votesRepository.getResponseCodeVotoPublicacionSent()
+    }
+
     fun getPaginHeaders(): LiveData<PaginHeader> {
         return postsRepository.getCommentsPaginHeaders()
     }

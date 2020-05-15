@@ -8,7 +8,8 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/element_card_view"
         android:layout_width="0dp"
-        android:layout_height="170dp"
+        android:maxHeight="300dp"
+        android:layout_height="wrap_content"
         android:layout_margin="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -16,7 +17,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <ImageButton
                 android:id="@+id/arrow_up"
@@ -100,7 +101,8 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constrainedHeight="true"
                 android:layout_marginStart="5dp"
                 android:scrollbars="vertical"
                 tools:text="@tools:sample/lorem/random"

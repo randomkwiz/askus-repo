@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import es.iesnervion.avazquez.askus.DTOs.ComentarioParaMostrarDTO
 import es.iesnervion.avazquez.askus.DTOs.PostCompletoParaMostrarDTO
 import es.iesnervion.avazquez.askus.DTOs.VotoPublicacionDTO
@@ -19,6 +20,7 @@ import es.iesnervion.avazquez.askus.adapters.CommentsAdapter
 import es.iesnervion.avazquez.askus.models.Comentario
 import es.iesnervion.avazquez.askus.ui.details.viewmodel.DetailsViewModel
 import es.iesnervion.avazquez.askus.utils.AppConstants
+import es.iesnervion.avazquez.askus.utils.AppConstants.INTERNAL_SERVER_ERROR
 import es.iesnervion.avazquez.askus.utils.AppConstants.NO_CONTENT
 import es.iesnervion.avazquez.askus.utils.PaginationScrollListener
 import es.iesnervion.avazquez.askus.utils.PaginationScrollListener.Companion.PAGE_SIZE
@@ -27,6 +29,8 @@ import es.iesnervion.avazquez.askus.utils.UtilClass.Companion.getFormattedCurren
 import kotlinx.android.synthetic.main.activity_details_post.*
 import setVisibilityToGone
 import setVisibilityToVisible
+import slideDown
+import slideUp
 
 class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
     lateinit var intentPost: PostCompletoParaMostrarDTO
@@ -34,6 +38,7 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
     lateinit var sharedPreference: SharedPreferences
     lateinit var viewModel: DetailsViewModel
     lateinit var observerLoadingData: Observer<Boolean>
+    lateinit var observerResponseCodeVote: Observer<Int>
 
     //   lateinit var currentPostObserver: Observer<PostCompletoListadoComentariosDTO>
     lateinit var commentSentObserver: Observer<Int>
@@ -58,7 +63,7 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
         setDataFromPost(intentPost)
         token = sharedPreference.getString("token", "").toString()
         idCurrentUser = sharedPreference.getInt("user_id", 0)
-        commentsAdapter = CommentsAdapter()
+        commentsAdapter = CommentsAdapter(intentPost.idAutor)
         recyclerView_comments.adapter = commentsAdapter
         setSupportActionBar(appbar);
         recyclerView_comments.setHasFixedSize(true)
@@ -74,6 +79,8 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun initListeners() {
+        hideCommentBox_btn.setOnClickListener(this)
+        openCommentBox_btn.setOnClickListener(this)
         arrow_up.setOnClickListener(this)
         arrow_down.setOnClickListener(this)
         btn_send_comment.setOnClickListener(this)
@@ -152,6 +159,34 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
         }
         viewModel.getInsertedCommentResponseCode().observe(this, commentSentObserver)
 
+
+        observerResponseCodeVote = Observer {
+            when (it) {
+                INTERNAL_SERVER_ERROR -> {
+                    //ya has votado aqui
+                    Snackbar.make(recyclerView_comments, // Parent view
+                        getString(R.string.you_cant_vote_twice), // Message to show
+                        Snackbar.LENGTH_SHORT // How long to display the message.
+                    ).show()
+                }
+                NO_CONTENT            -> {
+                    //ok
+                    Snackbar.make(recyclerView_comments, // Parent view
+                        getString(R.string.processed_vote), // Message to show
+                        Snackbar.LENGTH_SHORT // How long to display the message.
+                    ).show()
+                }
+                else                  -> {
+                    //error
+                    Snackbar.make(recyclerView_comments, // Parent view
+                        getString(R.string.there_was_an_error), // Message to show
+                        Snackbar.LENGTH_SHORT // How long to display the message.
+                    ).show()
+                }
+            }
+        }
+        viewModel.responseCodeVotoPublicacionSent().observe(this, observerResponseCodeVote)
+
     }
 
     private fun clearCommentEditText() {
@@ -165,8 +200,10 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
     }
     private fun setDataFromPost(currentPost: PostCompletoParaMostrarDTO) {
         appbar.title = currentPost.tituloPost
-        lbl_post_title.text = currentPost.tituloPost
-        lbl_post_text.text = currentPost.cuerpoPost
+        lbl_post_title.text = currentPost.tituloPost.replace("(?m)(^ *| +(?= |$))".toRegex(), "")
+            .replace("(?m)^$([\r\n]+?)(^$[\r\n]+?^)+".toRegex(), "$1")
+        lbl_post_text.text = currentPost.cuerpoPost.replace("(?m)(^ *| +(?= |$))".toRegex(), "")
+            .replace("(?m)^$([\r\n]+?)(^$[\r\n]+?^)+".toRegex(), "$1")
         upvotes_count.text = currentPost.cantidadVotosPositivos.toString()
         downvotes_count.text = currentPost.cantidadVotosNegativos.toString()
         lbl_tag_lists.text = currentPost.listadoTags.joinToString()
@@ -177,7 +214,7 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
         var valoracion = false
         var isBtnVoteClicked = false
         when (v.id) {
-            R.id.arrow_up         -> {
+            R.id.arrow_up           -> {
                 valoracion = true
                 isBtnVoteClicked = true
             }
@@ -185,7 +222,7 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
                 valoracion = false
                 isBtnVoteClicked = true
             }
-            R.id.btn_send_comment -> {
+            R.id.btn_send_comment   -> {
                 if (fieldsAreFilled()) {
                     btn_send_comment.isEnabled = false
                     viewModel.commentToSend =
@@ -198,6 +235,22 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
                     Toast.makeText(applicationContext, getString(R.string.fillFields),
                         Toast.LENGTH_SHORT).show()
                 }
+            }
+            R.id.hideCommentBox_btn -> {
+                hideCommentBox_btn.isClickable =
+                        false  //para que no le pueda dar dos veces seguidas (hace cosas raras la animacion)
+                openCommentBox_btn.isClickable = true
+                create_comment_content_l_layout.slideDown()
+                openCommentBox_btn.setVisibilityToVisible()
+                openCommentBox_btn.slideUp()
+            }
+            R.id.openCommentBox_btn -> {
+                hideCommentBox_btn.isClickable =
+                        true  //para que no le pueda dar dos veces seguidas (hace cosas raras la animacion)
+                openCommentBox_btn.isClickable = false
+                openCommentBox_btn.setVisibilityToGone()
+                openCommentBox_btn.slideDown()
+                create_comment_content_l_layout.slideUp()
             }
         }
         if (isBtnVoteClicked) {

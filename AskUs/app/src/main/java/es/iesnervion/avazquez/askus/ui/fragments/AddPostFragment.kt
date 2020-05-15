@@ -155,8 +155,12 @@ class AddPostFragment : Fragment(), View.OnClickListener {
         viewModel.newPost.id = 0
         viewModel.newPost.fechaCreacion = getFormattedCurrentDatetime()
         viewModel.newPost.fechaPublicacion = getFormattedCurrentDatetime()
-        viewModel.newPost.texto = input_title_body.text.toString()
-        viewModel.newPost.titulo = input_title_post.text.toString()
+        viewModel.newPost.texto =
+                input_title_body.text.toString().replace("(?m)(^ *| +(?= |$))".toRegex(), "")
+                    .replace("(?m)^$([\r\n]+?)(^$[\r\n]+?^)+".toRegex(), "$1")
+        viewModel.newPost.titulo =
+                input_title_post.text.toString().replace("(?m)(^ *| +(?= |$))".toRegex(), "")
+                    .replace("(?m)^$([\r\n]+?)(^$[\r\n]+?^)+".toRegex(), "$1")
         val idTagOne = tagIds[spinner_tag_one.selectedItemPosition]
         val idTagTwo = tagIds[spinner_tag_two.selectedItemPosition]
         if (idTagTwo == 0) {

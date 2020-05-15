@@ -129,8 +129,10 @@ class PostAdapter(listener: RecyclerViewClickListener) : RecyclerView.Adapter<Ba
             val currentPost = posts[position]
             text.movementMethod = ScrollingMovementMethod.getInstance()
             author.text = currentPost.nickAutor
-            text.text = currentPost.cuerpoPost
-            title.text = currentPost.tituloPost
+            text.text = currentPost.cuerpoPost.replace("(?m)(^ *| +(?= |$))".toRegex(), "")
+                .replace("(?m)^$([\r\n]+?)(^$[\r\n]+?^)+".toRegex(), "$1")
+            title.text = currentPost.tituloPost.replace("(?m)(^ *| +(?= |$))".toRegex(), "")
+                .replace("(?m)^$([\r\n]+?)(^$[\r\n]+?^)+".toRegex(), "$1")
             nComments.text = currentPost.cantidadComentarios.toString()
             tagList.text = currentPost.listadoTags.joinToString()
             upvotes.text = currentPost.cantidadVotosPositivos.toString()

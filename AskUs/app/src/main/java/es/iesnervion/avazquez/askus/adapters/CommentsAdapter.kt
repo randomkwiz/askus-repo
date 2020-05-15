@@ -1,5 +1,6 @@
 package es.iesnervion.avazquez.askus.adapters
 
+import android.graphics.Color
 import android.os.Build
 import android.text.method.ScrollingMovementMethod
 import android.view.View
@@ -13,7 +14,7 @@ import es.iesnervion.avazquez.askus.adapters.viewholders.BaseViewHolder
 import es.iesnervion.avazquez.askus.adapters.viewholders.ProgressHolder
 import inflate
 
-class CommentsAdapter() : RecyclerView.Adapter<BaseViewHolder>() {
+class CommentsAdapter(private val idAutorPost: Int) : RecyclerView.Adapter<BaseViewHolder>() {
     private var comments: MutableList<ComentarioParaMostrarDTO> = mutableListOf()
     private val VIEW_TYPE_LOADING = 0
     private val VIEW_TYPE_NORMAL = 1
@@ -44,6 +45,9 @@ class CommentsAdapter() : RecyclerView.Adapter<BaseViewHolder>() {
             //        }else{
             //            holder.container.setBackgroundColor(Color.DKGRAY)
             //        }
+            if (position == 0 && currentComment.idUsuario == idAutorPost) {
+                container.setBackgroundColor(Color.LTGRAY)
+            }
         }
 
         override fun clear() {
@@ -71,13 +75,6 @@ class CommentsAdapter() : RecyclerView.Adapter<BaseViewHolder>() {
 
     fun addItems(postItems: MutableList<ComentarioParaMostrarDTO>) {
         //checkear que el item a añadir no exista ya
-        //        for(i in postItems){
-        //            for(c in comments){
-        //                if(i.id == c.id){
-        //                    postItems.remove(i)
-        //                }
-        //            }
-        //        }
         val idInTheList = comments.map { it.id }
         postItems.removeAll {
             it.id in idInTheList
