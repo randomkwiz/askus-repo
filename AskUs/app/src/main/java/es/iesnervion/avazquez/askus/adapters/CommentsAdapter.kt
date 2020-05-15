@@ -47,6 +47,8 @@ class CommentsAdapter(private val idAutorPost: Int) : RecyclerView.Adapter<BaseV
             //        }
             if (position == 0 && currentComment.idUsuario == idAutorPost) {
                 container.setBackgroundColor(Color.LTGRAY)
+            } else {
+                container.setBackgroundColor(Color.WHITE)
             }
         }
 

@@ -2,30 +2,30 @@ package es.iesnervion.avazquez.askus.ui.repositories
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import es.iesnervion.avazquez.askus.DTOs.ProfileDTO
-import es.iesnervion.avazquez.askus.ui.usecase.LoadUsersUseCase
+import es.iesnervion.avazquez.askus.DTOs.LogroDTO
+import es.iesnervion.avazquez.askus.ui.usecase.LoadLogrosUseCase
 import javax.inject.Inject
 
-class UsersRepository @Inject
-constructor() {
-    internal var loadJSONUseCase: LoadUsersUseCase
+class LogrosRepository
+@Inject constructor() {
+    internal var loadJSONUseCase: LoadLogrosUseCase
     private val loadingLiveData = MutableLiveData<Boolean>()
     private val showFinishMessage = MutableLiveData<Boolean>()
-    private val userIDByNickname = MutableLiveData<List<Int>>()
-    private val userProfile = MutableLiveData<ProfileDTO>()
+    private val allLogros = MutableLiveData<List<LogroDTO>>()
+    private val logrosFromUser = MutableLiveData<List<LogroDTO>>()
     val finishMessage: LiveData<Boolean>
         get() = showFinishMessage
 
     init {
-        loadJSONUseCase = LoadUsersUseCase()
+        loadJSONUseCase = LoadLogrosUseCase()
     }
 
     fun getLoadingLiveData(): LiveData<Boolean> {
         return loadingLiveData
     }
 
-    fun useCaseLoadUserIDByNickname(token: String, nickname: String) {
-        loadJSONUseCase.getIDUserByNickname(object : RepositoryInterface {
+    fun useCaseLoadAllLogros() {
+        loadJSONUseCase.getAllLogros(object : RepositoryInterface {
             override fun showError(show: Boolean) {
                 showFinishMessage.postValue(show)
             }
@@ -35,13 +35,13 @@ constructor() {
             }
 
             override fun <T, I> onSuccess(data: List<T>, moreInfo: I?) {
-                userIDByNickname.postValue(data as List<Int>)
+                allLogros.postValue(data as List<LogroDTO>)
             }
-        }, token, nickname)
+        })
     }
 
-    fun useCaseLoadUserProfile(idUser: Int) {
-        loadJSONUseCase.getUserProfile(object : RepositoryInterface {
+    fun useCaseLoadLogrosFromUser(token: String, idUser: Int) {
+        loadJSONUseCase.getLogrosDeUsuario(object : RepositoryInterface {
             override fun showError(show: Boolean) {
                 showFinishMessage.postValue(show)
             }
@@ -51,20 +51,16 @@ constructor() {
             }
 
             override fun <T, I> onSuccess(data: List<T>, moreInfo: I?) {
-                if (moreInfo as Int == 200) {
-                    userProfile.postValue(data.last() as ProfileDTO)
-                } else {
-                    showFinishMessage.postValue(true)
-                }
+                logrosFromUser.postValue(data as List<LogroDTO>)
             }
-        }, idUser = idUser)
+        }, token = token, idUsuario = idUser)
     }
 
-    fun getUserIDByNickname(): LiveData<List<Int>> {
-        return userIDByNickname
+    fun getAllLogros(): LiveData<List<LogroDTO>> {
+        return allLogros
     }
 
-    fun getUserProfile(): LiveData<ProfileDTO> {
-        return userProfile
+    fun getLogrosFromUser(): LiveData<List<LogroDTO>> {
+        return logrosFromUser
     }
 }

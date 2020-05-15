@@ -19,6 +19,7 @@ import es.iesnervion.avazquez.askus.interfaces.HomeActivityCallback
 import es.iesnervion.avazquez.askus.ui.details.view.DetailsPostActivity
 import es.iesnervion.avazquez.askus.ui.fragments.AddPostFragment
 import es.iesnervion.avazquez.askus.ui.fragments.HomeFragment
+import es.iesnervion.avazquez.askus.ui.fragments.profileFragment.view.ProfileFragment
 import es.iesnervion.avazquez.askus.ui.fragments.tabs.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.activity_home.*
 
@@ -30,6 +31,7 @@ class HomeActivity : AppCompatActivity()
     lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     lateinit var selectedItemMenuTitle: String
     lateinit var selectedTag: TagDTO
+    var currentUserId = 0
     var tagsObserver: Observer<List<TagDTO>>
 
     init {
@@ -49,6 +51,7 @@ class HomeActivity : AppCompatActivity()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        currentUserId = intent.getIntExtra("user_id", 0)
         viewModel.loadTags()
         initObservers()
         setSupportActionBar(toolBar)
@@ -79,6 +82,7 @@ class HomeActivity : AppCompatActivity()
         val menu: Menu = navigation.menu
         tagList = viewModel.allTags().value ?: listOf()
         val sortedList = viewModel.allTags().value?.sortedBy { it.nombre }
+        //TODO mejorar esto con funcionalidades de kotlin
         if (!sortedList.isNullOrEmpty()) {
             for (x in sortedList.iterator()) {
                 menu.add(0, x.id, 0, x.nombre).isCheckable = true
@@ -107,7 +111,7 @@ class HomeActivity : AppCompatActivity()
             }
             R.id.nav_account -> {
                 toolBar.title = resources.getText(R.string.menu_account)
-                Toast.makeText(this, getString(R.string.menu_account), Toast.LENGTH_SHORT).show()
+                loadFragmentLoader(ProfileFragment.newInstance(currentUserId))
             }
             R.id.nav_settings -> {
                 toolBar.title = resources.getText(R.string.menu_settings)

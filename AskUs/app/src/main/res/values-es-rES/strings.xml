@@ -45,4 +45,10 @@
     <string name="comment_sent">Comentario enviado</string>
     <string name="error_sending_comment">Erro al enviar el comentario</string>
     <string name="what_s_going_on">¿Qué opinas de este post?</string>
+    <string name="average_user_rating">Nota media:</string>
+    <string name="number_of_published_publications">"Publicaciones publicadas: "</string>
+    <string name="number_of_publications_sent">"Publicaciones enviadas: "</string>
+    <string name="number_of_written_comments">"Comentarios escritos: "</string>
+    <string name="last_login_date">Último acceso:</string>
+    <string name="account_creation_date">"Fecha de creación de la cuenta: "</string>
 </resources>
