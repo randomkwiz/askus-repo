@@ -136,6 +136,9 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
             if (it) {
                 //Si llega aquí significa que ya están seteados ambos valores
                 if (viewModel.currentPost?.IdPost == intentPost.IdPost) {
+                    //Se actualizan los votos si el post es el mismo
+                    upvotes_count.text = viewModel.currentPost?.cantidadVotosPositivos.toString()
+                    downvotes_count.text = viewModel.currentPost?.cantidadVotosNegativos.toString()
                     this.totalPage = viewModel.currentPaginHeader.totalPages
                     viewModel.currentPost?.listadoComentarios?.let { it1 -> addElements(it1) }
                 }
