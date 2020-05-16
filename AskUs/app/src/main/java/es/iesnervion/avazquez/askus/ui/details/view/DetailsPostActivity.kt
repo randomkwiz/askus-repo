@@ -67,8 +67,6 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
         token = sharedPreference.getString("token", "").toString()
         idCurrentUser = sharedPreference.getInt("user_id", 0)
         setCommentsAdapter()
-
-        recyclerView_comments.adapter = commentsAdapter
         setSupportActionBar(appbar)
         recyclerView_comments.setHasFixedSize(true)
         //this line shows back button
@@ -93,6 +91,7 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
                 }
             }
         })
+        recyclerView_comments.adapter = commentsAdapter
     }
 
 

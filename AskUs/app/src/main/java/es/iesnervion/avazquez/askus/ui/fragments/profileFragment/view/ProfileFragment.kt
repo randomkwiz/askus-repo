@@ -19,6 +19,8 @@ import es.iesnervion.avazquez.askus.utils.AppConstants
 import kotlinx.android.synthetic.main.fragment_profile.*
 import setVisibilityToGone
 import setVisibilityToVisible
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * A simple [Fragment] subclass.
@@ -92,9 +94,8 @@ class ProfileFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 lbl_sent_posts.text = it.cantidadPostsEnviados.toString()
                 lbl_posted_posts.text = it.cantidadPostsPublicados.toString()
                 user_mark.text = it.notaMediaEnPosts.toString()
-                //TODO formatear fecha
-                last_login_date.text = it?.fechaUltimoAcceso.toString()
-                register_date.text = it?.fechaRegistro.toString()
+                last_login_date.text = formatDate(it?.fechaUltimoAcceso.toString())
+                register_date.text = formatDate(it?.fechaRegistro.toString())
             }
         }
         viewModel.getUserProfile().observe(viewLifecycleOwner, dataFromUserObserver)
@@ -131,5 +132,12 @@ class ProfileFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             viewModel.loadUserProfile(it)
         }
         idUserToLoad.let { viewModel.loadLogrosFromUser(token, it) }
+    }
+
+    private fun formatDate(date: String): String {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
+        val outputFormat = SimpleDateFormat("dd-MM-yyyy")
+        val date: Date = inputFormat.parse(date)
+        return outputFormat.format(date)
     }
 }
