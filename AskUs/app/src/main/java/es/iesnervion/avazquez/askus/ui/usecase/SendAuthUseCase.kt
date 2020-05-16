@@ -26,10 +26,10 @@ class SendAuthUseCase {
                 if(response.isSuccessful){
                     response.body()?.replace("\"", "")?.toList()
                         ?.let {
-                            repositoryInterface.onSuccess(it, null)
+                            repositoryInterface.onSuccess(it, response.code())
                         }
                 }else{
-                    repositoryInterface.onSuccess(listOf(response.code()), null)
+                    repositoryInterface.onSuccess(listOf(""), response.code())
                 }
 
             }

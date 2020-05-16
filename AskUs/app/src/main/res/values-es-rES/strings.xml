@@ -52,4 +52,6 @@
     <string name="last_login_date">Último acceso:</string>
     <string name="account_creation_date">"Fecha de creación de la cuenta: "</string>
     <string name="loading">Cargando ...</string>
+    <string name="remember_password">Recordar contraseña</string>
+    <string name="internal_server_error">Error del servidor. Inténtelo de nuevo más tarde.</string>
 </resources>

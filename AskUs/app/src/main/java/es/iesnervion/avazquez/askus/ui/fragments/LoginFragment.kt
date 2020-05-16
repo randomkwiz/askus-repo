@@ -2,6 +2,7 @@ package es.iesnervion.avazquez.askus.ui.fragments
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,8 @@ import es.iesnervion.avazquez.askus.R
 import es.iesnervion.avazquez.askus.interfaces.AuthActivityInterface
 import es.iesnervion.avazquez.askus.models.Login
 import es.iesnervion.avazquez.askus.ui.auth.viewmodel.AuthViewModel
+import es.iesnervion.avazquez.askus.utils.AppConstants
+import es.iesnervion.avazquez.askus.utils.AppConstants.INTERNAL_SERVER_ERROR
 import es.iesnervion.avazquez.askus.utils.AppConstants.UNAUTHORIZED
 import kotlinx.android.synthetic.main.fragment_login.*
 import setVisibilityToGone
@@ -25,6 +28,8 @@ class LoginFragment : Fragment(),
     View.OnClickListener {
     lateinit var authActivityInterface: AuthActivityInterface
     lateinit var viewModel: AuthViewModel
+    lateinit var sharedPreference: SharedPreferences
+    lateinit var editor: SharedPreferences.Editor
     lateinit var observerLoadingData: Observer<Boolean>
     lateinit var observerError: Observer<Boolean>
     lateinit var observerCredentials: Observer<List<Char>>
@@ -49,6 +54,9 @@ class LoginFragment : Fragment(),
         link_signup.setOnClickListener(this)
         rememberPassword.setOnClickListener(this)
         initObservers()
+        sharedPreference =
+                activity!!.getSharedPreferences(AppConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
+        editor = sharedPreference.edit()
     }
 
     private fun initObservers() {
@@ -67,9 +75,11 @@ class LoginFragment : Fragment(),
             }
         }
         observerCredentials = Observer {
-            if (it.size == 1) {
-                if (it == listOf(UNAUTHORIZED)) {
+            if (it.toString().contains("ERROR")) {
+                if (it.toString().contains(UNAUTHORIZED.toString())) {
                     lbl_error_login.text = resources.getText(R.string.invalid_credentials)
+                } else if (it.toString().contains(INTERNAL_SERVER_ERROR.toString())) {
+                    lbl_error_login.text = resources.getText(R.string.internal_server_error)
                 } else {
                     lbl_error_login.text = resources.getText(R.string.there_was_an_error)
                 }
@@ -85,6 +95,21 @@ class LoginFragment : Fragment(),
         viewModel.errorLiveData().observe(viewLifecycleOwner, observerError)
     }
 
+    private fun rememberPasswordIfNeeded() {
+        if (cb_keep_sesion.isChecked) {
+            val passwordToSave = viewModel.login.password
+            val nicknameToSave = viewModel.login.nickname
+            editor.putString("passwordToSave", passwordToSave)
+            editor.putString("nicknameToSave", nicknameToSave)
+            editor.putBoolean("remember_password", true)
+        } else {
+            editor.putString("passwordToSave", "")
+            editor.putString("nicknameToSave", "")
+            editor.putBoolean("remember_password", false)
+        }
+        editor.commit()
+    }
+
     override fun onClick(v: View) {
         when (v.id) {
             R.id.btn_login -> {
@@ -94,6 +119,7 @@ class LoginFragment : Fragment(),
                 )
                 if (viewModel.login.nickname.isNotEmpty() && viewModel.login.password.isNotEmpty()) {
                     lbl_error_login.setVisibilityToGone()
+                    rememberPasswordIfNeeded()
                     viewModel.checkLogin()
                 } else {
                     lbl_error_login.text = resources.getText(R.string.fillFields)
