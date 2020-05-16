@@ -41,7 +41,6 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
     lateinit var token: String
     lateinit var sharedPreference: SharedPreferences
     lateinit var viewModel: DetailsViewModel
-    lateinit var observerLoadingData: Observer<Boolean>
     lateinit var observerResponseCodeVote: Observer<Int>
 
     //   lateinit var currentPostObserver: Observer<PostCompletoListadoComentariosDTO>
@@ -225,8 +224,8 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
     //limpia los campos de entrada de texto
     //y vuelve a habilitar el btn de enviar
     private fun clearCommentEditText() {
-        comment_title.text.clear()
-        comment_text.text.clear()
+        comment_title.text?.clear()
+        comment_text.text!!.clear()
         viewModel.commentToSend.idPublicacion = 0
         viewModel.commentToSend.fechaPublicacion = ""
         viewModel.commentToSend.texto = ""
@@ -307,7 +306,7 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun fieldsAreFilled(): Boolean {
-        return comment_title.text.isNotEmpty() && comment_text.text.isNotEmpty()
+        return comment_title.text!!.isNotEmpty() && comment_text.text!!.isNotEmpty()
     }
 
     private fun addElements(items: List<ComentarioParaMostrarDTO>) {

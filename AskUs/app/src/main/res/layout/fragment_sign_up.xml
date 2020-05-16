@@ -73,6 +73,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 app:counterEnabled="true"
+                app:endIconTint="@color/colorPrimary"
                 app:counterMaxLength="20"
                 android:layout_height="wrap_content">
 
@@ -88,6 +89,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 app:endIconMode="password_toggle"
+                app:endIconTint="@color/colorPrimary"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_height="wrap_content">
 

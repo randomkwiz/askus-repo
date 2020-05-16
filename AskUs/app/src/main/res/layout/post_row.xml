@@ -20,6 +20,7 @@
             android:layout_height="wrap_content">
 
             <ImageButton
+                android:tint="@color/colorAccent"
                 android:id="@+id/arrow_up"
                 android:src="@drawable/ic_arrow_drop_up_black_24dp"
                 android:background="?android:selectableItemBackground"
@@ -41,6 +42,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <ImageButton
+                android:tint="@color/colorAccent"
                 android:id="@+id/arrow_down"
                 android:src="@drawable/ic_arrow_drop_down_black_24dp"
                 android:background="?android:selectableItemBackground"
