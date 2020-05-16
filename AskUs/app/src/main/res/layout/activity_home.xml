@@ -11,15 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.appcompat.widget.Toolbar
+        <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolBar"
+            app:popupTheme="@style/Widget.MaterialComponents.Toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:theme="@style/Widget.MaterialComponents.Toolbar"
             android:background="@color/colorPrimary"
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-            app:layout_constraintTop_toTopOf="parent"
             app:menu="@menu/toolbar_menu"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:title="@string/tb_activity_main_title" />
 
         <FrameLayout
@@ -35,9 +34,8 @@
         android:id="@+id/navigation"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
-        app:itemTextColor="@color/colorAccent"
-        android:background="@color/colorPrimary"
+        android:layout_gravity="start|left"
+        android:theme="@style/ThemeOverlay.MaterialComponents.Light"
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/my_navigation_items" />
 

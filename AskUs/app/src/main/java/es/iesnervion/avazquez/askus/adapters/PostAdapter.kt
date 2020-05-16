@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import es.iesnervion.avazquez.askus.DTOs.PostCompletoParaMostrarDTO
 import es.iesnervion.avazquez.askus.R
@@ -99,17 +100,19 @@ class PostAdapter(listener: RecyclerViewClickListener) : RecyclerView.Adapter<Ba
 
     inner class PostViewHolder(itemView: View, val listener: RecyclerViewClickListener) :
         View.OnClickListener, BaseViewHolder(itemView) {
-        val title = itemView.findViewById(R.id.lbl_post_title) as TextView
-        val text = itemView.findViewById(R.id.lbl_post_text) as TextView
+        val title = itemView.findViewById(R.id.lbl_post_title_post_row) as TextView
+        val text = itemView.findViewById(R.id.lbl_post_text_post_row) as TextView
         val nComments = itemView.findViewById(R.id.lbl_comments_quantity) as TextView
-        val author = itemView.findViewById(R.id.lbl_author_nick) as TextView
-        val tagList = itemView.findViewById(R.id.lbl_tag_lists) as TextView
+        val author = itemView.findViewById(R.id.lbl_author_nick_post_row) as TextView
+        val tagList = itemView.findViewById(R.id.lbl_tag_lists_post_row) as TextView
         val upvotes = itemView.findViewById(R.id.upvotes_count) as TextView
         val downvotes = itemView.findViewById(R.id.downvotes_count) as TextView
         val arrowUp = itemView.findViewById(R.id.arrow_up) as ImageButton
         val arrowDown = itemView.findViewById(R.id.arrow_down) as ImageButton
+        val cardView = itemView.findViewById(R.id.element_card_view) as CardView
 
         init {
+            //cardView.setOnClickListener(this)
             arrowUp.setOnClickListener(this)
             arrowDown.setOnClickListener(this)
             title.setOnClickListener(this)

@@ -8,14 +8,12 @@
     tools:context=".ui.fragments.HomeFragment">
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
-        tools:background="@color/colorPrimary"
+        tools:background="@color/colorPrimaryDark"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="?actionBarSize"
         app:tabGravity="fill"
-        app:tabIndicatorColor="#FFFFFF"
         app:tabIndicatorHeight="4dp"
-        app:tabBackground="@color/colorPrimary"
         app:tabMode="fixed">
 
     </com.google.android.material.tabs.TabLayout>
@@ -38,8 +36,11 @@
             android:layout_height="wrap_content"
             android:scaleType="fitCenter"
             app:fabSize="auto"
+            app:tint="#FFFFFF"
+            android:backgroundTint="@color/colorPrimary"
+            app:borderWidth="0dp"
             android:src="@drawable/ic_add_black_24dp"
-            android:layout_gravity="bottom | end"
+            android:layout_gravity="bottom|end"
             android:layout_margin="25dp" />
     </FrameLayout>
 

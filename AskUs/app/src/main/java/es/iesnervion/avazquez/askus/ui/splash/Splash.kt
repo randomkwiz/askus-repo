@@ -16,7 +16,7 @@ class Splash : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
         val anim: Animation = AnimationUtils.loadAnimation(this, R.anim.splash_anim)
         splash_img.startAnimation(anim)
-        splash_progressBar.startAnimation(anim)
+        //lottie_anim_splash.startAnimation(anim)
         credits_txt.startAnimation(anim)
         Handler().postDelayed(Runnable {
             val i = Intent(this, AuthActivity::class.java)

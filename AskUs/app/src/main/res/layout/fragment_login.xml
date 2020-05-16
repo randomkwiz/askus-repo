@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:theme="@style/ThemeOverlay.MaterialComponents.Light"
     tools:context=".ui.fragments.LoginFragment">
 
     <ScrollView
@@ -29,44 +31,56 @@
 
             <!-- Email Label -->
 
-            <EditText
-                android:id="@+id/input_nickname"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/lblNickname"
-                android:singleLine="true"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_height="wrap_content">
 
-                />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_nickname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/lblNickname"
+                    android:singleLine="true" />
+            </com.google.android.material.textfield.TextInputLayout>
 
 
             <!-- Password Label -->
-
-            <EditText
-                android:id="@+id/input_password"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/password"
-                android:inputType="textPassword" />
+                app:endIconMode="password_toggle"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/password"
+                    android:inputType="textPassword" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <CheckBox
                 android:id="@+id/cb_keep_sesion"
-                android:text="@string/remember_password"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="@string/remember_password" />
 
             <ProgressBar
-                android:visibility="gone"
                 android:id="@+id/progress_bar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:visibility="gone" />
+
 
             <TextView
-                android:visibility="gone"
                 android:id="@+id/lbl_error_login"
-                android:textColor="#FF0000"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textColor="#FF0000"
+                android:visibility="gone" />
+
             <Button
                 android:id="@+id/btn_login"
                 android:layout_width="fill_parent"

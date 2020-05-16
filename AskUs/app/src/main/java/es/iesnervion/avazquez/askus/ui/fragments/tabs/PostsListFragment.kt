@@ -217,23 +217,24 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private fun initAdapter() {
         adapter = PostAdapter(object : RecyclerViewClickListener {
             override fun onClick(view: View, position: Int) {
+                val currentItem = adapter.getItem(position)
                 var valoracion = false
                 when (view.id) {
-                    R.id.arrow_up        -> {
+                    R.id.arrow_up                 -> {
                         imgBtnUpDownVoteHasBeenClicked = true
                         valoracion = true
                     }
-                    R.id.arrow_down      -> {
+                    R.id.arrow_down               -> {
                         imgBtnUpDownVoteHasBeenClicked = true
                         valoracion = false
                     }
-                    R.id.lbl_post_title  -> {
-                        postClicked(adapter.getItem(position))
+                    R.id.lbl_post_title_post_row  -> {
+                        postClicked(post = currentItem)
                     }
-                    R.id.lbl_post_text   -> {
-                        postClicked(adapter.getItem(position))
+                    R.id.lbl_post_text_post_row   -> {
+                        postClicked(post = currentItem)
                     }
-                    R.id.lbl_author_nick -> {
+                    R.id.lbl_author_nick_post_row -> {
                         onUserClicked(adapter.getItem(position).idAutor,
                             adapter.getItem(position).nickAutor)
                     }

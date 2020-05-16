@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorPrimary"
     android:orientation="vertical"
     tools:context=".ui.splash.Splash">
@@ -24,11 +25,15 @@
         android:layout_gravity="center"
         android:textColor="#FFFFFF" />
 
-    <ProgressBar
+    <com.airbnb.lottie.LottieAnimationView
         android:layout_weight="0.1"
+        android:visibility="visible"
+        app:lottie_fileName="question_anim.json"
         android:layout_gravity="center"
-        android:id="@+id/splash_progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        app:lottie_loop="true"
+        app:lottie_autoPlay="true"
+        android:id="@+id/lottie_anim_splash"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_margin="35dp" />
 </LinearLayout>

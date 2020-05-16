@@ -24,6 +24,9 @@ import es.iesnervion.avazquez.askus.ui.fragments.HomeFragment
 import es.iesnervion.avazquez.askus.ui.fragments.profileFragment.view.ProfileFragment
 import es.iesnervion.avazquez.askus.ui.fragments.tabs.viewmodel.MainViewModel
 import es.iesnervion.avazquez.askus.utils.AppConstants
+import es.iesnervion.avazquez.askus.utils.AppConstants.EXTRA_PARAM_POST
+import es.iesnervion.avazquez.askus.utils.AppConstants.PROFILE_ANOTHER_USER
+import es.iesnervion.avazquez.askus.utils.AppConstants.PROFILE_CURRENT_USER
 import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity()
@@ -129,7 +132,8 @@ class HomeActivity : AppCompatActivity()
             }
             R.id.nav_account -> {
                 toolBar.title = resources.getText(R.string.menu_account)
-                loadFragmentLoader(ProfileFragment.newInstance(currentUserId))
+                loadFragmentLoaderBackStack((ProfileFragment.newInstance(currentUserId)),
+                    PROFILE_CURRENT_USER)
             }
             R.id.nav_settings -> {
                 toolBar.title = resources.getText(R.string.menu_settings)
@@ -149,17 +153,17 @@ class HomeActivity : AppCompatActivity()
     /**
      * This will load the fragment
      */
-    private fun loadFragmentLoader(fragment: Fragment) {
+    private fun loadFragmentLoader(fragment: Fragment, tag: String = "") {
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.content_frame, fragment)
+        transaction.replace(R.id.content_frame, fragment, tag)
         transaction.setTransition(TRANSIT_FRAGMENT_FADE)
         //transaction.addToBackStack(null)
         transaction.commit()
     }
 
-    private fun loadFragmentLoaderBackStack(fragment: Fragment) {
+    private fun loadFragmentLoaderBackStack(fragment: Fragment, tag: String = "") {
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.content_frame, fragment)
+        transaction.replace(R.id.content_frame, fragment, tag)
         transaction.setTransition(TRANSIT_FRAGMENT_FADE)
         transaction.addToBackStack(null)
         transaction.commit()
@@ -178,17 +182,48 @@ class HomeActivity : AppCompatActivity()
 
     override fun onPostClicked(post: PostCompletoParaMostrarDTO) {
         val intent = Intent(this, DetailsPostActivity::class.java)
-        intent.putExtra("post", post)
+        intent.putExtra(EXTRA_PARAM_POST, post)
         startActivity(intent)
     }
+    //    override fun onPostClicked(post: PostCompletoParaMostrarDTO,
+    //    v: View,
+    //    title: Int,
+    //    txt: Int,
+    //    author: Int,
+    //    tags: Int) {
+    //    val intent = Intent(this, DetailsPostActivity::class.java)
+    //    intent.putExtra(EXTRA_PARAM_POST, post)
+    //    val activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(this,
+    //        Pair<View, String>(v.findViewById(title), VIEW_NAME_TITLE_POST),
+    //        Pair<View, String>(v.findViewById(txt), VIEW_NAME_BODY_POST),
+    //        Pair<View, String>(v.findViewById(tags), VIEW_NAME_TAGS_POST),
+    //        Pair<View, String>(v.findViewById(author), VIEW_NAME_AUTHOR_POST))
+    //    // Now we can start the Activity, providing the activity options as a bundle
+    //    ActivityCompat.startActivity(this, intent, activityOptions.toBundle())
+    //    }
 
     override fun onUserClicked(idUser: Int, nickname: String) {
-        loadFragmentLoader(ProfileFragment.newInstance(idUser))
+        loadFragmentLoader(ProfileFragment.newInstance(idUser), PROFILE_ANOTHER_USER)
         toolBar.title = nickname
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
-        toolBar.title = selectedItemMenuTitle
+        val currentFragment: Fragment? = supportFragmentManager.findFragmentById(R.id.content_frame)
+        when {
+            (currentFragment?.tag == PROFILE_CURRENT_USER) -> {
+                viewModel.saveStateMenu = 0
+                val menuItem: MenuItem = navigation.menu.findItem(viewModel.saveStateMenu)
+                        ?: navigation.menu.getItem(0)
+                onNavigationItemSelected(menuItem)
+                menuItem.isChecked = true
+            }
+            currentFragment?.tag == PROFILE_ANOTHER_USER   -> {
+                super.onBackPressed()
+            }
+            else                                           -> {
+                super.onBackPressed()
+                toolBar.title = selectedItemMenuTitle
+            }
+        }
     }
 }
