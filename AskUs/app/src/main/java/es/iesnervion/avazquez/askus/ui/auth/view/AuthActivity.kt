@@ -64,8 +64,9 @@ class AuthActivity : AppCompatActivity()
                 if (it.size == 1 && it[0] > 0) {
                     editor.putInt("user_id", it.first().toInt())
                     editor.commit()
-                    startActivity(Intent(this, HomeActivity::class.java).putExtra("user_id",
-                            it.first().toInt()))
+                    startActivity(Intent(this, HomeActivity::class.java).putExtra("type", "auth")
+                        //.putExtra("user_id", it.first().toInt())
+                    )
                     finish()
                 }
             }

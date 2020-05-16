@@ -49,9 +49,6 @@
     <string name="error_sending_comment">Error sending comment</string>
     <string name="title">Title</string>
     <string name="what_s_going_on">What\'s going on?</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="average_user_rating">Average user rating:</string>
     <string name="number_of_published_publications">Number of published publications:</string>
     <string name="number_of_publications_sent">Number of publications sent:</string>

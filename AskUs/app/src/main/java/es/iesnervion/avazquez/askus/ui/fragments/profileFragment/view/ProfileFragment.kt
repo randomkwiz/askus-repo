@@ -38,6 +38,7 @@ class ProfileFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     lateinit var sharedPreference: SharedPreferences
     lateinit var areValuesReadyObserver: Observer<Boolean>
     lateinit var dataFromUserObserver: Observer<ProfileDTO>
+    lateinit var loadingObserver: Observer<Boolean>
     lateinit var token: String
     lateinit var adapter: LogroAdapter
     var idUserToLoad = 0
@@ -80,10 +81,6 @@ class ProfileFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 adapter = LogroAdapter(listaLogrosOriginal = viewModel.allLogros,
                     listaLogrosConseguidos = viewModel.idLogrosFromUser)
                 recyclerview_logros.adapter = adapter
-                swipeRefreshLayout.isRefreshing = false
-                //TODO esto va en el onLoading angela xfavor
-                progress_bar.setVisibilityToGone()
-                recyclerview_logros.setVisibilityToVisible()
             }
         }
         viewModel.getAreValuesReady().observe(viewLifecycleOwner, areValuesReadyObserver)
@@ -101,6 +98,32 @@ class ProfileFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             }
         }
         viewModel.getUserProfile().observe(viewLifecycleOwner, dataFromUserObserver)
+
+        loadingObserver = Observer {
+            if (it) {
+                if (swipeRefreshLayout.isRefreshing) {
+                    progress_bar.setVisibilityToGone()
+                    swipeRefreshLayout.setVisibilityToVisible()
+                    recyclerview_logros.setVisibilityToVisible()
+                } else {
+                    progress_bar.setVisibilityToVisible()
+                    swipeRefreshLayout.setVisibilityToGone()
+                    recyclerview_logros.setVisibilityToGone()
+                }
+            } else {
+                if (swipeRefreshLayout.isRefreshing) {
+                    swipeRefreshLayout.isRefreshing = false
+                    progress_bar.setVisibilityToGone()
+                    swipeRefreshLayout.setVisibilityToVisible()
+                    recyclerview_logros.setVisibilityToVisible()
+                } else {
+                    progress_bar.setVisibilityToGone()
+                    swipeRefreshLayout.setVisibilityToVisible()
+                    recyclerview_logros.setVisibilityToVisible()
+                }
+            }
+        }
+        viewModel.loadingLiveData().observe(viewLifecycleOwner, loadingObserver)
     }
 
     override fun onRefresh() {

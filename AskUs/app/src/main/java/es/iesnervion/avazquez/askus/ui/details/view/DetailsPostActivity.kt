@@ -1,6 +1,7 @@
 package es.iesnervion.avazquez.askus.ui.details.view
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
@@ -17,8 +18,10 @@ import es.iesnervion.avazquez.askus.DTOs.PostCompletoParaMostrarDTO
 import es.iesnervion.avazquez.askus.DTOs.VotoPublicacionDTO
 import es.iesnervion.avazquez.askus.R
 import es.iesnervion.avazquez.askus.adapters.CommentsAdapter
+import es.iesnervion.avazquez.askus.interfaces.RecyclerViewClickListener
 import es.iesnervion.avazquez.askus.models.Comentario
 import es.iesnervion.avazquez.askus.ui.details.viewmodel.DetailsViewModel
+import es.iesnervion.avazquez.askus.ui.home.view.HomeActivity
 import es.iesnervion.avazquez.askus.utils.AppConstants
 import es.iesnervion.avazquez.askus.utils.AppConstants.INTERNAL_SERVER_ERROR
 import es.iesnervion.avazquez.askus.utils.AppConstants.NO_CONTENT
@@ -63,22 +66,38 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
         setDataFromPost(intentPost)
         token = sharedPreference.getString("token", "").toString()
         idCurrentUser = sharedPreference.getInt("user_id", 0)
-        commentsAdapter = CommentsAdapter(intentPost.idAutor)
+        setCommentsAdapter()
+
         recyclerView_comments.adapter = commentsAdapter
-        setSupportActionBar(appbar);
+        setSupportActionBar(appbar)
         recyclerView_comments.setHasFixedSize(true)
         //this line shows back button
-        supportActionBar?.setDisplayHomeAsUpEnabled(true);
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         initObservers()
         initListeners()
         val dividerItemDecoration =
                 DividerItemDecoration(recyclerView_comments.context, LinearLayout.VERTICAL)
         recyclerView_comments.addItemDecoration(dividerItemDecoration)
         loadDataFirstTime()
-
     }
 
+    //setea el adapter del listado de comentarios
+    private fun setCommentsAdapter() {
+        commentsAdapter = CommentsAdapter(intentPost.idAutor, object : RecyclerViewClickListener {
+            override fun onClick(view: View, position: Int) {
+                when (view.id) {
+                    R.id.lbl_author_nick -> {
+                        goToUser(commentsAdapter.getItem(position).idUsuario,
+                            commentsAdapter.getItem(position).nickAutor)
+                    }
+                }
+            }
+        })
+    }
+
+
     private fun initListeners() {
+        lbl_author_nick.setOnClickListener(this)
         hideCommentBox_btn.setOnClickListener(this)
         openCommentBox_btn.setOnClickListener(this)
         arrow_up.setOnClickListener(this)
@@ -111,11 +130,12 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
         currentPage++
         loadData()
     }
+
     private fun onRefresh() {
-        itemCount = 0;
-        currentPage = PAGE_START;
-        mIsLastPage = false;
-        commentsAdapter.clear();
+        itemCount = 0
+        currentPage = PAGE_START
+        mIsLastPage = false
+        commentsAdapter.clear()
         loadData()
     }
 
@@ -189,9 +209,10 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
         viewModel.responseCodeVotoPublicacionSent().observe(this, observerResponseCodeVote)
-
     }
 
+    //limpia los campos de entrada de texto
+    //y vuelve a habilitar el btn de enviar
     private fun clearCommentEditText() {
         comment_title.text.clear()
         comment_text.text.clear()
@@ -201,6 +222,9 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
         viewModel.commentToSend.titulo = ""
         btn_send_comment.isEnabled = true
     }
+
+    //Setea los datos de entrada del usuario a los datos de post actual
+    //elimina multiples espacios en blanco y saltos de linea duplicados
     private fun setDataFromPost(currentPost: PostCompletoParaMostrarDTO) {
         appbar.title = currentPost.tituloPost
         lbl_post_title.text = currentPost.tituloPost.replace("(?m)(^ *| +(?= |$))".toRegex(), "")
@@ -221,7 +245,7 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
                 valoracion = true
                 isBtnVoteClicked = true
             }
-            R.id.arrow_down       -> {
+            R.id.arrow_down         -> {
                 valoracion = false
                 isBtnVoteClicked = true
             }
@@ -230,8 +254,7 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
                     btn_send_comment.isEnabled = false
                     viewModel.commentToSend =
                             Comentario(0, getFormattedCurrentDatetime(), 0, idCurrentUser,
-                                intentPost.IdPost,
-                                false, false, comment_text.text.toString(),
+                                intentPost.IdPost, false, false, comment_text.text.toString(),
                                 comment_title.text.toString())
                     viewModel.insertComment()
                 } else {
@@ -255,13 +278,21 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
                 openCommentBox_btn.slideDown()
                 create_comment_content_l_layout.slideUp()
             }
+            R.id.lbl_author_nick    -> {
+                goToUser(intentPost.idAutor, intentPost.nickAutor)
+            }
         }
         if (isBtnVoteClicked) {
             val votoPublicacionDTO =
                     VotoPublicacionDTO(idCurrentUser, intentPost.IdPost, valoracion,
-                getFormattedCurrentDatetime())
+                        getFormattedCurrentDatetime())
             viewModel.insertVotoPublicacion(token = token, votoPublicacionDTO = votoPublicacionDTO)
         }
+    }
+
+    private fun goToUser(idUser: Int, nickUser: String) {
+        startActivity(Intent(this, HomeActivity::class.java).putExtra("type", "loadProfileFragment")
+            .putExtra("idUserToLoad", idUser).putExtra("nicknameUserToLoad", nickUser))
     }
 
     private fun fieldsAreFilled(): Boolean {

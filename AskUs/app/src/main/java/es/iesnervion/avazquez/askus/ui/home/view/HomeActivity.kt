@@ -1,6 +1,8 @@
 package es.iesnervion.avazquez.askus.ui.home.view
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -21,6 +23,7 @@ import es.iesnervion.avazquez.askus.ui.fragments.AddPostFragment
 import es.iesnervion.avazquez.askus.ui.fragments.HomeFragment
 import es.iesnervion.avazquez.askus.ui.fragments.profileFragment.view.ProfileFragment
 import es.iesnervion.avazquez.askus.ui.fragments.tabs.viewmodel.MainViewModel
+import es.iesnervion.avazquez.askus.utils.AppConstants
 import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity()
@@ -31,6 +34,8 @@ class HomeActivity : AppCompatActivity()
     lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     lateinit var selectedItemMenuTitle: String
     lateinit var selectedTag: TagDTO
+    lateinit var sharedPreference: SharedPreferences
+    lateinit var intentType: String
     var currentUserId = 0
     var tagsObserver: Observer<List<TagDTO>>
 
@@ -51,7 +56,10 @@ class HomeActivity : AppCompatActivity()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
-        currentUserId = intent.getIntExtra("user_id", 0)
+        intentType = intent.getStringExtra("type") ?: "auth"
+        sharedPreference = getSharedPreferences(AppConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
+        //        currentUserId = intent.getIntExtra("user_id", 0)
+        currentUserId = sharedPreference.getInt("user_id", 0)
         viewModel.loadTags()
         initObservers()
         setSupportActionBar(toolBar)
@@ -64,6 +72,7 @@ class HomeActivity : AppCompatActivity()
         actionBarDrawerToggle.syncState()   //without this it doesn't show the hamburguer menu icon
         navigation.setNavigationItemSelectedListener(this)
         initMenu()
+
         if (savedInstanceState == null) {
             val menuItem: MenuItem = navigation.menu.getItem(0)
             onNavigationItemSelected(menuItem)
@@ -75,6 +84,13 @@ class HomeActivity : AppCompatActivity()
                 navigation.menu.findItem(viewModel.saveStateMenu) ?: navigation.menu.getItem(0)
             onNavigationItemSelected(menuItem)
             menuItem.isChecked = true
+        }
+        when (intentType) {
+            "loadProfileFragment" -> {
+                val idUserClicked = intent.getIntExtra("idUserToLoad", 0)
+                val nicknameUserClicked = intent.getStringExtra("nicknameUserToLoad") ?: ""
+                onUserClicked(idUser = idUserClicked, nickname = nicknameUserClicked)
+            }
         }
     }
 
@@ -107,7 +123,13 @@ class HomeActivity : AppCompatActivity()
         when (item.itemId) {
             R.id.nav_home -> {
                 toolBar.title = resources.getText(R.string.menu_home)
-                loadFragmentLoader(HomeFragment.newInstance(0))
+                //loadFragmentLoader(HomeFragment.newInstance(0))
+                //Este no puede tener add to back stack
+                val transaction = supportFragmentManager.beginTransaction()
+                transaction.replace(R.id.content_frame, HomeFragment.newInstance(0))
+                transaction.setTransition(TRANSIT_FRAGMENT_FADE)
+                //transaction.addToBackStack(null);
+                transaction.commit()
             }
             R.id.nav_account -> {
                 toolBar.title = resources.getText(R.string.menu_account)
@@ -134,17 +156,14 @@ class HomeActivity : AppCompatActivity()
     private fun loadFragmentLoader(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.content_frame, fragment)
-        //transaction.addToBackStack(null);
+        transaction.setTransition(TRANSIT_FRAGMENT_FADE)
+        transaction.addToBackStack(null)
         transaction.commit()
     }
 
     override fun onAddPostClicked(idTagUserWasSeeing: Int) {
         //No uso el método loadFragmentLoader porque aquí sí quiero añadir add to back stack
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.content_frame, AddPostFragment.newInstance(idTagUserWasSeeing))
-        transaction.addToBackStack("addPostFragment")
-        transaction.setTransition(TRANSIT_FRAGMENT_FADE)
-        transaction.commit()
+        loadFragmentLoader(AddPostFragment.newInstance(idTagUserWasSeeing))
         toolBar.title = getString(R.string.send_post)
     }
 
@@ -157,6 +176,11 @@ class HomeActivity : AppCompatActivity()
         val intent = Intent(this, DetailsPostActivity::class.java)
         intent.putExtra("post", post)
         startActivity(intent)
+    }
+
+    override fun onUserClicked(idUser: Int, nickname: String) {
+        loadFragmentLoader(ProfileFragment.newInstance(idUser))
+        toolBar.title = nickname
     }
 
     override fun onBackPressed() {

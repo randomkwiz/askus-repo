@@ -12,12 +12,18 @@ import es.iesnervion.avazquez.askus.DTOs.ComentarioParaMostrarDTO
 import es.iesnervion.avazquez.askus.R
 import es.iesnervion.avazquez.askus.adapters.viewholders.BaseViewHolder
 import es.iesnervion.avazquez.askus.adapters.viewholders.ProgressHolder
+import es.iesnervion.avazquez.askus.interfaces.RecyclerViewClickListener
 import inflate
 
-class CommentsAdapter(private val idAutorPost: Int) : RecyclerView.Adapter<BaseViewHolder>() {
+class CommentsAdapter(private val idAutorPost: Int, listener: RecyclerViewClickListener) :
+    RecyclerView.Adapter<BaseViewHolder>(), View.OnClickListener {
+
     private var comments: MutableList<ComentarioParaMostrarDTO> = mutableListOf()
     private val VIEW_TYPE_LOADING = 0
     private val VIEW_TYPE_NORMAL = 1
+    private lateinit var listener: View.OnClickListener
+    private var recyclerViewClickListener: RecyclerViewClickListener = listener
+
     var isLoaderVisible = false
     override fun getItemViewType(position: Int): Int {
         return if (isLoaderVisible) {
@@ -29,7 +35,8 @@ class CommentsAdapter(private val idAutorPost: Int) : RecyclerView.Adapter<BaseV
         }
     }
 
-    inner class CommentViewHolder(itemView: View) : BaseViewHolder(itemView) {
+    inner class CommentViewHolder(itemView: View, val listener: RecyclerViewClickListener) :
+        BaseViewHolder(itemView), View.OnClickListener {
         val title = itemView.findViewById(R.id.lbl_comment_title) as TextView
         val text = itemView.findViewById(R.id.lbl_comment_text) as TextView
         val author = itemView.findViewById(R.id.lbl_author_nick) as TextView
@@ -52,16 +59,23 @@ class CommentsAdapter(private val idAutorPost: Int) : RecyclerView.Adapter<BaseV
             }
         }
 
+        init {
+            author.setOnClickListener(this)
+        }
         override fun clear() {
+        }
+
+        override fun onClick(v: View) {
+            listener.onClick(v, adapterPosition)
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
-        var itemView: View?
+        val itemView: View?
         return when (viewType) {
             VIEW_TYPE_NORMAL -> {
                 itemView = parent.inflate(R.layout.comment_row)
-                CommentViewHolder(itemView)
+                CommentViewHolder(itemView, recyclerViewClickListener)
             }
             else             -> {
                 itemView = parent.inflate(R.layout.loading_row)
@@ -120,5 +134,9 @@ class CommentsAdapter(private val idAutorPost: Int) : RecyclerView.Adapter<BaseV
 
     fun getItem(position: Int): ComentarioParaMostrarDTO {
         return comments[position]
+    }
+
+    override fun onClick(v: View) {
+        listener.onClick(v)
     }
 }
