@@ -10,6 +10,8 @@
     <TextView
         tools:text="@tools:sample/first_names"
         android:id="@+id/lbl_author_nick"
+        android:clickable="true"
+        android:focusable="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="end"

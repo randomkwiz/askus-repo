@@ -8,6 +8,7 @@ import dagger.Module
 import dagger.Provides
 import es.iesnervion.avazquez.askus.retrofit.interfaces.*
 import es.iesnervion.avazquez.askus.ui.repositories.AuthRepository
+import es.iesnervion.avazquez.askus.ui.repositories.LogrosRepository
 import es.iesnervion.avazquez.askus.ui.repositories.PostsRepository
 import es.iesnervion.avazquez.askus.ui.repositories.UsersRepository
 import es.iesnervion.avazquez.askus.utils.AppConstants.BASE_URL
@@ -31,6 +32,12 @@ class AppModule(private val mApplication: Application) {
     @Singleton
     fun usersRepository(): UsersRepository {
         return UsersRepository()
+    }
+
+    @Provides
+    @Singleton
+    fun logrosRepository(): LogrosRepository {
+        return LogrosRepository()
     }
 
     @Provides

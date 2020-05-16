@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -91,11 +90,11 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     override fun onRefresh() {
-        itemCount = 0;
-        currentPage = PAGE_START;
-        mIsLastPage = false;
-        adapter.clear();
-        doApiCall();
+        itemCount = 0
+        currentPage = PAGE_START
+        mIsLastPage = false
+        adapter.clear()
+        doApiCall()
     }
 
     private fun setListeners() {
@@ -218,7 +217,7 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private fun initAdapter() {
         adapter = PostAdapter(object : RecyclerViewClickListener {
             override fun onClick(view: View, position: Int) {
-                var valoracion: Boolean = false
+                var valoracion = false
                 when (view.id) {
                     R.id.arrow_up        -> {
                         imgBtnUpDownVoteHasBeenClicked = true
@@ -235,10 +234,8 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                         postClicked(adapter.getItem(position))
                     }
                     R.id.lbl_author_nick -> {
-                        //TODO que hacer cuando el usuario clicka en el nick del autor
-                        Toast.makeText(context,
-                            "Has clickado en " + adapter.getItem(position).nickAutor,
-                            Toast.LENGTH_LONG).show()
+                        onUserClicked(adapter.getItem(position).idAutor,
+                            adapter.getItem(position).nickAutor)
                     }
                 }
                 if (imgBtnUpDownVoteHasBeenClicked) {
@@ -284,6 +281,12 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private fun postClicked(post: PostCompletoParaMostrarDTO) {
         if (context is HomeActivityCallback) {
             (context as HomeActivityCallback).onPostClicked(post)
+        }
+    }
+
+    private fun onUserClicked(idUser: Int, nickname: String) {
+        if (context is HomeActivityCallback) {
+            (context as HomeActivityCallback).onUserClicked(idUser = idUser, nickname = nickname)
         }
     }
 }

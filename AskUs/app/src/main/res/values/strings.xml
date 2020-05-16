@@ -49,4 +49,11 @@
     <string name="error_sending_comment">Error sending comment</string>
     <string name="title">Title</string>
     <string name="what_s_going_on">What\'s going on?</string>
+    <string name="average_user_rating">Average user rating:</string>
+    <string name="number_of_published_publications">Number of published publications:</string>
+    <string name="number_of_publications_sent">Number of publications sent:</string>
+    <string name="number_of_written_comments">Number of written comments:</string>
+    <string name="last_login_date">"Last login date: "</string>
+    <string name="account_creation_date">Account creation date:</string>
+    <string name="loading">Loading ...</string>
 </resources>
