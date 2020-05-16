@@ -123,13 +123,9 @@ class HomeActivity : AppCompatActivity()
         when (item.itemId) {
             R.id.nav_home -> {
                 toolBar.title = resources.getText(R.string.menu_home)
-                //loadFragmentLoader(HomeFragment.newInstance(0))
+                loadFragmentLoader(HomeFragment.newInstance(0))
                 //Este no puede tener add to back stack
-                val transaction = supportFragmentManager.beginTransaction()
-                transaction.replace(R.id.content_frame, HomeFragment.newInstance(0))
-                transaction.setTransition(TRANSIT_FRAGMENT_FADE)
-                //transaction.addToBackStack(null);
-                transaction.commit()
+
             }
             R.id.nav_account -> {
                 toolBar.title = resources.getText(R.string.menu_account)
@@ -157,13 +153,21 @@ class HomeActivity : AppCompatActivity()
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.content_frame, fragment)
         transaction.setTransition(TRANSIT_FRAGMENT_FADE)
+        //transaction.addToBackStack(null)
+        transaction.commit()
+    }
+
+    private fun loadFragmentLoaderBackStack(fragment: Fragment) {
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.content_frame, fragment)
+        transaction.setTransition(TRANSIT_FRAGMENT_FADE)
         transaction.addToBackStack(null)
         transaction.commit()
     }
 
     override fun onAddPostClicked(idTagUserWasSeeing: Int) {
         //No uso el método loadFragmentLoader porque aquí sí quiero añadir add to back stack
-        loadFragmentLoader(AddPostFragment.newInstance(idTagUserWasSeeing))
+        loadFragmentLoaderBackStack(AddPostFragment.newInstance(idTagUserWasSeeing))
         toolBar.title = getString(R.string.send_post)
     }
 

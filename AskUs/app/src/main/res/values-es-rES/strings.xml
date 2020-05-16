@@ -51,4 +51,5 @@
     <string name="number_of_written_comments">"Comentarios escritos: "</string>
     <string name="last_login_date">Último acceso:</string>
     <string name="account_creation_date">"Fecha de creación de la cuenta: "</string>
+    <string name="loading">Cargando ...</string>
 </resources>
