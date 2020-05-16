@@ -26,14 +26,13 @@ import setVisibilityToVisible
  */
 class LoginFragment : Fragment(),
     View.OnClickListener {
-    lateinit var authActivityInterface: AuthActivityInterface
     lateinit var viewModel: AuthViewModel
     lateinit var sharedPreference: SharedPreferences
     lateinit var editor: SharedPreferences.Editor
     lateinit var observerLoadingData: Observer<Boolean>
     lateinit var observerError: Observer<Boolean>
     lateinit var observerCredentials: Observer<List<Char>>
-    lateinit var observerUserID: Observer<List<Int>>
+
     companion object {
         fun newInstance(): LoginFragment {
             return LoginFragment()
@@ -127,7 +126,9 @@ class LoginFragment : Fragment(),
                 }
             }
             R.id.link_signup -> {
-                authActivityInterface.goToSignUp()
+                if (context is AuthActivityInterface) {
+                    (context as AuthActivityInterface).goToSignUp()
+                }
             }
             R.id.rememberPassword -> {
                 val builder = AlertDialog.Builder(context)
@@ -139,12 +140,5 @@ class LoginFragment : Fragment(),
                 builder.show()
             }
         }
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        //TODO cambiar esto - memory leak
-        if (context is AuthActivityInterface)
-            this.authActivityInterface = context
     }
 }
