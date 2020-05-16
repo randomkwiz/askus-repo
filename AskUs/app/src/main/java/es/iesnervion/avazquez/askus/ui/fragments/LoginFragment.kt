@@ -120,6 +120,7 @@ class LoginFragment : Fragment(),
                     lbl_error_login.setVisibilityToGone()
                     rememberPasswordIfNeeded()
                     viewModel.checkLogin()
+                    userIsTryingToLogIn()
                 } else {
                     lbl_error_login.text = resources.getText(R.string.fillFields)
                     lbl_error_login.setVisibilityToVisible()
@@ -140,5 +141,9 @@ class LoginFragment : Fragment(),
                 builder.show()
             }
         }
+    }
+
+    private fun userIsTryingToLogIn() {
+        if (context is AuthActivityInterface) (context as AuthActivityInterface).userIsTryingToLogIn()
     }
 }

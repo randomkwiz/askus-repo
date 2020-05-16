@@ -18,6 +18,7 @@ import es.iesnervion.avazquez.askus.ui.fragments.LoginFragment
 import es.iesnervion.avazquez.askus.ui.fragments.SignUpFragment
 import es.iesnervion.avazquez.askus.ui.home.view.HomeActivity
 import es.iesnervion.avazquez.askus.utils.AppConstants
+import es.iesnervion.avazquez.askus.utils.AppConstants.LOG_OUT
 
 class AuthActivity : AppCompatActivity(), AuthActivityInterface {
     val loginFragment: Fragment = LoginFragment.newInstance()
@@ -32,6 +33,7 @@ class AuthActivity : AppCompatActivity(), AuthActivityInterface {
     lateinit var nicknameSaved: String
     lateinit var tokenSaved: String
     var idSaved = 0
+    var userHasLoggedOut = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -39,7 +41,7 @@ class AuthActivity : AppCompatActivity(), AuthActivityInterface {
         editor = sharedPreference.edit()
         viewModel = ViewModelProviders.of(this)[AuthViewModel::class.java]
         setDataFromSharedPref()
-
+        userHasLoggedOut = intent.getBooleanExtra(LOG_OUT, false)
         if (isDataSaved()) {
             startActivity(Intent(this, HomeActivity::class.java).putExtra("type", "auth"))
             finish()
@@ -56,7 +58,7 @@ class AuthActivity : AppCompatActivity(), AuthActivityInterface {
     private fun initObservers() {
         // Create the observer which updates the UI.
         tokenObserver = Observer<List<Char>> {
-            if (!it.toString().contains("ERROR")) {
+            if (!it.toString().contains("ERROR") && !userHasLoggedOut) {
                 val token = it.joinToString("")
                 editor.putString("token", token)
                 editor.putString("user_nickname", viewModel.login.nickname)
@@ -66,7 +68,7 @@ class AuthActivity : AppCompatActivity(), AuthActivityInterface {
         }
         viewModel.getToken().observe(this, tokenObserver)
         userIDObserver = Observer<List<Int>> {
-            if (it.isNotEmpty()) {
+            if (!it.isNullOrEmpty() && !userHasLoggedOut) {
                 if (it.size == 1 && it[0] > 0) {
                     editor.putInt("user_id", it.first().toInt())
                     editor.commit()
@@ -96,6 +98,10 @@ class AuthActivity : AppCompatActivity(), AuthActivityInterface {
 
     override fun goToLogIn() {
         loadFragmentLoader(loginFragment)
+    }
+
+    override fun userIsTryingToLogIn() {
+        this.userHasLoggedOut = false
     }
 
     private fun setDataFromSharedPref() {

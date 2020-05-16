@@ -6,7 +6,6 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -18,15 +17,20 @@ import es.iesnervion.avazquez.askus.DTOs.PostCompletoParaMostrarDTO
 import es.iesnervion.avazquez.askus.DTOs.TagDTO
 import es.iesnervion.avazquez.askus.R
 import es.iesnervion.avazquez.askus.interfaces.HomeActivityCallback
+import es.iesnervion.avazquez.askus.ui.auth.view.AuthActivity
 import es.iesnervion.avazquez.askus.ui.details.view.DetailsPostActivity
 import es.iesnervion.avazquez.askus.ui.fragments.AddPostFragment
 import es.iesnervion.avazquez.askus.ui.fragments.HomeFragment
+import es.iesnervion.avazquez.askus.ui.fragments.SettingsFragment
 import es.iesnervion.avazquez.askus.ui.fragments.profileFragment.view.ProfileFragment
 import es.iesnervion.avazquez.askus.ui.fragments.tabs.viewmodel.MainViewModel
 import es.iesnervion.avazquez.askus.utils.AppConstants
 import es.iesnervion.avazquez.askus.utils.AppConstants.EXTRA_PARAM_POST
+import es.iesnervion.avazquez.askus.utils.AppConstants.LOG_OUT
+import es.iesnervion.avazquez.askus.utils.AppConstants.NEW_POST
 import es.iesnervion.avazquez.askus.utils.AppConstants.PROFILE_ANOTHER_USER
 import es.iesnervion.avazquez.askus.utils.AppConstants.PROFILE_CURRENT_USER
+import es.iesnervion.avazquez.askus.utils.AppConstants.SETTINGS
 import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity()
@@ -137,8 +141,7 @@ class HomeActivity : AppCompatActivity()
             }
             R.id.nav_settings -> {
                 toolBar.title = resources.getText(R.string.menu_settings)
-                Toast.makeText(this, getString(R.string.menu_settings), Toast.LENGTH_SHORT)
-                    .show()
+                loadFragmentLoaderBackStack((SettingsFragment.newInstance()), SETTINGS)
             }
             else -> {
                 selectedTag = tagList.first { it.nombre == item.title }
@@ -171,7 +174,7 @@ class HomeActivity : AppCompatActivity()
 
     override fun onAddPostClicked(idTagUserWasSeeing: Int) {
         //No uso el método loadFragmentLoader porque aquí sí quiero añadir add to back stack
-        loadFragmentLoaderBackStack(AddPostFragment.newInstance(idTagUserWasSeeing))
+        loadFragmentLoaderBackStack(AddPostFragment.newInstance(idTagUserWasSeeing), NEW_POST)
         toolBar.title = getString(R.string.send_post)
     }
 
@@ -207,6 +210,13 @@ class HomeActivity : AppCompatActivity()
         toolBar.title = nickname
     }
 
+    override fun logOut() {
+        val intent = Intent(this, AuthActivity::class.java)
+        intent.putExtra(LOG_OUT, true)
+        startActivity(intent)
+        finish()
+    }
+
     override fun onBackPressed() {
         val currentFragment: Fragment? = supportFragmentManager.findFragmentById(R.id.content_frame)
         when {
@@ -219,6 +229,13 @@ class HomeActivity : AppCompatActivity()
             }
             currentFragment?.tag == PROFILE_ANOTHER_USER   -> {
                 super.onBackPressed()
+            }
+            currentFragment?.tag == SETTINGS               -> {
+                viewModel.saveStateMenu = 0
+                val menuItem: MenuItem = navigation.menu.findItem(viewModel.saveStateMenu)
+                        ?: navigation.menu.getItem(0)
+                onNavigationItemSelected(menuItem)
+                menuItem.isChecked = true
             }
             else                                           -> {
                 super.onBackPressed()

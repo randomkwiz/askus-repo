@@ -19,4 +19,6 @@ object AppConstants {
     const val PROFILE_CURRENT_USER = "PROFILE_CURRENT_USER"
     const val PROFILE_ANOTHER_USER = "PROFILE_ANOTHER_USER"
     const val NEW_POST = "NEW_POST"
+    const val SETTINGS = "SETTINGS"
+    const val LOG_OUT = "LOG_OUT"
 }
