@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId "es.iesnervion.avazquez.askus"
-        minSdkVersion 19
+        minSdkVersion 21  //okhttpclient necesita api 21 - > https://medium.com/square-corner-blog/okhttp-3-13-requires-android-5-818bb78d07ce
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
