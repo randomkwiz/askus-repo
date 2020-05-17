@@ -2,14 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="192dp"
+    android:background="@color/colorPrimary"
               android:orientation="vertical"
-              android:padding="35dp">
+    android:padding="45dp">
 
     <TextView
+        android:textColor="#FFFFFF"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/app_name"
-        android:textSize="35sp" />
+        android:layout_marginBottom="10dp"
+        android:textSize="25sp" />
+
+    <TextView
+        android:textColor="#FFFFFF"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/post_something_and_find_out_what_people_think_about_that_little_issue_of_you"
+        android:textSize="15sp" />
 
 </LinearLayout>
 

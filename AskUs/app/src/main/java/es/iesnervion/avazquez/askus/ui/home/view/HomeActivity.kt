@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -27,6 +28,7 @@ import es.iesnervion.avazquez.askus.ui.fragments.tabs.viewmodel.MainViewModel
 import es.iesnervion.avazquez.askus.utils.AppConstants
 import es.iesnervion.avazquez.askus.utils.AppConstants.EXTRA_PARAM_POST
 import es.iesnervion.avazquez.askus.utils.AppConstants.LOG_OUT
+import es.iesnervion.avazquez.askus.utils.AppConstants.MENU_NAV_DRAWER_SIZE
 import es.iesnervion.avazquez.askus.utils.AppConstants.NEW_POST
 import es.iesnervion.avazquez.askus.utils.AppConstants.PROFILE_ANOTHER_USER
 import es.iesnervion.avazquez.askus.utils.AppConstants.PROFILE_CURRENT_USER
@@ -49,7 +51,7 @@ class HomeActivity : AppCompatActivity()
     init {
         tagsObserver = Observer { list ->
             tagList = list
-            if (list.isNotEmpty() && navigation.menu.size() == 3) {
+            if (list.isNotEmpty() && navigation.menu.size() == MENU_NAV_DRAWER_SIZE) {
                 val menu: Menu = navigation.menu
                 val sortedList = list.sortedBy { it.nombre }
                 for (x in sortedList.iterator()) {
@@ -128,22 +130,27 @@ class HomeActivity : AppCompatActivity()
      */
     private fun loadFragment(item: MenuItem) {
         when (item.itemId) {
-            R.id.nav_home -> {
+            R.id.nav_home       -> {
                 toolBar.title = resources.getText(R.string.menu_home)
                 loadFragmentLoader(HomeFragment.newInstance(0))
                 //Este no puede tener add to back stack
 
             }
-            R.id.nav_account -> {
+            R.id.nav_account    -> {
                 toolBar.title = resources.getText(R.string.menu_account)
                 loadFragmentLoaderBackStack((ProfileFragment.newInstance(currentUserId)),
                     PROFILE_CURRENT_USER)
             }
-            R.id.nav_settings -> {
+            R.id.nav_settings   -> {
                 toolBar.title = resources.getText(R.string.menu_settings)
                 loadFragmentLoaderBackStack((SettingsFragment.newInstance()), SETTINGS)
             }
-            else -> {
+            R.id.nav_moderation -> {
+                toolBar.title = resources.getText(R.string.menu_moderation)
+                Toast.makeText(this, "Moderation section - work in progress", Toast.LENGTH_SHORT)
+                    .show()
+            }
+            else                -> {
                 selectedTag = tagList.first { it.nombre == item.title }
                 toolBar.title = selectedTag.nombre
                 loadFragmentLoader(HomeFragment.newInstance(selectedTag.id))

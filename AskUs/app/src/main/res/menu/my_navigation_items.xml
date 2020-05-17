@@ -16,6 +16,10 @@
             android:icon="@drawable/ic_settings_black_24dp"
             android:id="@+id/nav_settings"
             android:title="@string/menu_settings" />
+        <item
+            android:icon="@drawable/ic_check_circle_black_24dp"
+            android:id="@+id/nav_moderation"
+            android:title="@string/menu_moderation" />
     </group>
 
 </menu>

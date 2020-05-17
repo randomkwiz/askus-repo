@@ -21,4 +21,5 @@ object AppConstants {
     const val NEW_POST = "NEW_POST"
     const val SETTINGS = "SETTINGS"
     const val LOG_OUT = "LOG_OUT"
+    const val MENU_NAV_DRAWER_SIZE = 4
 }
