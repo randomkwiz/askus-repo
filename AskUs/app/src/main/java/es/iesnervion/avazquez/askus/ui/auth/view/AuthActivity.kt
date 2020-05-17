@@ -58,7 +58,7 @@ class AuthActivity : AppCompatActivity(), AuthActivityInterface {
     private fun initObservers() {
         // Create the observer which updates the UI.
         tokenObserver = Observer<List<Char>> {
-            if (!it.toString().contains("ERROR") && !userHasLoggedOut) {
+            if (!it.joinToString("").contains("ERROR") && !userHasLoggedOut) {
                 val token = it.joinToString("")
                 editor.putString("token", token)
                 editor.putString("user_nickname", viewModel.login.nickname)

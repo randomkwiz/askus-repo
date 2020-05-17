@@ -74,10 +74,10 @@ class LoginFragment : Fragment(),
             }
         }
         observerCredentials = Observer {
-            if (it.toString().contains("ERROR")) {
-                if (it.toString().contains(UNAUTHORIZED.toString())) {
+            if (it.joinToString("").contains("ERROR")) {
+                if (it.joinToString("").contains(UNAUTHORIZED.toString())) {
                     lbl_error_login.text = resources.getText(R.string.invalid_credentials)
-                } else if (it.toString().contains(INTERNAL_SERVER_ERROR.toString())) {
+                } else if (it.joinToString("").contains(INTERNAL_SERVER_ERROR.toString())) {
                     lbl_error_login.text = resources.getText(R.string.internal_server_error)
                 } else {
                     lbl_error_login.text = resources.getText(R.string.there_was_an_error)

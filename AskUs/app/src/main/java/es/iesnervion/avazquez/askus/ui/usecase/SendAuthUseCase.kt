@@ -29,7 +29,8 @@ class SendAuthUseCase {
                             repositoryInterface.onSuccess(it, response.code())
                         }
                 }else{
-                    repositoryInterface.onSuccess(listOf(""), response.code())
+                    repositoryInterface.onSuccess(("ERROR_" + response.code().toString()).toList(),
+                        response.code())
                 }
 
             }
