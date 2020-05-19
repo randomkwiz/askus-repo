@@ -48,7 +48,10 @@ class AuthActivity : AppCompatActivity(), AuthActivityInterface {
         }
         //Pongo el fragment del login
         if (savedInstanceState == null) {
-            loadFragmentLoader(loginFragment)
+            val transaction = supportFragmentManager.beginTransaction()
+            transaction.replace(R.id.fragment, loginFragment)
+            //transaction.addToBackStack(null);
+            transaction.commit()
         }
         initObservers()
         AppCenter.start(application, "e5856b93-d2a9-4b5d-983a-6512e3b8190d", Analytics::class.java,
@@ -70,7 +73,7 @@ class AuthActivity : AppCompatActivity(), AuthActivityInterface {
         userIDObserver = Observer<List<Int>> {
             if (!it.isNullOrEmpty() && !userHasLoggedOut) {
                 if (it.size == 1 && it[0] > 0) {
-                    editor.putInt("user_id", it.first().toInt())
+                    editor.putInt("user_id", it[0])
                     editor.commit()
                     startActivity(Intent(this, HomeActivity::class.java).putExtra("type", "auth")
                         //.putExtra("user_id", it.first().toInt())
@@ -88,7 +91,7 @@ class AuthActivity : AppCompatActivity(), AuthActivityInterface {
     private fun loadFragmentLoader(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.fragment, fragment)
-        //transaction.addToBackStack(null);
+        transaction.addToBackStack(null);
         transaction.commit()
     }
 
@@ -105,10 +108,10 @@ class AuthActivity : AppCompatActivity(), AuthActivityInterface {
     }
 
     private fun setDataFromSharedPref() {
+        this.isRememberPasswordActivated = sharedPreference.getBoolean("remember_password", false)
         this.nicknameSaved = sharedPreference.getString("nicknameToSave", "").toString()
         this.passwordSaved = sharedPreference.getString("passwordToSave", "").toString()
         this.tokenSaved = sharedPreference.getString("token", "").toString()
-        this.isRememberPasswordActivated = sharedPreference.getBoolean("remember_password", false)
         this.idSaved = sharedPreference.getInt("user_id", 0)
     }
 

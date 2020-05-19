@@ -13,8 +13,15 @@
         android:id="@+id/splash_img"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="50dp"
-        android:src="@drawable/people" />
+        android:src="@drawable/ic_icon2" />
+
+    <TextView
+        android:layout_marginBottom="35dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="100sp"
+        android:gravity="center"
+        android:text="@string/app_name" />
 
     <TextView
         android:id="@+id/credits_txt"
