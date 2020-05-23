@@ -23,8 +23,7 @@ class LoadPostsUseCase {
 
     /*Gets public and private posted posts ALL*/
     fun getListadoPostsCompletosParaMostrarCantidadComentarios(repositoryInterface: RepositoryInterface,
-        token: String,
-        pageNumber: Int, idUsuarioLogeado: Int,
+        token: String, pageNumber: Int, idUsuarioLogeado: Int,
         pageSize: Int) {
         val call = requestInterface.getListadoPostsCompletosParaMostrarCantidadComentarios(
             authToken = token, pageNumber = pageNumber, pageSize = pageSize,
@@ -42,17 +41,15 @@ class LoadPostsUseCase {
                 val jsonString = response.headers().get("Paging-Headers")
                 val header = Gson().fromJson(jsonString, PaginHeader::class.java)
                 response.body()?.toList()?.let {
-                        repositoryInterface.onSuccess(it, header ?: null)
-                    }
+                    repositoryInterface.onSuccess(it, header ?: null)
+                }
             }
-
         })
     }
 
     /*Gets public and private posted posts TOP RATED*/
     fun getListadoPostsCompletosParaMostrarCantidadComentariosTopRated(repositoryInterface: RepositoryInterface,
-        token: String,
-        pageNumber: Int, idUsuarioLogeado: Int,
+        token: String, pageNumber: Int, idUsuarioLogeado: Int,
         pageSize: Int) {
         val call = requestInterface.getListadoPostsCompletosParaMostrarCantidadComentariosTopRated(
             authToken = token, pageNumber = pageNumber, pageSize = pageSize,
@@ -78,8 +75,7 @@ class LoadPostsUseCase {
 
     /*Gets public and private posted posts TOP COMMENTED*/
     fun getListadoPostsCompletosParaMostrarCantidadComentariosTopCommented(repositoryInterface: RepositoryInterface,
-        token: String,
-        pageNumber: Int, idUsuarioLogeado: Int,
+        token: String, pageNumber: Int, idUsuarioLogeado: Int,
         pageSize: Int) {
         val call =
                 requestInterface.getListadoPostsCompletosParaMostrarCantidadComentariosTopCommented(
@@ -106,8 +102,7 @@ class LoadPostsUseCase {
 
     /*Gets public and private posted posts that contains a given tag - ALL*/
     fun getListadoPostsCompletosParaMostrarCantidadComentariosTag(repositoryInterface: RepositoryInterface,
-        token: String,
-        idTag: Int, idUsuarioLogeado: Int,
+        token: String, idTag: Int, idUsuarioLogeado: Int,
         pageNumber: Int,
         pageSize: Int) {
         val call = requestInterface.getListadoPostsCompletosParaMostrarCantidadComentariosPorTag(
@@ -134,8 +129,7 @@ class LoadPostsUseCase {
 
     /*Gets public and private posted posts that contains a given tag - TOP RATED*/
     fun getListadoPostsCompletosParaMostrarCantidadComentariosTagTopRated(repositoryInterface: RepositoryInterface,
-        token: String,
-        idTag: Int, idUsuarioLogeado: Int,
+        token: String, idTag: Int, idUsuarioLogeado: Int,
         pageNumber: Int,
         pageSize: Int) {
         val call =
@@ -163,8 +157,7 @@ class LoadPostsUseCase {
 
     /*Gets public and private posted posts that contains a given tag - TOP COMMENTED*/
     fun getListadoPostsCompletosParaMostrarCantidadComentariosTagTopCommented(repositoryInterface: RepositoryInterface,
-        token: String,
-        idTag: Int, idUsuarioLogeado: Int,
+        token: String, idTag: Int, idUsuarioLogeado: Int,
         pageNumber: Int,
         pageSize: Int) {
         val call =
@@ -178,7 +171,8 @@ class LoadPostsUseCase {
                 repositoryInterface.showError(false)
             }
 
-            override fun onResponse(call: Call<List<PostCompletoParaMostrarDTO>>, response: Response<List<PostCompletoParaMostrarDTO>>) {
+            override fun onResponse(call: Call<List<PostCompletoParaMostrarDTO>>,
+                response: Response<List<PostCompletoParaMostrarDTO>>) {
                 repositoryInterface.onLoading(false)
                 val jsonString = response.headers().get("Paging-Headers")
                 val header = Gson().fromJson(jsonString, PaginHeader::class.java)
@@ -212,14 +206,11 @@ class LoadPostsUseCase {
                 val jsonString = response.headers().get("Paging-Headers")
                 val header = Gson().fromJson(jsonString, PaginHeader::class.java)
                 response.body()?.let {
-                        repositoryInterface.onSuccess(listOf(it), header ?: null)
-                    }
+                    repositoryInterface.onSuccess(listOf(it), header ?: null)
+                }
             }
         })
     }
-
-
-
 
     /*Gets public posted posts*/
     fun getNonDeletedPublicPostedPosts(repositoryInterface: RepositoryInterface) {
@@ -232,18 +223,15 @@ class LoadPostsUseCase {
                 repositoryInterface.showError(false)
             }
 
-            override fun onResponse(
-                call: Call<List<PublicacionDTO>>,
-                response: Response<List<PublicacionDTO>>
-            ) {
+            override fun onResponse(call: Call<List<PublicacionDTO>>,
+                response: Response<List<PublicacionDTO>>) {
                 repositoryInterface.onLoading(false)
                 val jsonString = response.headers().get("Paging-Headers")
                 val header = Gson().fromJson(jsonString, PaginHeader::class.java)
                 response.body()?.toList()?.let {
-                        repositoryInterface.onSuccess(it, header ?: null)
-                    }
+                    repositoryInterface.onSuccess(it, header ?: null)
+                }
             }
-
         })
     }
 }

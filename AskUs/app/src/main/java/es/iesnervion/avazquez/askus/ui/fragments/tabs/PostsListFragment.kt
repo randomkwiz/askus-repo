@@ -275,6 +275,7 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             mIsLastPage = true
         }
         mIsLoading = false
+
         addImgIfNoContent()
     }
 

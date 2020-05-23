@@ -17,16 +17,15 @@ import javax.inject.Inject
 class MainViewModel : ViewModel() {
     @Inject
     lateinit var postsRepository: PostsRepository
+
     @Inject
     lateinit var tagsRepository: TagsRepository
 
     @Inject
     lateinit var votesRepository: VotesRepository
-
     var newPost: Publicacion = Publicacion(id = 0, idAutor = 0, texto = "")
     lateinit var tagList: List<Int>
     var saveStateMenu = 0
-
     fun allVisiblePostsByTag(): LiveData<List<PostCompletoParaMostrarDTO>> {
         return postsRepository.getAllVisiblePostsByGivenTag()
     }
