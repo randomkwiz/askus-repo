@@ -136,7 +136,11 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private fun initObservers() {
         adapter.clear()
         observerPosts = Observer { post ->
-            addElements(post.toMutableList())
+            if (idTag == 0   //si es 0 porque significa que pide todos los posts
+                || post.all { post -> idTag in post.listadoTags.map { it.id } } //o que todos los posts tengan el tag indicado
+            ) {
+                addElements(post.toMutableList())
+            }
         }
         observerLoadingData = Observer { loading ->
             if (loading) {
@@ -252,7 +256,6 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                             Snackbar.LENGTH_SHORT).show()
                         imgBtnUpDownVoteHasBeenClicked = false
                     }
-
                 }
             }
         })
