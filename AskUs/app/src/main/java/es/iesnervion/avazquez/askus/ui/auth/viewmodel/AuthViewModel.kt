@@ -10,7 +10,7 @@ import es.iesnervion.avazquez.askus.utils.GlobalApplication
 import javax.inject.Inject
 
 class AuthViewModel : ViewModel() {
-    lateinit var login: Login
+    var login: Login
     lateinit var newUser: User
 
     @Inject
@@ -21,6 +21,7 @@ class AuthViewModel : ViewModel() {
 
     init {
         GlobalApplication.applicationComponent?.inject(this)
+        login = Login("", "")
     }
 
     fun checkLogin() {

@@ -23,6 +23,7 @@ import es.iesnervion.avazquez.askus.models.Comentario
 import es.iesnervion.avazquez.askus.ui.details.viewmodel.DetailsViewModel
 import es.iesnervion.avazquez.askus.ui.home.view.HomeActivity
 import es.iesnervion.avazquez.askus.utils.AppConstants
+import es.iesnervion.avazquez.askus.utils.AppConstants.EXTRA_PARAM_POST
 import es.iesnervion.avazquez.askus.utils.AppConstants.INTERNAL_SERVER_ERROR
 import es.iesnervion.avazquez.askus.utils.AppConstants.NO_CONTENT
 import es.iesnervion.avazquez.askus.utils.PaginationScrollListener
@@ -40,7 +41,6 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
     lateinit var token: String
     lateinit var sharedPreference: SharedPreferences
     lateinit var viewModel: DetailsViewModel
-    lateinit var observerLoadingData: Observer<Boolean>
     lateinit var observerResponseCodeVote: Observer<Int>
 
     //   lateinit var currentPostObserver: Observer<PostCompletoListadoComentariosDTO>
@@ -62,7 +62,18 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(R.layout.activity_details_post)
         sharedPreference = getSharedPreferences(AppConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
         viewModel = ViewModelProviders.of(this).get(DetailsViewModel::class.java)
-        intentPost = intent.getSerializableExtra("post") as PostCompletoParaMostrarDTO
+        intentPost = intent.getSerializableExtra(EXTRA_PARAM_POST) as PostCompletoParaMostrarDTO
+        /*
+       * Set the name of the view's which will be transition to, using the static values above.
+       * This could be done in the layout XML, but exposing it via static variables allows easy
+       * querying from other Activities
+       */
+        //        ViewCompat.setTransitionName(lbl_post_title, VIEW_NAME_TITLE_POST)
+        //        ViewCompat.setTransitionName(lbl_post_text, VIEW_NAME_BODY_POST)
+        //        ViewCompat.setTransitionName(lbl_author_nick, VIEW_NAME_AUTHOR_POST)
+        //        ViewCompat.setTransitionName(lbl_tag_lists, VIEW_NAME_TAGS_POST)
+
+
         setDataFromPost(intentPost)
         token = sharedPreference.getString("token", "").toString()
         idCurrentUser = sharedPreference.getInt("user_id", 0)
@@ -213,8 +224,8 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
     //limpia los campos de entrada de texto
     //y vuelve a habilitar el btn de enviar
     private fun clearCommentEditText() {
-        comment_title.text.clear()
-        comment_text.text.clear()
+        comment_title.text?.clear()
+        comment_text.text!!.clear()
         viewModel.commentToSend.idPublicacion = 0
         viewModel.commentToSend.fechaPublicacion = ""
         viewModel.commentToSend.texto = ""
@@ -295,7 +306,7 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun fieldsAreFilled(): Boolean {
-        return comment_title.text.isNotEmpty() && comment_text.text.isNotEmpty()
+        return comment_title.text!!.isNotEmpty() && comment_text.text!!.isNotEmpty()
     }
 
     private fun addElements(items: List<ComentarioParaMostrarDTO>) {

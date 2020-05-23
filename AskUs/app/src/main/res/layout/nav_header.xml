@@ -4,14 +4,12 @@
               android:layout_height="192dp"
     android:background="@color/colorPrimary"
               android:orientation="vertical"
-              android:padding="35dp">
+    android:padding="15dp">
 
-    <TextView
+    <ImageView
+        android:id="@+id/splash_img"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/app_name"
-        android:textColor="@color/colorAccent"
-        android:textSize="25sp" />
-
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_launcher" />
 </LinearLayout>
 

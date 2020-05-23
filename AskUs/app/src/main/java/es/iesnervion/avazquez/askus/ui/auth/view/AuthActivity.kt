@@ -18,38 +18,50 @@ import es.iesnervion.avazquez.askus.ui.fragments.LoginFragment
 import es.iesnervion.avazquez.askus.ui.fragments.SignUpFragment
 import es.iesnervion.avazquez.askus.ui.home.view.HomeActivity
 import es.iesnervion.avazquez.askus.utils.AppConstants
-import es.iesnervion.avazquez.askus.utils.AppConstants.TOKEN_LENGHT
+import es.iesnervion.avazquez.askus.utils.AppConstants.LOG_OUT
 
-class AuthActivity : AppCompatActivity()
-    , AuthActivityInterface {
-    val loginFragment: Fragment =
-        LoginFragment.newInstance()
-    val signUpFragment: Fragment =
-        SignUpFragment.newInstance()
+class AuthActivity : AppCompatActivity(), AuthActivityInterface {
+    val loginFragment: Fragment = LoginFragment.newInstance()
+    val signUpFragment: Fragment = SignUpFragment.newInstance()
     lateinit var tokenObserver: Observer<List<Char>>
     lateinit var userIDObserver: Observer<List<Int>>
     lateinit var viewModel: AuthViewModel
     lateinit var sharedPreference: SharedPreferences
     lateinit var editor: SharedPreferences.Editor
+    lateinit var passwordSaved: String
+    var isRememberPasswordActivated = false
+    lateinit var nicknameSaved: String
+    lateinit var tokenSaved: String
+    var idSaved = 0
+    var userHasLoggedOut = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         sharedPreference = getSharedPreferences(AppConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
         editor = sharedPreference.edit()
         viewModel = ViewModelProviders.of(this)[AuthViewModel::class.java]
+        setDataFromSharedPref()
+        userHasLoggedOut = intent.getBooleanExtra(LOG_OUT, false)
+        if (isDataSaved()) {
+            startActivity(Intent(this, HomeActivity::class.java).putExtra("type", "auth"))
+            finish()
+        }
         //Pongo el fragment del login
         if (savedInstanceState == null) {
-            loadFragmentLoader(loginFragment)
+            val transaction = supportFragmentManager.beginTransaction()
+            transaction.replace(R.id.fragment, loginFragment)
+            //transaction.addToBackStack(null);
+            transaction.commit()
         }
         initObservers()
-        AppCenter.start(application, "e5856b93-d2a9-4b5d-983a-6512e3b8190d",
-            Analytics::class.java, Crashes::class.java)
+        AppCenter.start(application, "e5856b93-d2a9-4b5d-983a-6512e3b8190d", Analytics::class.java,
+            Crashes::class.java)
     }
 
     private fun initObservers() {
         // Create the observer which updates the UI.
         tokenObserver = Observer<List<Char>> {
-            if (it.size > TOKEN_LENGHT) {
+            if (!it.joinToString("").contains("ERROR") && !userHasLoggedOut) {
                 val token = it.joinToString("")
                 editor.putString("token", token)
                 editor.putString("user_nickname", viewModel.login.nickname)
@@ -57,12 +69,11 @@ class AuthActivity : AppCompatActivity()
                 viewModel.loadUserIDByNickname(nickname = viewModel.login.nickname, token = token)
             }
         }
-        viewModel.getToken()
-            .observe(this, tokenObserver)
+        viewModel.getToken().observe(this, tokenObserver)
         userIDObserver = Observer<List<Int>> {
-            if (it.isNotEmpty()) {
+            if (!it.isNullOrEmpty() && !userHasLoggedOut) {
                 if (it.size == 1 && it[0] > 0) {
-                    editor.putInt("user_id", it.first().toInt())
+                    editor.putInt("user_id", it[0])
                     editor.commit()
                     startActivity(Intent(this, HomeActivity::class.java).putExtra("type", "auth")
                         //.putExtra("user_id", it.first().toInt())
@@ -80,7 +91,7 @@ class AuthActivity : AppCompatActivity()
     private fun loadFragmentLoader(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.fragment, fragment)
-        //transaction.addToBackStack(null);
+        transaction.addToBackStack(null);
         transaction.commit()
     }
 
@@ -90,5 +101,21 @@ class AuthActivity : AppCompatActivity()
 
     override fun goToLogIn() {
         loadFragmentLoader(loginFragment)
+    }
+
+    override fun userIsTryingToLogIn() {
+        this.userHasLoggedOut = false
+    }
+
+    private fun setDataFromSharedPref() {
+        this.isRememberPasswordActivated = sharedPreference.getBoolean("remember_password", false)
+        this.nicknameSaved = sharedPreference.getString("nicknameToSave", "").toString()
+        this.passwordSaved = sharedPreference.getString("passwordToSave", "").toString()
+        this.tokenSaved = sharedPreference.getString("token", "").toString()
+        this.idSaved = sharedPreference.getInt("user_id", 0)
+    }
+
+    private fun isDataSaved(): Boolean {
+        return nicknameSaved.isNotEmpty() && passwordSaved.isNotEmpty() && tokenSaved.isNotEmpty() && isRememberPasswordActivated && idSaved > 0
     }
 }

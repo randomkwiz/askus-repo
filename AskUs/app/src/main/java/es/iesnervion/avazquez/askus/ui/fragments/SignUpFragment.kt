@@ -1,6 +1,5 @@
 package es.iesnervion.avazquez.askus.ui.fragments
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Patterns
 import android.view.LayoutInflater
@@ -26,7 +25,6 @@ import setVisibilityToVisible
 class SignUpFragment : Fragment()
     , View.OnClickListener {
     lateinit var viewModel: AuthViewModel
-    lateinit var authActivityInterface: AuthActivityInterface
     lateinit var observerLoadingData: Observer<Boolean>
     lateinit var observerError: Observer<Boolean>
     lateinit var observerCredentials: Observer<List<Char>>
@@ -76,6 +74,9 @@ class SignUpFragment : Fragment()
         observerCredentials = Observer {
             if (it == listOf(OK)) {
                 lbl_error_login.setVisibilityToGone()
+                if (context is AuthActivityInterface) {
+                    (context as AuthActivityInterface).goToLogIn()
+                }
             } else {
                 if (it == listOf(CONFLICT)) {
                     lbl_error_login.text = resources.getText(R.string.error_create_user_conflict)
@@ -140,14 +141,10 @@ class SignUpFragment : Fragment()
                     }
             }
             R.id.link_login -> {
-                authActivityInterface.goToLogIn()
+                if (context is AuthActivityInterface) {
+                    (context as AuthActivityInterface).goToLogIn()
+                }
             }
         }
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is AuthActivityInterface)
-            this.authActivityInterface = context
     }
 }

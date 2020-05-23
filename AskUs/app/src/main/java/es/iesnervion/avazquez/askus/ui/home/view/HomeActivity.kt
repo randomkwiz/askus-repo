@@ -18,12 +18,21 @@ import es.iesnervion.avazquez.askus.DTOs.PostCompletoParaMostrarDTO
 import es.iesnervion.avazquez.askus.DTOs.TagDTO
 import es.iesnervion.avazquez.askus.R
 import es.iesnervion.avazquez.askus.interfaces.HomeActivityCallback
+import es.iesnervion.avazquez.askus.ui.auth.view.AuthActivity
 import es.iesnervion.avazquez.askus.ui.details.view.DetailsPostActivity
 import es.iesnervion.avazquez.askus.ui.fragments.AddPostFragment
 import es.iesnervion.avazquez.askus.ui.fragments.HomeFragment
+import es.iesnervion.avazquez.askus.ui.fragments.SettingsFragment
 import es.iesnervion.avazquez.askus.ui.fragments.profileFragment.view.ProfileFragment
 import es.iesnervion.avazquez.askus.ui.fragments.tabs.viewmodel.MainViewModel
 import es.iesnervion.avazquez.askus.utils.AppConstants
+import es.iesnervion.avazquez.askus.utils.AppConstants.EXTRA_PARAM_POST
+import es.iesnervion.avazquez.askus.utils.AppConstants.LOG_OUT
+import es.iesnervion.avazquez.askus.utils.AppConstants.MENU_NAV_DRAWER_SIZE
+import es.iesnervion.avazquez.askus.utils.AppConstants.NEW_POST
+import es.iesnervion.avazquez.askus.utils.AppConstants.PROFILE_ANOTHER_USER
+import es.iesnervion.avazquez.askus.utils.AppConstants.PROFILE_CURRENT_USER
+import es.iesnervion.avazquez.askus.utils.AppConstants.SETTINGS
 import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity()
@@ -42,7 +51,7 @@ class HomeActivity : AppCompatActivity()
     init {
         tagsObserver = Observer { list ->
             tagList = list
-            if (list.isNotEmpty() && navigation.menu.size() == 3) {
+            if (list.isNotEmpty() && navigation.menu.size() == MENU_NAV_DRAWER_SIZE) {
                 val menu: Menu = navigation.menu
                 val sortedList = list.sortedBy { it.nombre }
                 for (x in sortedList.iterator()) {
@@ -121,22 +130,27 @@ class HomeActivity : AppCompatActivity()
      */
     private fun loadFragment(item: MenuItem) {
         when (item.itemId) {
-            R.id.nav_home -> {
+            R.id.nav_home       -> {
                 toolBar.title = resources.getText(R.string.menu_home)
                 loadFragmentLoader(HomeFragment.newInstance(0))
                 //Este no puede tener add to back stack
 
             }
-            R.id.nav_account -> {
+            R.id.nav_account    -> {
                 toolBar.title = resources.getText(R.string.menu_account)
-                loadFragmentLoader(ProfileFragment.newInstance(currentUserId))
+                loadFragmentLoaderBackStack((ProfileFragment.newInstance(currentUserId)),
+                    PROFILE_CURRENT_USER)
             }
-            R.id.nav_settings -> {
+            R.id.nav_settings   -> {
                 toolBar.title = resources.getText(R.string.menu_settings)
-                Toast.makeText(this, getString(R.string.menu_settings), Toast.LENGTH_SHORT)
+                loadFragmentLoaderBackStack((SettingsFragment.newInstance()), SETTINGS)
+            }
+            R.id.nav_moderation -> {
+                toolBar.title = resources.getText(R.string.menu_moderation)
+                Toast.makeText(this, "Moderation section - work in progress", Toast.LENGTH_SHORT)
                     .show()
             }
-            else -> {
+            else                -> {
                 selectedTag = tagList.first { it.nombre == item.title }
                 toolBar.title = selectedTag.nombre
                 loadFragmentLoader(HomeFragment.newInstance(selectedTag.id))
@@ -149,17 +163,17 @@ class HomeActivity : AppCompatActivity()
     /**
      * This will load the fragment
      */
-    private fun loadFragmentLoader(fragment: Fragment) {
+    private fun loadFragmentLoader(fragment: Fragment, tag: String = "") {
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.content_frame, fragment)
+        transaction.replace(R.id.content_frame, fragment, tag)
         transaction.setTransition(TRANSIT_FRAGMENT_FADE)
         //transaction.addToBackStack(null)
         transaction.commit()
     }
 
-    private fun loadFragmentLoaderBackStack(fragment: Fragment) {
+    private fun loadFragmentLoaderBackStack(fragment: Fragment, tag: String = "") {
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.content_frame, fragment)
+        transaction.replace(R.id.content_frame, fragment, tag)
         transaction.setTransition(TRANSIT_FRAGMENT_FADE)
         transaction.addToBackStack(null)
         transaction.commit()
@@ -167,7 +181,7 @@ class HomeActivity : AppCompatActivity()
 
     override fun onAddPostClicked(idTagUserWasSeeing: Int) {
         //No uso el método loadFragmentLoader porque aquí sí quiero añadir add to back stack
-        loadFragmentLoaderBackStack(AddPostFragment.newInstance(idTagUserWasSeeing))
+        loadFragmentLoaderBackStack(AddPostFragment.newInstance(idTagUserWasSeeing), NEW_POST)
         toolBar.title = getString(R.string.send_post)
     }
 
@@ -178,17 +192,62 @@ class HomeActivity : AppCompatActivity()
 
     override fun onPostClicked(post: PostCompletoParaMostrarDTO) {
         val intent = Intent(this, DetailsPostActivity::class.java)
-        intent.putExtra("post", post)
+        intent.putExtra(EXTRA_PARAM_POST, post)
         startActivity(intent)
     }
+    //    override fun onPostClicked(post: PostCompletoParaMostrarDTO,
+    //    v: View,
+    //    title: Int,
+    //    txt: Int,
+    //    author: Int,
+    //    tags: Int) {
+    //    val intent = Intent(this, DetailsPostActivity::class.java)
+    //    intent.putExtra(EXTRA_PARAM_POST, post)
+    //    val activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(this,
+    //        Pair<View, String>(v.findViewById(title), VIEW_NAME_TITLE_POST),
+    //        Pair<View, String>(v.findViewById(txt), VIEW_NAME_BODY_POST),
+    //        Pair<View, String>(v.findViewById(tags), VIEW_NAME_TAGS_POST),
+    //        Pair<View, String>(v.findViewById(author), VIEW_NAME_AUTHOR_POST))
+    //    // Now we can start the Activity, providing the activity options as a bundle
+    //    ActivityCompat.startActivity(this, intent, activityOptions.toBundle())
+    //    }
 
     override fun onUserClicked(idUser: Int, nickname: String) {
-        loadFragmentLoader(ProfileFragment.newInstance(idUser))
+        loadFragmentLoader(ProfileFragment.newInstance(idUser), PROFILE_ANOTHER_USER)
         toolBar.title = nickname
     }
 
+    override fun logOut() {
+        val intent = Intent(this, AuthActivity::class.java)
+        intent.putExtra(LOG_OUT, true)
+        startActivity(intent)
+        finish()
+    }
+
     override fun onBackPressed() {
-        super.onBackPressed()
-        toolBar.title = selectedItemMenuTitle
+        val currentFragment: Fragment? = supportFragmentManager.findFragmentById(R.id.content_frame)
+        when {
+            (currentFragment?.tag == PROFILE_CURRENT_USER) -> {
+                viewModel.saveStateMenu = 0
+                val menuItem: MenuItem = navigation.menu.findItem(viewModel.saveStateMenu)
+                        ?: navigation.menu.getItem(0)
+                onNavigationItemSelected(menuItem)
+                menuItem.isChecked = true
+            }
+            currentFragment?.tag == PROFILE_ANOTHER_USER   -> {
+                super.onBackPressed()
+            }
+            currentFragment?.tag == SETTINGS               -> {
+                viewModel.saveStateMenu = 0
+                val menuItem: MenuItem = navigation.menu.findItem(viewModel.saveStateMenu)
+                        ?: navigation.menu.getItem(0)
+                onNavigationItemSelected(menuItem)
+                menuItem.isChecked = true
+            }
+            else                                           -> {
+                super.onBackPressed()
+                toolBar.title = selectedItemMenuTitle
+            }
+        }
     }
 }

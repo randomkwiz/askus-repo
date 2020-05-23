@@ -57,7 +57,11 @@ constructor() {
             }
 
             override fun <T, I> onSuccess(data: List<T>, moreInfo: I?) {
-                token.postValue(data as List<Char>)
+                if (moreInfo as Int == 200) {
+                    token.postValue(data as List<Char>)
+                } else {
+                    token.postValue((("ERROR_$moreInfo")).toList())
+                }
             }
         }, login)
     }

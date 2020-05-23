@@ -145,8 +145,7 @@ class AddPostFragment : Fragment(), View.OnClickListener {
     }
 
     private fun fieldsAreFilled(): Boolean {
-        return input_title_post.text.isNotEmpty() &&
-                input_title_body.text.isNotEmpty() &&
+        return input_title_post.text.isNotEmpty() && input_title_body.text!!.isNotEmpty() &&
                 spinner_tag_one.selectedItemPosition > 0
     }
 

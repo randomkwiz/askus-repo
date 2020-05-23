@@ -7,9 +7,9 @@
     tools:context=".ui.fragments.AddPostFragment">
 
     <ScrollView
-        android:padding="15dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:padding="15dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -17,20 +17,21 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:layout_weight="1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:orientation="horizontal">
 
                 <TextView
-                    tools:text="@tools:sample/first_names"
-                    android:layout_margin="5dp"
                     android:id="@+id/lbl_author_nick"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="50" />
+                    android:layout_margin="5dp"
+                    android:layout_weight="50"
+                    tools:text="@tools:sample/first_names" />
 
                 <ImageButton
+                    android:tint="@color/colorAccent"
                     android:id="@+id/is_private"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -42,66 +43,85 @@
 
             </LinearLayout>
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:counterEnabled="true"
+                app:counterMaxLength="50"
+                android:layout_height="wrap_content">
 
-            <EditText
-                android:layout_weight="1"
-                android:id="@+id/input_title_post"
+                <EditText
+                    android:id="@+id/input_title_post"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="@string/title"
+                    android:inputType="textAutoCorrect|text"
+                    android:maxLength="50"
+                    android:maxLines="1"
+                    android:scrollbars="vertical" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textContainer"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/title"
-                android:scrollbars="vertical"
-                android:inputType="textMultiLine"
-                android:maxLength="50"
-                android:maxLines="2" />
+                android:layout_marginBottom="15dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="300">
 
-            <EditText
-                android:id="@+id/input_title_body"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:gravity="start"
-                android:inputType="textMultiLine"
-                android:maxLength="300"
-                android:hint="@string/post_body_hint" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_title_body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="200dp"
+                    android:gravity="start"
+                    android:hint="@string/post_body_hint"
+                    android:inputType="textMultiLine|textAutoCorrect"
+                    android:maxLength="300" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:id="@+id/lbl_select_one_category"
-                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:text="@string/select_at_least_one_category"
                 android:textColor="#FF0000"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:visibility="gone" />
+
             <LinearLayout
-                android:layout_weight="1"
                 android:id="@+id/spinner_container_linear_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 app:layout_constraintBottom_toTopOf="@id/btnSend">
 
                 <Spinner
-                    tools:listitem="@layout/support_simple_spinner_dropdown_item"
                     android:id="@+id/spinner_tag_one"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="50"
                     app:layout_constraintStart_toStartOf="parent"
+                    tools:listitem="@layout/support_simple_spinner_dropdown_item"
 
                     />
 
                 <Spinner
-                    tools:listitem="@layout/support_simple_spinner_dropdown_item"
                     android:id="@+id/spinner_tag_two"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="50"
                     app:layout_constraintEnd_toEndOf="parent"
+                    tools:listitem="@layout/support_simple_spinner_dropdown_item"
 
                     />
 
             </LinearLayout>
 
             <Button
-                android:layout_weight="1"
                 android:id="@+id/btnSend"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -109,6 +129,7 @@
                 android:layout_marginTop="50dp"
                 android:layout_marginEnd="25dp"
                 android:layout_marginBottom="10dp"
+                android:layout_weight="1"
                 android:text="@string/send_post" />
         </LinearLayout>
     </ScrollView>

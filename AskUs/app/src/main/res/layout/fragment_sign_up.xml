@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:theme="@style/ThemeOverlay.MaterialComponents.Light"
     tools:context=".ui.fragments.SignUpFragment">
 
 
@@ -19,56 +21,94 @@
             android:paddingTop="20dp"
             android:paddingRight="24dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <ImageView
+                android:id="@+id/splash_img"
+                android:layout_width="150dp"
+                android:layout_height="181dp"
                 android:layout_gravity="center"
-                android:padding="15dp"
-                android:text="@string/app_name"
-                android:textSize="50sp" />
+                android:layout_weight="0.15"
+                android:src="@drawable/ic_launcher" />
 
+            <TextView
+                android:layout_weight="0.01"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="50dp"
+                android:gravity="center"
+                android:text="@string/app_name" />
 
             <!-- Nick Label -->
-
-            <EditText
-                android:id="@+id/input_nickname"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/lblNickname"
-                android:inputType="text"
-                android:maxLength="25"
-                android:singleLine="true" />
+                app:counterEnabled="true"
+                app:counterMaxLength="25"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_height="wrap_content">
 
-            <!-- Email Label -->
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_nickname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/lblNickname"
+                    android:inputType="text"
+                    android:maxLength="25"
+                    android:singleLine="true" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <EditText
-                android:id="@+id/input_email"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/lblEmail_account"
-                android:inputType="textEmailAddress"
-                android:maxLength="254"
-                android:singleLine="true" />
+                app:counterEnabled="true"
+                app:counterMaxLength="254"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/lblEmail_account"
+                    android:inputType="textEmailAddress"
+                    android:maxLength="254"
+                    android:singleLine="true" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
 
             <!-- Password Label -->
-
-            <EditText
-                android:id="@+id/input_password"
+            <com.google.android.material.textfield.TextInputLayout
+                app:endIconMode="password_toggle"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/password"
-                android:maxLength="20"
-                android:inputType="textPassword" />
+                app:counterEnabled="true"
+                app:endIconTint="@color/colorPrimary"
+                app:counterMaxLength="20"
+                android:layout_height="wrap_content">
 
-            <!-- Repeat Password Label -->
-            <EditText
-                android:id="@+id/input_repeat_password"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/password"
+                    android:maxLength="20"
+                    android:inputType="textPassword" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLength="20"
-                android:hint="@string/repeat_password"
-                android:inputType="textPassword" />
+                app:endIconMode="password_toggle"
+                app:endIconTint="@color/colorPrimary"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_repeat_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLength="20"
+                    android:hint="@string/repeat_password"
+                    android:inputType="textPassword" />
+            </com.google.android.material.textfield.TextInputLayout>
+
 
             <ProgressBar
                 android:id="@+id/progress_bar"

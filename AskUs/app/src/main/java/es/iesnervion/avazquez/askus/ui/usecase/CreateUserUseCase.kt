@@ -23,7 +23,7 @@ class CreateUserUseCase {
         call.enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 repositoryInterface.onLoading(false)
-                repositoryInterface.onSuccess(listOf(response.code()), null)
+                repositoryInterface.onSuccess(listOf(response.code()), response.code())
             }
 
             override fun onFailure(call: Call<Void>, t: Throwable) {

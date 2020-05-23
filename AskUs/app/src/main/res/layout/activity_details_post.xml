@@ -58,6 +58,7 @@
                                 android:layout_marginStart="5dp"
                                 android:background="?android:selectableItemBackground"
                                 android:padding="3dp"
+                                android:tint="@color/colorAccent"
                                 android:src="@drawable/ic_thumb_up_black_24dp"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent" />
@@ -80,6 +81,7 @@
                                 android:layout_marginStart="5dp"
                                 android:background="?android:selectableItemBackground"
                                 android:padding="3dp"
+                                android:tint="@color/colorAccent"
                                 android:src="@drawable/ic_thumb_down_black_24dp"
                                 app:layout_constraintBottom_toBottomOf="@id/arrow_up"
                                 app:layout_constraintStart_toEndOf="@id/upvotes_count"
@@ -136,8 +138,7 @@
                                 android:layout_height="wrap_content"
                                 android:maxHeight="400dp"
                                 android:layout_margin="5dp"
-                                app:layout_constrainedHeight="true"
-                                app:layout_constrainedWidth="true"
+
                                 app:layout_constraintBottom_toTopOf="@id/upvotes_count"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
@@ -220,6 +221,7 @@
         android:layout_weight="50"
         android:background="@null"
         android:padding="5dp"
+        android:tint="@color/colorAccent"
         android:scaleType="fitStart"
         android:src="@drawable/ic_expand_less_black_24dp"
         android:visibility="gone" />
@@ -233,9 +235,9 @@
         app:layout_anchor="@id/recyclerView_comments"
         app:layout_anchorGravity="bottom|right|end"
         app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
-        tools:visibility="gone">
+        tools:visibility="visible">
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/comment_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -247,10 +249,10 @@
             android:maxLines="1"
             android:padding="1dp" />
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/comment_text"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="100dp"
             android:layout_margin="1dp"
             android:background="@drawable/roundedshape"
             android:gravity="start"
@@ -274,6 +276,7 @@
                 android:background="@null"
                 android:padding="1dp"
                 android:scaleType="fitStart"
+                android:tint="@color/colorAccent"
                 android:src="@drawable/ic_expand_more_black_24dp"
                 tools:visibility="visible" />
 
