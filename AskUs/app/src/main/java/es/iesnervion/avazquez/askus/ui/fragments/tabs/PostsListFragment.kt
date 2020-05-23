@@ -120,15 +120,15 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         when (filterType) {
             "ALL"           -> {
                 viewModel.loadPostsByTag(token, idTag, pageNumber = currentPage,
-                    pageSize = PAGE_SIZE)
+                    pageSize = PAGE_SIZE, idUsuarioLogeado = idCurrentUser)
             }
             "TOP_RATED"     -> {
                 viewModel.loadPostsByTagTopRated(token, idTag, pageNumber = currentPage,
-                    pageSize = PAGE_SIZE)
+                    pageSize = PAGE_SIZE, idUsuarioLogeado = idCurrentUser)
             }
             "TOP_COMMENTED" -> {
                 viewModel.loadPostsByTagTopCommented(token, idTag, pageNumber = currentPage,
-                    pageSize = PAGE_SIZE)
+                    pageSize = PAGE_SIZE, idUsuarioLogeado = idCurrentUser)
             }
         }
     }
@@ -240,11 +240,19 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                     }
                 }
                 if (imgBtnUpDownVoteHasBeenClicked) {
-                    val votoPublicacionDTO =
-                            VotoPublicacionDTO(idCurrentUser, adapter.getItem(position).IdPost,
-                                valoracion, getFormattedCurrentDatetime())
-                    viewModel.insertVotoPublicacion(token = token,
-                        votoPublicacionDTO = votoPublicacionDTO)
+                    if (currentItem.votoDeUsuarioLogeado == null) {
+                        val votoPublicacionDTO =
+                                VotoPublicacionDTO(idCurrentUser, adapter.getItem(position).IdPost,
+                                    valoracion, getFormattedCurrentDatetime())
+                        viewModel.insertVotoPublicacion(token = token,
+                            votoPublicacionDTO = votoPublicacionDTO)
+                    } else {
+                        //ya has votado aqui
+                        Snackbar.make(recyclerView, getString(R.string.you_cant_vote_twice),
+                            Snackbar.LENGTH_SHORT).show()
+                        imgBtnUpDownVoteHasBeenClicked = false
+                    }
+
                 }
             }
         })

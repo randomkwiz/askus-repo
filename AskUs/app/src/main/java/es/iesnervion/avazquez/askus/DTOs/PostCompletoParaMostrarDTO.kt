@@ -15,5 +15,7 @@ class PostCompletoParaMostrarDTO(
     @SerializedName("cantidadVotosPositivos") val cantidadVotosPositivos: Int,
     @SerializedName("cantidadVotosNegativos") val cantidadVotosNegativos: Int,
     @SerializedName("isPostPrivado") val isPostPrivado: Boolean,
-    @SerializedName("listadoTags") val listadoTags: List<TagDTO>
+    @SerializedName("listadoTags") val listadoTags: List<TagDTO>,
+    @SerializedName("votoDeUsuarioLogeado") val votoDeUsuarioLogeado: VotoPublicacionDTO?
+
 ) : Serializable

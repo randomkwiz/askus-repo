@@ -43,33 +43,45 @@ class MainViewModel : ViewModel() {
         return postsRepository.getLoadingLiveData()
     }
 
-    fun loadPostsByTag(token: String, idTag: Int, pageNumber: Int, pageSize: Int) {
+    fun loadPostsByTag(token: String,
+        idTag: Int,
+        pageNumber: Int,
+        pageSize: Int,
+        idUsuarioLogeado: Int) {
         if (idTag == 0) {
             postsRepository.useCaseLoadNonDeletedPostedPosts(token, pageSize = pageSize,
-                pageNumber = pageNumber)
+                pageNumber = pageNumber, idUsuarioLogeado = idUsuarioLogeado)
         } else {
             postsRepository.useCaseLoadNonDeletedPostedPostsByTag(token, idTag,
-                pageNumber = pageNumber, pageSize = pageSize)
+                pageNumber = pageNumber, pageSize = pageSize, idUsuarioLogeado = idUsuarioLogeado)
         }
     }
 
-    fun loadPostsByTagTopRated(token: String, idTag: Int, pageNumber: Int, pageSize: Int) {
+    fun loadPostsByTagTopRated(token: String,
+        idTag: Int,
+        pageNumber: Int,
+        pageSize: Int,
+        idUsuarioLogeado: Int) {
         if (idTag == 0) {
             postsRepository.useCaseLoadNonDeletedPostedPostsTopRated(token, pageSize = pageSize,
-                pageNumber = pageNumber)
+                pageNumber = pageNumber, idUsuarioLogeado = idUsuarioLogeado)
         } else {
             postsRepository.useCaseLoadNonDeletedPostedPostsByTagTopRated(token, idTag,
-                pageNumber = pageNumber, pageSize = pageSize)
+                pageNumber = pageNumber, pageSize = pageSize, idUsuarioLogeado = idUsuarioLogeado)
         }
     }
 
-    fun loadPostsByTagTopCommented(token: String, idTag: Int, pageNumber: Int, pageSize: Int) {
+    fun loadPostsByTagTopCommented(token: String,
+        idTag: Int,
+        pageNumber: Int,
+        pageSize: Int,
+        idUsuarioLogeado: Int) {
         if (idTag == 0) {
             postsRepository.useCaseLoadNonDeletedPostedPostsTopCommented(token, pageSize = pageSize,
-                pageNumber = pageNumber)
+                pageNumber = pageNumber, idUsuarioLogeado = idUsuarioLogeado)
         } else {
             postsRepository.useCaseLoadNonDeletedPostedPostsByTagTopCommented(token, idTag,
-                pageNumber = pageNumber, pageSize = pageSize)
+                pageNumber = pageNumber, pageSize = pageSize, idUsuarioLogeado = idUsuarioLogeado)
         }
     }
 

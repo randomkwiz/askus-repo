@@ -3,11 +3,14 @@ package es.iesnervion.avazquez.askus.ui.details.view
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.ImageViewCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -157,7 +160,7 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
     private fun loadData() {
         if (token.isNotEmpty()) {
             viewModel.loadPostData(token, intentPost.IdPost, pageSize = PAGE_SIZE,
-                pageNumber = currentPage)
+                pageNumber = currentPage, idUsuarioLogeado = idCurrentUser)
         }
     }
 
@@ -245,6 +248,21 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
         downvotes_count.text = currentPost.cantidadVotosNegativos.toString()
         lbl_tag_lists.text = currentPost.listadoTags.joinToString()
         lbl_author_nick.text = currentPost.nickAutor
+        //Primero limpia las casillas
+        ImageViewCompat.setImageTintList(arrow_up, null)
+        ImageViewCompat.setImageTintList(arrow_down, null)
+        //Luego si es necesario pone los tintes
+        if (currentPost.votoDeUsuarioLogeado != null) {
+            if (currentPost.votoDeUsuarioLogeado.valoracion) {
+                //es positiva
+                ImageViewCompat.setImageTintList(arrow_up,
+                    ColorStateList.valueOf(Color.parseColor("#0C8C00")))
+            } else {
+                //es negativa
+                ImageViewCompat.setImageTintList(arrow_down,
+                    ColorStateList.valueOf(Color.parseColor("#FF0000")))
+            }
+        }
     }
 
     override fun onClick(v: View) {
@@ -293,10 +311,17 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
         if (isBtnVoteClicked) {
-            val votoPublicacionDTO =
-                    VotoPublicacionDTO(idCurrentUser, intentPost.IdPost, valoracion,
-                        getFormattedCurrentDatetime())
-            viewModel.insertVotoPublicacion(token = token, votoPublicacionDTO = votoPublicacionDTO)
+            if (intentPost.votoDeUsuarioLogeado == null) {
+                val votoPublicacionDTO =
+                        VotoPublicacionDTO(idCurrentUser, intentPost.IdPost, valoracion,
+                            getFormattedCurrentDatetime())
+                viewModel.insertVotoPublicacion(token = token,
+                    votoPublicacionDTO = votoPublicacionDTO)
+            } else {
+                //ya has votado aqui
+                Snackbar.make(recyclerView_comments, getString(R.string.you_cant_vote_twice),
+                    Snackbar.LENGTH_SHORT).show()
+            }
         }
     }
 
