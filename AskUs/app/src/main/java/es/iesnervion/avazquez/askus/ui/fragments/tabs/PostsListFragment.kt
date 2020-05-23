@@ -287,7 +287,8 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private fun onUserClicked(idUser: Int, nickname: String) {
         if (context is HomeActivityCallback) {
-            (context as HomeActivityCallback).onUserClicked(idUser = idUser, nickname = nickname)
+            (context as HomeActivityCallback).onUserClicked(idUser = idUser, nickname = nickname,
+                fromDetails = false)
         }
     }
 }

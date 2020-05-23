@@ -56,4 +56,8 @@
     <string name="internal_server_error">Error del servidor. Inténtelo de nuevo más tarde.</string>
     <string name="menu_moderation">Moderación</string>
     <string name="post_something_and_find_out_what_people_think_about_that_little_issue_of_you">"Publica y descubre qué opina la gente de ese asuntillo que te trae de cabeza ... "</string>
+    <string name="user_want_to_exit">¿Deseas salir de AskUs?</string>
+    <string name="exit">Salir</string>
+    <string name="yes">Sí</string>
+    <string name="no">No</string>
 </resources>
