@@ -44,11 +44,6 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
     lateinit var token: String
     lateinit var sharedPreference: SharedPreferences
     lateinit var viewModel: DetailsViewModel
-    lateinit var observerResponseCodeVote: Observer<Int>
-
-    //   lateinit var currentPostObserver: Observer<PostCompletoListadoComentariosDTO>
-    lateinit var commentSentObserver: Observer<Int>
-    lateinit var areValuesReadyObserver: Observer<Boolean>
     lateinit var commentsAdapter: CommentsAdapter
     var idCurrentUser: Int = 0
 
@@ -57,8 +52,6 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
     private var mIsLastPage = false
     private var totalPage = -1
     private var mIsLoading = false
-
-    //    lateinit var observerTotalPage: Observer<PaginHeader>
     var itemCount = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,15 +59,6 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
         sharedPreference = getSharedPreferences(AppConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
         viewModel = ViewModelProviders.of(this).get(DetailsViewModel::class.java)
         intentPost = intent.getSerializableExtra(EXTRA_PARAM_POST) as PostCompletoParaMostrarDTO
-        /*
-       * Set the name of the view's which will be transition to, using the static values above.
-       * This could be done in the layout XML, but exposing it via static variables allows easy
-       * querying from other Activities
-       */
-        //        ViewCompat.setTransitionName(lbl_post_title, VIEW_NAME_TITLE_POST)
-        //        ViewCompat.setTransitionName(lbl_post_text, VIEW_NAME_BODY_POST)
-        //        ViewCompat.setTransitionName(lbl_author_nick, VIEW_NAME_AUTHOR_POST)
-        //        ViewCompat.setTransitionName(lbl_tag_lists, VIEW_NAME_TAGS_POST)
         setDataFromPost(intentPost)
         token = sharedPreference.getString("token", "").toString()
         idCurrentUser = sharedPreference.getInt("user_id", 0)
@@ -161,67 +145,65 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    private fun onValuesReady(areValuesReady: Boolean) {
+        if (areValuesReady) {
+            //Si llega aquí significa que ya están seteados ambos valores
+            if (viewModel.currentPost?.IdPost == intentPost.IdPost) {
+                //Se actualizan los votos si el post es el mismo
+                upvotes_count.text = viewModel.currentPost?.cantidadVotosPositivos.toString()
+                downvotes_count.text = viewModel.currentPost?.cantidadVotosNegativos.toString()
+                //Se actualizan los colores
+                updateOwnVote(viewModel.currentPost?.votoDeUsuarioLogeado)
+                this.totalPage = viewModel.currentPaginHeader.totalPages
+                viewModel.currentPost?.listadoComentarios?.let { it1 -> addElements(it1) }
+            }
+        }
+    }
+
+    private fun onCommentSent(code: Int) {
+        when (code) {
+            NO_CONTENT -> {
+                showToast(getString(R.string.comment_sent))
+                clearCommentEditText()
+            }
+            else       -> {
+                showToast(getString(R.string.error_sending_comment))
+                btn_send_comment.isEnabled = true
+            }
+        }
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun onResponseCodeVoteReceived(code: Int) {
+        when (code) {
+            INTERNAL_SERVER_ERROR -> {
+                //ya has votado aqui
+                showSnackBar(getString(R.string.you_cant_vote_twice))
+            }
+            NO_CONTENT            -> {
+                //ok
+                showSnackBar(getString(R.string.processed_vote))
+                loadData()
+            }
+            else                  -> {
+                //error
+                showSnackBar(getString(R.string.there_was_an_error))
+            }
+        }
+    }
+
+    private fun showSnackBar(message: String) {
+        Snackbar.make(recyclerView_comments, message, Snackbar.LENGTH_SHORT).show()
+    }
+
     private fun initObservers() {
-        areValuesReadyObserver = Observer {
-            if (it) {
-                //Si llega aquí significa que ya están seteados ambos valores
-                if (viewModel.currentPost?.IdPost == intentPost.IdPost) {
-                    //Se actualizan los votos si el post es el mismo
-                    upvotes_count.text = viewModel.currentPost?.cantidadVotosPositivos.toString()
-                    downvotes_count.text = viewModel.currentPost?.cantidadVotosNegativos.toString()
-                    //Se actualizan los colores
-                    updateOwnVote(viewModel.currentPost?.votoDeUsuarioLogeado)
-                    this.totalPage = viewModel.currentPaginHeader.totalPages
-                    viewModel.currentPost?.listadoComentarios?.let { it1 -> addElements(it1) }
-                }
-            }
-        }
-        viewModel.areValuesReady().observe(this, areValuesReadyObserver)
-
-        commentSentObserver = Observer {
-            when (it) {
-                NO_CONTENT -> {
-                    Toast.makeText(applicationContext, getString(R.string.comment_sent),
-                        Toast.LENGTH_SHORT).show()
-                    clearCommentEditText()
-                }
-                else       -> {
-                    Toast.makeText(applicationContext, getString(R.string.error_sending_comment),
-                        Toast.LENGTH_SHORT).show()
-                    btn_send_comment.isEnabled = true
-                }
-            }
-        }
-        viewModel.getInsertedCommentResponseCode().observe(this, commentSentObserver)
-
-
-        observerResponseCodeVote = Observer {
-            when (it) {
-                INTERNAL_SERVER_ERROR -> {
-                    //ya has votado aqui
-                    Snackbar.make(recyclerView_comments, // Parent view
-                        getString(R.string.you_cant_vote_twice), // Message to show
-                        Snackbar.LENGTH_SHORT // How long to display the message.
-                    ).show()
-                }
-                NO_CONTENT            -> {
-                    //ok
-                    Snackbar.make(recyclerView_comments, // Parent view
-                        getString(R.string.processed_vote), // Message to show
-                        Snackbar.LENGTH_SHORT // How long to display the message.
-                    ).show()
-                    loadData()
-                }
-                else                  -> {
-                    //error
-                    Snackbar.make(recyclerView_comments, // Parent view
-                        getString(R.string.there_was_an_error), // Message to show
-                        Snackbar.LENGTH_SHORT // How long to display the message.
-                    ).show()
-                }
-            }
-        }
-        viewModel.responseCodeVotoPublicacionSent().observe(this, observerResponseCodeVote)
+        viewModel.areValuesReady().observe(this, Observer(::onValuesReady))
+        viewModel.getInsertedCommentResponseCode().observe(this, Observer(::onCommentSent))
+        viewModel.responseCodeVotoPublicacionSent()
+            .observe(this, Observer(::onResponseCodeVoteReceived))
     }
 
     //limpia los campos de entrada de texto
@@ -282,50 +264,64 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
                 isBtnVoteClicked = true
             }
             R.id.btn_send_comment   -> {
-                if (fieldsAreFilled()) {
-                    btn_send_comment.isEnabled = false
-                    viewModel.commentToSend =
-                            Comentario(0, getFormattedCurrentDatetime(), 0, idCurrentUser,
-                                intentPost.IdPost, false, false, comment_text.text.toString(),
-                                comment_title.text.toString())
-                    viewModel.insertComment()
-                } else {
-                    Toast.makeText(applicationContext, getString(R.string.fillFields),
-                        Toast.LENGTH_SHORT).show()
-                }
+                onSendCommentClicked()
             }
             R.id.hideCommentBox_btn -> {
-                hideCommentBox_btn.isClickable =
-                        false  //para que no le pueda dar dos veces seguidas (hace cosas raras la animacion)
-                openCommentBox_btn.isClickable = true
-                create_comment_content_l_layout.slideDown()
-                openCommentBox_btn.setVisibilityToVisible()
-                openCommentBox_btn.slideUp()
+                onHideCommentBoxClicked()
             }
             R.id.openCommentBox_btn -> {
-                hideCommentBox_btn.isClickable =
-                        true  //para que no le pueda dar dos veces seguidas (hace cosas raras la animacion)
-                openCommentBox_btn.isClickable = false
-                openCommentBox_btn.setVisibilityToGone()
-                openCommentBox_btn.slideDown()
-                create_comment_content_l_layout.slideUp()
+                onOpenCommentBoxClicked()
             }
             R.id.lbl_author_nick    -> {
                 goToUser(intentPost.idAutor, intentPost.nickAutor)
             }
         }
         if (isBtnVoteClicked) {
-            if (intentPost.votoDeUsuarioLogeado == null) {
-                val votoPublicacionDTO =
-                        VotoPublicacionDTO(idCurrentUser, intentPost.IdPost, valoracion,
-                            getFormattedCurrentDatetime())
-                viewModel.insertVotoPublicacion(token = token,
-                    votoPublicacionDTO = votoPublicacionDTO)
-            } else {
-                //ya has votado aqui
-                Snackbar.make(recyclerView_comments, getString(R.string.you_cant_vote_twice),
-                    Snackbar.LENGTH_SHORT).show()
-            }
+            onVoteBtnClicked(valoracion)
+        }
+    }
+
+    private fun onVoteBtnClicked(valoracion: Boolean) {
+        if (intentPost.votoDeUsuarioLogeado == null) {
+            val votoPublicacionDTO =
+                    VotoPublicacionDTO(idCurrentUser, intentPost.IdPost, valoracion,
+                        getFormattedCurrentDatetime())
+            viewModel.insertVotoPublicacion(token = token, votoPublicacionDTO = votoPublicacionDTO)
+        } else {
+            //ya has votado aqui
+            Snackbar.make(recyclerView_comments, getString(R.string.you_cant_vote_twice),
+                Snackbar.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun onOpenCommentBoxClicked() {
+        hideCommentBox_btn.isClickable =
+                true  //para que no le pueda dar dos veces seguidas (hace cosas raras la animacion)
+        openCommentBox_btn.isClickable = false
+        openCommentBox_btn.setVisibilityToGone()
+        openCommentBox_btn.slideDown()
+        create_comment_content_l_layout.slideUp()
+    }
+
+    private fun onHideCommentBoxClicked() {
+        hideCommentBox_btn.isClickable =
+                false  //para que no le pueda dar dos veces seguidas (hace cosas raras la animacion)
+        openCommentBox_btn.isClickable = true
+        create_comment_content_l_layout.slideDown()
+        openCommentBox_btn.setVisibilityToVisible()
+        openCommentBox_btn.slideUp()
+    }
+
+    private fun onSendCommentClicked() {
+        if (fieldsAreFilled()) {
+            btn_send_comment.isEnabled = false
+            viewModel.commentToSend = Comentario(0, getFormattedCurrentDatetime(), 0, idCurrentUser,
+                intentPost.IdPost, false, false, comment_text.text.toString(),
+                comment_title.text.toString())
+            viewModel.insertComment()
+        } else {
+            Toast.makeText(applicationContext, getString(R.string.fillFields), Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
@@ -342,7 +338,6 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
         if (currentPage != PAGE_START) {
             commentsAdapter.removeLoading()
         }
-
         commentsAdapter.addItems(items.toMutableList())
         swipeRefreshLayout.isRefreshing = false
         //check weather is last page or not
