@@ -259,6 +259,7 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 }
             }
         })
+        //        adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
         recyclerView.adapter = adapter
     }
 

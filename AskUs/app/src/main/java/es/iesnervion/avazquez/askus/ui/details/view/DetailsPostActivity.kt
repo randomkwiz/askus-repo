@@ -75,8 +75,6 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
         //        ViewCompat.setTransitionName(lbl_post_text, VIEW_NAME_BODY_POST)
         //        ViewCompat.setTransitionName(lbl_author_nick, VIEW_NAME_AUTHOR_POST)
         //        ViewCompat.setTransitionName(lbl_tag_lists, VIEW_NAME_TAGS_POST)
-
-
         setDataFromPost(intentPost)
         token = sharedPreference.getString("token", "").toString()
         idCurrentUser = sharedPreference.getInt("user_id", 0)
@@ -107,7 +105,6 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
         })
         recyclerView_comments.adapter = commentsAdapter
     }
-
 
     private fun initListeners() {
         lbl_author_nick.setOnClickListener(this)
@@ -172,6 +169,8 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
                     //Se actualizan los votos si el post es el mismo
                     upvotes_count.text = viewModel.currentPost?.cantidadVotosPositivos.toString()
                     downvotes_count.text = viewModel.currentPost?.cantidadVotosNegativos.toString()
+                    //Se actualizan los colores
+                    updateOwnVote(viewModel.currentPost?.votoDeUsuarioLogeado)
                     this.totalPage = viewModel.currentPaginHeader.totalPages
                     viewModel.currentPost?.listadoComentarios?.let { it1 -> addElements(it1) }
                 }
@@ -211,6 +210,7 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
                         getString(R.string.processed_vote), // Message to show
                         Snackbar.LENGTH_SHORT // How long to display the message.
                     ).show()
+                    loadData()
                 }
                 else                  -> {
                     //error
@@ -248,12 +248,16 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
         downvotes_count.text = currentPost.cantidadVotosNegativos.toString()
         lbl_tag_lists.text = currentPost.listadoTags.joinToString()
         lbl_author_nick.text = currentPost.nickAutor
+        updateOwnVote(currentPost.votoDeUsuarioLogeado)
+    }
+
+    private fun updateOwnVote(voto: VotoPublicacionDTO?) {
         //Primero limpia las casillas
         ImageViewCompat.setImageTintList(arrow_up, null)
         ImageViewCompat.setImageTintList(arrow_down, null)
         //Luego si es necesario pone los tintes
-        if (currentPost.votoDeUsuarioLogeado != null) {
-            if (currentPost.votoDeUsuarioLogeado.valoracion) {
+        if (voto != null) {
+            if (voto.valoracion) {
                 //es positiva
                 ImageViewCompat.setImageTintList(arrow_up,
                     ColorStateList.valueOf(Color.parseColor("#0C8C00")))

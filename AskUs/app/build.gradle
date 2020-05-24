@@ -74,6 +74,10 @@ dependencies {
 
     implementation 'com.google.android.material:material:1.1.0'
 
+    //RecyclerView
+   // implementation 'androidx.recyclerview:recyclerview:1.2.0-alpha03'
+
     //See more
-    implementation 'com.github.AhmMhd:SeeMoreTextView-Android:1.0.0'
+//    implementation 'com.github.AhmMhd:SeeMoreTextView-Android:1.0.0'
+
 }
