@@ -122,6 +122,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#FF0000"
+                tools:visibility="visible"
+                tools:text="Texto largo de error para probar"
+                android:layout_marginTop="5dp"
                 android:visibility="gone" />
 
             <Button
