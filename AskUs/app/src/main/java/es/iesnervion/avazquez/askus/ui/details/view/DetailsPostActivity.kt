@@ -352,7 +352,10 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
             mIsLastPage = true
         }
         mIsLoading = false
-
+        //Aquí sólo entrará cuando el valor de
+        //currentPaginHeader esté seteado
+        //por eso nunca será null y por eso
+        //necesito el MediatorLiveData
         if (commentsAdapter.itemCount >= viewModel.currentPaginHeader.totalCount) {
             commentsAdapter.removeLoading()
         }
