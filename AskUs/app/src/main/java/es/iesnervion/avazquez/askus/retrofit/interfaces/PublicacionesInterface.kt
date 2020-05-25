@@ -85,4 +85,10 @@ interface PublicacionesInterface {
 
     @POST("api/Publicaciones")
     fun postNewPost(@Body post: CreatePostRequestBody): Call<Void>
+
+    /*PRUEBA*/
+    @GET("/api/publicaciones?&pageNumber=1&pageSize=30&pagination=true&idUsuarioLogeado=1")
+    fun getPostModeracionPrueba(
+        @Header("Authorization") authToken: String): Call<List<PostCompletoParaMostrarDTO>>
+
 }

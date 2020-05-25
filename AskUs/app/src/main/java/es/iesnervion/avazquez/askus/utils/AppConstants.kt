@@ -17,6 +17,7 @@ object AppConstants {
     const val VIEW_NAME_AUTHOR_POST = "detail:_author"
     const val VIEW_NAME_TAGS_POST = "detail:_tags"
     const val PROFILE_CURRENT_USER = "PROFILE_CURRENT_USER"
+    const val MODERATION = "MODERATION"
     const val PROFILE_ANOTHER_USER = "PROFILE_ANOTHER_USER"
     const val PROFILE_ANOTHER_USER_FROM_DETAILS = "PROFILE_ANOTHER_USER_FROM_DETAILS"
     const val HOME_PAGE = "HOME_PAGE"
