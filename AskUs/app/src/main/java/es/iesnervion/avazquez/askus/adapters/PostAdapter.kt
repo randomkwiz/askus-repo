@@ -1,5 +1,7 @@
 package es.iesnervion.avazquez.askus.adapters
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Build
 import android.text.method.ScrollingMovementMethod
 import android.view.View
@@ -7,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.core.widget.ImageViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import es.iesnervion.avazquez.askus.DTOs.PostCompletoParaMostrarDTO
 import es.iesnervion.avazquez.askus.R
@@ -75,7 +78,8 @@ class PostAdapter(listener: RecyclerViewClickListener) : RecyclerView.Adapter<Ba
             }
         }
         isLoaderVisible = true
-        posts.add(PostCompletoParaMostrarDTO(0, 0, "", "", "", 0, "", "", 0, 0, false, listOf()))
+        posts.add(
+            PostCompletoParaMostrarDTO(0, 0, "", "", "", 0, "", "", 0, 0, false, listOf(), null))
         val pos = (posts.size - 1)
         notifyItemInserted(pos)
     }
@@ -140,6 +144,22 @@ class PostAdapter(listener: RecyclerViewClickListener) : RecyclerView.Adapter<Ba
             tagList.text = currentPost.listadoTags.joinToString()
             upvotes.text = currentPost.cantidadVotosPositivos.toString()
             downvotes.text = currentPost.cantidadVotosNegativos.toString()
+            //Primero limpia las casillas
+            ImageViewCompat.setImageTintList(arrowUp, null)
+            ImageViewCompat.setImageTintList(arrowDown, null)
+            //Luego si es necesario pone los tintes
+            if (currentPost.votoDeUsuarioLogeado != null) {
+                if (currentPost.votoDeUsuarioLogeado.valoracion) {
+                    //es positiva
+                    ImageViewCompat.setImageTintList(arrowUp,
+                        ColorStateList.valueOf(Color.parseColor("#0C8C00")))
+                } else {
+                    //es negativa
+                    ImageViewCompat.setImageTintList(arrowDown,
+                        ColorStateList.valueOf(Color.parseColor("#FF0000")))
+                }
+            }
+
         }
     }
 }

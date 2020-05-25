@@ -55,9 +55,13 @@ class DetailsViewModel : ViewModel() {
         }
     }
 
-    fun loadPostData(token: String, idPost: Int, pageNumber: Int, pageSize: Int) {
+    fun loadPostData(token: String,
+        idPost: Int,
+        pageNumber: Int,
+        pageSize: Int,
+        idUsuarioLogeado: Int) {
         postsRepository.useCaseLoadPostWithAllComments(token, idPost, pageNumber = pageNumber,
-            pageSize = pageSize)
+            pageSize = pageSize, idUsuarioLogeado = idUsuarioLogeado)
     }
 
     fun responseCodeVotoPublicacionSent(): LiveData<Int> {

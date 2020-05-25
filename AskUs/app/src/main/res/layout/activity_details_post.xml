@@ -208,6 +208,8 @@
             android:layout_margin="5dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:itemCount="5"
+            android:clipToPadding="false"
+            android:paddingBottom="40dp"
             tools:listitem="@layout/comment_row"
             tools:visibility="gone" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

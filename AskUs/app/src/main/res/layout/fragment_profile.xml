@@ -11,13 +11,11 @@
         android:id="@+id/llayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:weightSum="100">
+        android:orientation="vertical">
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="50">
+            android:layout_height="wrap_content">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -172,14 +170,14 @@
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/progress_bar"
-            app:lottie_loop="true"
-            app:lottie_autoPlay="true"
-            app:lottie_fileName="trophy.json"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
             android:layout_weight="50"
             android:visibility="visible"
+            app:lottie_autoPlay="true"
+            app:lottie_fileName="trophy.json"
+            app:lottie_loop="true"
             tools:visibility="gone" />
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -187,7 +185,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="bottom"
-            android:layout_weight="50"
             android:visibility="gone"
             tools:background="@color/colorAccent"
             tools:visibility="visible">

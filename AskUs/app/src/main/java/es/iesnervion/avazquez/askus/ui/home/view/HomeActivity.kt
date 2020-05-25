@@ -8,6 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE
@@ -27,17 +28,18 @@ import es.iesnervion.avazquez.askus.ui.fragments.profileFragment.view.ProfileFra
 import es.iesnervion.avazquez.askus.ui.fragments.tabs.viewmodel.MainViewModel
 import es.iesnervion.avazquez.askus.utils.AppConstants
 import es.iesnervion.avazquez.askus.utils.AppConstants.EXTRA_PARAM_POST
+import es.iesnervion.avazquez.askus.utils.AppConstants.HOME_PAGE
 import es.iesnervion.avazquez.askus.utils.AppConstants.LOG_OUT
 import es.iesnervion.avazquez.askus.utils.AppConstants.MENU_NAV_DRAWER_SIZE
 import es.iesnervion.avazquez.askus.utils.AppConstants.NEW_POST
 import es.iesnervion.avazquez.askus.utils.AppConstants.PROFILE_ANOTHER_USER
+import es.iesnervion.avazquez.askus.utils.AppConstants.PROFILE_ANOTHER_USER_FROM_DETAILS
 import es.iesnervion.avazquez.askus.utils.AppConstants.PROFILE_CURRENT_USER
 import es.iesnervion.avazquez.askus.utils.AppConstants.SETTINGS
 import kotlinx.android.synthetic.main.activity_home.*
 
-class HomeActivity : AppCompatActivity()
-    , NavigationView.OnNavigationItemSelectedListener
-    , HomeActivityCallback {
+class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
+    HomeActivityCallback {
     lateinit var viewModel: MainViewModel
     lateinit var tagList: List<TagDTO>
     lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
@@ -72,11 +74,9 @@ class HomeActivity : AppCompatActivity()
         viewModel.loadTags()
         initObservers()
         setSupportActionBar(toolBar)
-        actionBarDrawerToggle = ActionBarDrawerToggle(this,
-            dlDrawerLayout,
-            toolBar,
-            R.string.drawer_opened,
-            R.string.drawer_closed)
+        actionBarDrawerToggle =
+                ActionBarDrawerToggle(this, dlDrawerLayout, toolBar, R.string.drawer_opened,
+                    R.string.drawer_closed)
         dlDrawerLayout.addDrawerListener(actionBarDrawerToggle)
         actionBarDrawerToggle.syncState()   //without this it doesn't show the hamburguer menu icon
         navigation.setNavigationItemSelectedListener(this)
@@ -90,7 +90,7 @@ class HomeActivity : AppCompatActivity()
             viewModel.saveStateMenu = menuItem.itemId
         } else {
             val menuItem: MenuItem =
-                navigation.menu.findItem(viewModel.saveStateMenu) ?: navigation.menu.getItem(0)
+                    navigation.menu.findItem(viewModel.saveStateMenu) ?: navigation.menu.getItem(0)
             onNavigationItemSelected(menuItem)
             menuItem.isChecked = true
         }
@@ -98,7 +98,8 @@ class HomeActivity : AppCompatActivity()
             "loadProfileFragment" -> {
                 val idUserClicked = intent.getIntExtra("idUserToLoad", 0)
                 val nicknameUserClicked = intent.getStringExtra("nicknameUserToLoad") ?: ""
-                onUserClicked(idUser = idUserClicked, nickname = nicknameUserClicked)
+                onUserClicked(idUser = idUserClicked, nickname = nicknameUserClicked,
+                    fromDetails = true)
             }
         }
     }
@@ -132,9 +133,8 @@ class HomeActivity : AppCompatActivity()
         when (item.itemId) {
             R.id.nav_home       -> {
                 toolBar.title = resources.getText(R.string.menu_home)
-                loadFragmentLoader(HomeFragment.newInstance(0))
+                loadFragmentLoader(HomeFragment.newInstance(0), HOME_PAGE)
                 //Este no puede tener add to back stack
-
             }
             R.id.nav_account    -> {
                 toolBar.title = resources.getText(R.string.menu_account)
@@ -195,6 +195,7 @@ class HomeActivity : AppCompatActivity()
         intent.putExtra(EXTRA_PARAM_POST, post)
         startActivity(intent)
     }
+
     //    override fun onPostClicked(post: PostCompletoParaMostrarDTO,
     //    v: View,
     //    title: Int,
@@ -211,9 +212,13 @@ class HomeActivity : AppCompatActivity()
     //    // Now we can start the Activity, providing the activity options as a bundle
     //    ActivityCompat.startActivity(this, intent, activityOptions.toBundle())
     //    }
-
-    override fun onUserClicked(idUser: Int, nickname: String) {
-        loadFragmentLoader(ProfileFragment.newInstance(idUser), PROFILE_ANOTHER_USER)
+    override fun onUserClicked(idUser: Int, nickname: String, fromDetails: Boolean) {
+        if (fromDetails) {
+            loadFragmentLoader(ProfileFragment.newInstance(idUser),
+                PROFILE_ANOTHER_USER_FROM_DETAILS)
+        } else {
+            loadFragmentLoader(ProfileFragment.newInstance(idUser), PROFILE_ANOTHER_USER)
+        }
         toolBar.title = nickname
     }
 
@@ -227,24 +232,24 @@ class HomeActivity : AppCompatActivity()
     override fun onBackPressed() {
         val currentFragment: Fragment? = supportFragmentManager.findFragmentById(R.id.content_frame)
         when {
-            (currentFragment?.tag == PROFILE_CURRENT_USER) -> {
+            (currentFragment?.tag == PROFILE_CURRENT_USER || currentFragment?.tag == PROFILE_ANOTHER_USER || currentFragment?.tag == SETTINGS) -> {
                 viewModel.saveStateMenu = 0
                 val menuItem: MenuItem = navigation.menu.findItem(viewModel.saveStateMenu)
                         ?: navigation.menu.getItem(0)
                 onNavigationItemSelected(menuItem)
                 menuItem.isChecked = true
             }
-            currentFragment?.tag == PROFILE_ANOTHER_USER   -> {
+            currentFragment?.tag == PROFILE_ANOTHER_USER_FROM_DETAILS                                                                          -> {
                 super.onBackPressed()
             }
-            currentFragment?.tag == SETTINGS               -> {
-                viewModel.saveStateMenu = 0
-                val menuItem: MenuItem = navigation.menu.findItem(viewModel.saveStateMenu)
-                        ?: navigation.menu.getItem(0)
-                onNavigationItemSelected(menuItem)
-                menuItem.isChecked = true
+            currentFragment?.tag == HOME_PAGE                                                                                                  -> {
+                AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle(resources.getString(R.string.exit))
+                    .setMessage(resources.getString(R.string.user_want_to_exit))
+                    .setPositiveButton(resources.getString(R.string.yes)) { _, _ -> finish() }
+                    .setNegativeButton(resources.getString(R.string.no), null).show()
             }
-            else                                           -> {
+            else                                                                                                                               -> {
                 super.onBackPressed()
                 toolBar.title = selectedItemMenuTitle
             }

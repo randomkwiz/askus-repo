@@ -46,7 +46,10 @@ class PostsRepository
         return loadingLiveData
     }
 
-    fun useCaseLoadNonDeletedPostedPosts(token: String, pageSize: Int, pageNumber: Int) {
+    fun useCaseLoadNonDeletedPostedPosts(token: String,
+        pageSize: Int,
+        pageNumber: Int,
+        idUsuarioLogeado: Int) {
         loadJSONUseCase.getListadoPostsCompletosParaMostrarCantidadComentarios(object : RepositoryInterface {
             override fun showError(show: Boolean) {
                 showFinishMessage.postValue(show)
@@ -61,10 +64,13 @@ class PostsRepository
                 allVisiblePostsByGivenTag.postValue(data as List<PostCompletoParaMostrarDTO>)
                 paginHeader.postValue(moreInfo as PaginHeader)
             }
-        }, token, pageSize = pageSize, pageNumber = pageNumber)
+        }, token, pageSize = pageSize, pageNumber = pageNumber, idUsuarioLogeado = idUsuarioLogeado)
     }
 
-    fun useCaseLoadNonDeletedPostedPostsTopRated(token: String, pageSize: Int, pageNumber: Int) {
+    fun useCaseLoadNonDeletedPostedPostsTopRated(token: String,
+        pageSize: Int,
+        pageNumber: Int,
+        idUsuarioLogeado: Int) {
         loadJSONUseCase.getListadoPostsCompletosParaMostrarCantidadComentariosTopRated(
             object : RepositoryInterface {
                 override fun showError(show: Boolean) {
@@ -82,12 +88,12 @@ class PostsRepository
                         data as List<PostCompletoParaMostrarDTO>)
                     paginHeader.postValue(moreInfo as PaginHeader)
                 }
-            }, token, pageSize = pageSize, pageNumber = pageNumber)
+            }, token, pageSize = pageSize, pageNumber = pageNumber,
+            idUsuarioLogeado = idUsuarioLogeado)
     }
 
     fun useCaseLoadNonDeletedPostedPostsTopCommented(token: String,
-        pageSize: Int,
-        pageNumber: Int) {
+        pageSize: Int, pageNumber: Int, idUsuarioLogeado: Int) {
         loadJSONUseCase.getListadoPostsCompletosParaMostrarCantidadComentariosTopCommented(
             object : RepositoryInterface {
                 override fun showError(show: Boolean) {
@@ -105,13 +111,13 @@ class PostsRepository
                         data as List<PostCompletoParaMostrarDTO>)
                     paginHeader.postValue(moreInfo as PaginHeader)
                 }
-            }, token, pageSize = pageSize, pageNumber = pageNumber)
+            }, token, pageSize = pageSize, pageNumber = pageNumber,
+            idUsuarioLogeado = idUsuarioLogeado)
     }
 
     fun useCaseLoadNonDeletedPostedPostsByTag(token: String,
         idTag: Int,
-        pageNumber: Int,
-        pageSize: Int) {
+        pageNumber: Int, pageSize: Int, idUsuarioLogeado: Int) {
         loadJSONUseCase.getListadoPostsCompletosParaMostrarCantidadComentariosTag(object : RepositoryInterface {
             override fun showError(show: Boolean) {
                 showFinishMessage.postValue(show)
@@ -125,14 +131,14 @@ class PostsRepository
                 allVisiblePostsByGivenTag.postValue(data as List<PostCompletoParaMostrarDTO>)
                 paginHeader.postValue(moreInfo as PaginHeader)
             }
-        }, token = token, idTag = idTag, pageNumber = pageNumber, pageSize = pageSize)
+        }, token = token, idTag = idTag, pageNumber = pageNumber, pageSize = pageSize,
+            idUsuarioLogeado = idUsuarioLogeado)
     }
 
     //tag - top rated
     fun useCaseLoadNonDeletedPostedPostsByTagTopRated(token: String,
         idTag: Int,
-        pageNumber: Int,
-        pageSize: Int) {
+        pageNumber: Int, pageSize: Int, idUsuarioLogeado: Int) {
         loadJSONUseCase.getListadoPostsCompletosParaMostrarCantidadComentariosTagTopRated(
             object : RepositoryInterface {
                 override fun showError(show: Boolean) {
@@ -148,14 +154,14 @@ class PostsRepository
                         data as List<PostCompletoParaMostrarDTO>)
                     paginHeader.postValue(moreInfo as PaginHeader)
                 }
-            }, token = token, idTag = idTag, pageNumber = pageNumber, pageSize = pageSize)
+            }, token = token, idTag = idTag, pageNumber = pageNumber, pageSize = pageSize,
+            idUsuarioLogeado = idUsuarioLogeado)
     }
 
     //tag - top commented
     fun useCaseLoadNonDeletedPostedPostsByTagTopCommented(token: String,
         idTag: Int,
-        pageNumber: Int,
-        pageSize: Int) {
+        pageNumber: Int, pageSize: Int, idUsuarioLogeado: Int) {
         loadJSONUseCase.getListadoPostsCompletosParaMostrarCantidadComentariosTagTopCommented(
             object : RepositoryInterface {
                 override fun showError(show: Boolean) {
@@ -171,10 +177,15 @@ class PostsRepository
                         data as List<PostCompletoParaMostrarDTO>)
                     paginHeader.postValue(moreInfo as PaginHeader)
                 }
-            }, token = token, idTag = idTag, pageNumber = pageNumber, pageSize = pageSize)
+            }, token = token, idTag = idTag, pageNumber = pageNumber, pageSize = pageSize,
+            idUsuarioLogeado = idUsuarioLogeado)
     }
 
-    fun useCaseLoadPostWithAllComments(token: String, idPost: Int, pageNumber: Int, pageSize: Int) {
+    fun useCaseLoadPostWithAllComments(token: String,
+        idPost: Int,
+        pageNumber: Int,
+        pageSize: Int,
+        idUsuarioLogeado: Int) {
         loadJSONUseCase.getPublicacionParaMostrarConComentarios(object : RepositoryInterface {
             override fun showError(show: Boolean) {
                 showFinishMessage.postValue(show)
@@ -188,7 +199,8 @@ class PostsRepository
                 postWithComments.postValue((data as List<PostCompletoListadoComentariosDTO>).firstOrNull())
                 commentPaginHeader.postValue(moreInfo as PaginHeader)
             }
-        }, token = token, idPost = idPost, pageSize = pageSize, pageNumber = pageNumber)
+        }, token = token, idPost = idPost, pageSize = pageSize, pageNumber = pageNumber,
+            idUsuarioLogeado = idUsuarioLogeado)
     }
 
     fun useCaseSendNewPosts(post: PublicacionDTO, tagList: List<Int>) {

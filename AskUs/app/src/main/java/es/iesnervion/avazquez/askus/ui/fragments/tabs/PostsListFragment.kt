@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
-import es.iesnervion.avazquez.askus.DTOs.PaginHeader
 import es.iesnervion.avazquez.askus.DTOs.PostCompletoParaMostrarDTO
 import es.iesnervion.avazquez.askus.DTOs.VotoPublicacionDTO
 import es.iesnervion.avazquez.askus.R
@@ -37,9 +36,6 @@ import setVisibilityToVisible
 class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     lateinit var viewModel: MainViewModel
     lateinit var adapter: PostAdapter
-    lateinit var observerPosts: Observer<List<PostCompletoParaMostrarDTO>>
-    lateinit var observerLoadingData: Observer<Boolean>
-    lateinit var observerResponseCodeVote: Observer<Int>
     lateinit var filterType: String
     lateinit var sharedPreference: SharedPreferences
     lateinit var token: String
@@ -52,7 +48,6 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private var mIsLastPage = false
     private var totalPage = 2
     private var mIsLoading = false
-    lateinit var observerTotalPage: Observer<PaginHeader>
     var itemCount = 0
 
     companion object {
@@ -120,90 +115,89 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         when (filterType) {
             "ALL"           -> {
                 viewModel.loadPostsByTag(token, idTag, pageNumber = currentPage,
-                    pageSize = PAGE_SIZE)
+                    pageSize = PAGE_SIZE, idUsuarioLogeado = idCurrentUser)
             }
             "TOP_RATED"     -> {
                 viewModel.loadPostsByTagTopRated(token, idTag, pageNumber = currentPage,
-                    pageSize = PAGE_SIZE)
+                    pageSize = PAGE_SIZE, idUsuarioLogeado = idCurrentUser)
             }
             "TOP_COMMENTED" -> {
                 viewModel.loadPostsByTagTopCommented(token, idTag, pageNumber = currentPage,
-                    pageSize = PAGE_SIZE)
+                    pageSize = PAGE_SIZE, idUsuarioLogeado = idCurrentUser)
             }
         }
     }
 
+    private fun onValuesReady(areLoaded: Boolean) {
+        if (areLoaded) {
+            //Si llega aquí significa que ya están seteados ambos valores
+            if (idTag == 0   //si es 0 porque significa que pide todos los posts
+                || viewModel.postsList.all { post -> idTag in post.listadoTags.map { it.id } } //o que todos los posts tengan el tag indicado
+            ) {
+                addElements(viewModel.postsList.toMutableList())
+            }
+            this.totalPage = viewModel.currentPaginHeader.totalPages
+        }
+    }
+
+    private fun onLoadedData(loading: Boolean) {
+        if (loading) {
+            if (!swipeRefreshLayout.isRefreshing) {
+                if (adapter.itemCount == 0) {
+                    progressBar.setVisibilityToVisible()
+                    recyclerView.setVisibilityToGone()
+                }
+            }
+        } else {
+            progressBar.setVisibilityToGone()
+            recyclerView.setVisibilityToVisible()
+            swipeRefreshLayout.isRefreshing = false
+        }
+    }
+
+    private fun onResponseCodeVoteReceived(it: Int) {
+        //Hago esto de imgBtnUpDownVoteHasBeenClicked porque
+        //si no, entra aquí cada vez que cambias de pestaña en el view pager
+        //y te muestra el snackbar aunque no hayas pulsado el boton
+        //porque el observer entra con el ultimo dato del live data
+        if (imgBtnUpDownVoteHasBeenClicked) {
+            when (it) {
+                INTERNAL_SERVER_ERROR -> {
+                    //ya has votado aqui
+                    Snackbar.make(recyclerView, getString(R.string.you_cant_vote_twice),
+                        Snackbar.LENGTH_SHORT).show()
+                }
+                NO_CONTENT            -> {
+                    //ok
+                    Snackbar.make(recyclerView, getString(R.string.processed_vote),
+                        Snackbar.LENGTH_SHORT).show()
+                }
+                else                  -> {
+                    //error
+                    Snackbar.make(recyclerView, getString(R.string.there_was_an_error),
+                        Snackbar.LENGTH_SHORT).show()
+                }
+            }
+        }
+        imgBtnUpDownVoteHasBeenClicked = false
+    }
+
     private fun initObservers() {
         adapter.clear()
-        observerPosts = Observer { post ->
-            addElements(post.toMutableList())
-        }
-        observerLoadingData = Observer { loading ->
-            if (loading) {
-                if (!swipeRefreshLayout.isRefreshing) {
-                    if (adapter.itemCount == 0) {
-                        progressBar.setVisibilityToVisible()
-                        recyclerView.setVisibilityToGone()
-                    }
-                }
-            } else {
-                progressBar.setVisibilityToGone()
-                recyclerView.setVisibilityToVisible()
-                swipeRefreshLayout.isRefreshing = false
-            }
-        }
-
-        observerResponseCodeVote = Observer {
-            //Hago esto de imgBtnUpDownVoteHasBeenClicked porque
-            //si no, entra aquí cada vez que cambias de pestaña en el view pager
-            //y te muestra el snackbar aunque no hayas pulsado el boton
-            //porque el observer entra con el ultimo dato del live data
-            if (imgBtnUpDownVoteHasBeenClicked) {
-                when (it) {
-                    INTERNAL_SERVER_ERROR -> {
-                        //ya has votado aqui
-                        Snackbar.make(recyclerView, // Parent view
-                            getString(R.string.you_cant_vote_twice), // Message to show
-                            Snackbar.LENGTH_SHORT // How long to display the message.
-                        ).show()
-                    }
-                    NO_CONTENT            -> {
-                        //ok
-                        Snackbar.make(recyclerView, // Parent view
-                            getString(R.string.processed_vote), // Message to show
-                            Snackbar.LENGTH_SHORT // How long to display the message.
-                        ).show()
-                    }
-                    else                  -> {
-                        //error
-                        Snackbar.make(recyclerView, // Parent view
-                            getString(R.string.there_was_an_error), // Message to show
-                            Snackbar.LENGTH_SHORT // How long to display the message.
-                        ).show()
-                    }
-                }
-            }
-            imgBtnUpDownVoteHasBeenClicked = false
-        }
-
-        observerTotalPage = Observer {
-            this.totalPage = it.totalPages
-        }
-
-        viewModel.getPaginHeaders().observe(viewLifecycleOwner, observerTotalPage)
         viewModel.responseCodeVotoPublicacionSent()
-            .observe(viewLifecycleOwner, observerResponseCodeVote)
-        viewModel.loadingLiveData().observe(viewLifecycleOwner, observerLoadingData)
+            .observe(viewLifecycleOwner, Observer(::onResponseCodeVoteReceived))
+        viewModel.loadingLiveData().observe(viewLifecycleOwner, Observer(::onLoadedData))
         when (filterType) {
             "ALL"           -> {
-                viewModel.allVisiblePostsByTag().observe(viewLifecycleOwner, observerPosts)
+                viewModel.areValuesReadyAll().observe(viewLifecycleOwner, Observer(::onValuesReady))
             }
             "TOP_RATED"     -> {
-                viewModel.allVisiblePostsByTagTopRated().observe(viewLifecycleOwner, observerPosts)
+                viewModel.areValuesReadyTopRated()
+                    .observe(viewLifecycleOwner, Observer(::onValuesReady))
             }
             "TOP_COMMENTED" -> {
-                viewModel.allVisiblePostsByTagTopCommented()
-                    .observe(viewLifecycleOwner, observerPosts)
+                viewModel.areValuesReadyTopCommented()
+                    .observe(viewLifecycleOwner, Observer(::onValuesReady))
             }
         }
     }
@@ -240,14 +234,22 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                     }
                 }
                 if (imgBtnUpDownVoteHasBeenClicked) {
-                    val votoPublicacionDTO =
-                            VotoPublicacionDTO(idCurrentUser, adapter.getItem(position).IdPost,
-                                valoracion, getFormattedCurrentDatetime())
-                    viewModel.insertVotoPublicacion(token = token,
-                        votoPublicacionDTO = votoPublicacionDTO)
+                    if (currentItem.votoDeUsuarioLogeado == null) {
+                        val votoPublicacionDTO =
+                                VotoPublicacionDTO(idCurrentUser, adapter.getItem(position).IdPost,
+                                    valoracion, getFormattedCurrentDatetime())
+                        viewModel.insertVotoPublicacion(token = token,
+                            votoPublicacionDTO = votoPublicacionDTO)
+                    } else {
+                        //ya has votado aqui
+                        Snackbar.make(recyclerView, getString(R.string.you_cant_vote_twice),
+                            Snackbar.LENGTH_SHORT).show()
+                        imgBtnUpDownVoteHasBeenClicked = false
+                    }
                 }
             }
         })
+        //        adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
         recyclerView.adapter = adapter
     }
 
@@ -264,6 +266,13 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             mIsLastPage = true
         }
         mIsLoading = false
+        //Aquí sólo entrará cuando el valor de
+        //currentPaginHeader esté seteado
+        //por eso nunca será null y por eso
+        //necesito el MediatorLiveData
+        if (adapter.itemCount >= viewModel.currentPaginHeader.totalCount) {
+            adapter.removeLoading()
+        }
         addImgIfNoContent()
     }
 
@@ -287,7 +296,8 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private fun onUserClicked(idUser: Int, nickname: String) {
         if (context is HomeActivityCallback) {
-            (context as HomeActivityCallback).onUserClicked(idUser = idUser, nickname = nickname)
+            (context as HomeActivityCallback).onUserClicked(idUser = idUser, nickname = nickname,
+                fromDetails = false)
         }
     }
 }

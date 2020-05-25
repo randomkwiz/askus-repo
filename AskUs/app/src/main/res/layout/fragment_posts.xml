@@ -42,6 +42,8 @@
             tools:listitem="@layout/post_row"
             tools:itemCount="5"
             android:id="@+id/recyclerView"
+            android:clipToPadding="false"
+            android:paddingBottom="40dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

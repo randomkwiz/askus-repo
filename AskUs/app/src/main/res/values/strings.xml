@@ -32,8 +32,6 @@
     <string name="linkLogin">Already have an account? <u>Log in</u></string>
     <string name="drawer_opened">open</string>
     <string name="message_dialog_password_lost">If you have forgotten your password, contact the support team at: avazquez.developer@gmail.com</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="send_post">Send post</string>
     <string name="anonymous">Anonymous</string>
     <string name="post_sended">Post sent</string>
@@ -58,9 +56,10 @@
     <string name="loading">Loading ...</string>
     <string name="remember_password">Remember password</string>
     <string name="internal_server_error">Server error. Try again later.</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="menu_moderation">Moderation</string>
     <string name="post_something_and_find_out_what_people_think_about_that_little_issue_of_you">Post something and find out what people think about that little issue of you...</string>
+    <string name="user_want_to_exit">Do you really want to exit AskUs?</string>
+    <string name="exit">Exit</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

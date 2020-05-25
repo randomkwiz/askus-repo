@@ -72,7 +72,9 @@ class AuthActivity : AppCompatActivity(), AuthActivityInterface {
         viewModel.getToken().observe(this, tokenObserver)
         userIDObserver = Observer<List<Int>> {
             if (!it.isNullOrEmpty() && !userHasLoggedOut) {
-                if (it.size == 1 && it[0] > 0) {
+                if (it.size == 1 && it[0] != null && it[0] > 0) {
+                    //aunque diga que it[0] != null siempre es true, es mentira
+                    //no lo quites que peta
                     editor.putInt("user_id", it[0])
                     editor.commit()
                     startActivity(Intent(this, HomeActivity::class.java).putExtra("type", "auth")
@@ -91,7 +93,7 @@ class AuthActivity : AppCompatActivity(), AuthActivityInterface {
     private fun loadFragmentLoader(fragment: Fragment) {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.fragment, fragment)
-        transaction.addToBackStack(null);
+        transaction.addToBackStack(null)
         transaction.commit()
     }
 
