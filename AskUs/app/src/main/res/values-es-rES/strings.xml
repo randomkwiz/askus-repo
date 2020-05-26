@@ -62,5 +62,5 @@
     <string name="no">No</string>
     <string name="approve">Aprobar</string>
     <string name="reject">Rechazar</string>
-    <string name="no_more_posts_to_moderate">No hay más publicaciones para moderar</string>
+    <string name="no_more_posts_to_moderate">No hay más publicaciones para moderar. Vuelve más tarde.</string>
 </resources>
