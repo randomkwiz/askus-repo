@@ -35,7 +35,7 @@
     <string name="anonymous">Anónimo</string>
     <string name="post_sended">Publicación enviada</string>
     <string name="title">Título</string>
-    <string name="post_body_hint">¿Qué está pasando? … Escribe un breve resumen...</string>
+    <string name="post_body_hint">¿Qué está pasando? … Escribe un breve resumen…</string>
     <string name="spinner_select_category">Elige una categoría</string>
     <string name="select_at_least_one_category">Elige al menos una categoría</string>
     <string name="error_sending_post">Hubo un error enviando la publicación. Inténtalo de nuevo más tarde.</string>
@@ -51,13 +51,16 @@
     <string name="number_of_written_comments">"Comentarios escritos: "</string>
     <string name="last_login_date">Último acceso:</string>
     <string name="account_creation_date">"Fecha de creación de la cuenta: "</string>
-    <string name="loading">Cargando ...</string>
+    <string name="loading">Cargando …</string>
     <string name="remember_password">Recordar contraseña</string>
     <string name="internal_server_error">Error del servidor. Inténtelo de nuevo más tarde.</string>
     <string name="menu_moderation">Moderación</string>
-    <string name="post_something_and_find_out_what_people_think_about_that_little_issue_of_you">"Publica y descubre qué opina la gente de ese asuntillo que te trae de cabeza ... "</string>
+    <string name="post_something_and_find_out_what_people_think_about_that_little_issue_of_you">"Publica y descubre qué opina la gente de ese asuntillo que te trae de cabeza … "</string>
     <string name="user_want_to_exit">¿Deseas salir de AskUs?</string>
     <string name="exit">Salir</string>
     <string name="yes">Sí</string>
     <string name="no">No</string>
+    <string name="approve">Aprobar</string>
+    <string name="reject">Rechazar</string>
+    <string name="no_more_posts_to_moderate">No hay más publicaciones para moderar</string>
 </resources>

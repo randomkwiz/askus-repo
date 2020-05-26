@@ -53,16 +53,17 @@
     <string name="number_of_written_comments">Number of written comments:</string>
     <string name="last_login_date">"Last login date: "</string>
     <string name="account_creation_date">Account creation date:</string>
-    <string name="loading">Loading ...</string>
+    <string name="loading">Loading …</string>
     <string name="remember_password">Remember password</string>
     <string name="internal_server_error">Server error. Try again later.</string>
     <string name="menu_moderation">Moderation</string>
-    <string name="post_something_and_find_out_what_people_think_about_that_little_issue_of_you">Post something and find out what people think about that little issue of you...</string>
+    <string name="post_something_and_find_out_what_people_think_about_that_little_issue_of_you">Post something and find out what people think about that little issue of you…</string>
     <string name="user_want_to_exit">Do you really want to exit AskUs?</string>
     <string name="exit">Exit</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="approve">Approve</string>
+    <string name="reject">Reject</string>
+    <string name="no_more_posts_to_moderate">There\'s no more post to moderate</string>
 </resources>

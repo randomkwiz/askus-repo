@@ -6,13 +6,13 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
-import es.iesnervion.avazquez.askus.DTOs.PostCompletoParaMostrarDTO
+import es.iesnervion.avazquez.askus.DTOs.PostModeracionDTO
 import es.iesnervion.avazquez.askus.R
 import inflate
 
 class ModerationPostAdapter :
     RecyclerView.Adapter<ModerationPostAdapter.ModerationPostViewHolder>() {
-    private var moderationPostList: MutableList<PostCompletoParaMostrarDTO> = mutableListOf()
+    private var moderationPostList: MutableList<PostModeracionDTO> = mutableListOf()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ModerationPostViewHolder {
         val itemView = parent.inflate(R.layout.moderation_row)
         return ModerationPostViewHolder(itemView)
@@ -23,23 +23,24 @@ class ModerationPostAdapter :
         holder.onBind(position)
     }
 
-    fun addItems(postItems: MutableList<PostCompletoParaMostrarDTO>) {
+    fun addItems(postItems: MutableList<PostModeracionDTO>) {
         //checkear que el item a añadir no exista ya
-        //        val idInTheList = moderationPostList.map { it.IdPost }
-        //        postItems.removeAll {
-        //            it.IdPost in idInTheList
-        //        }
-        //        if (postItems.isNotEmpty()) {
-        //            moderationPostList.addAll(postItems)
-        //            notifyDataSetChanged()
-        //        }
-        //Estamos de prueba
-        moderationPostList.addAll(postItems)
-        notifyDataSetChanged()
+        val idInTheList = moderationPostList.map { it.idPublicacion }
+        postItems.removeAll {
+            it.idPublicacion in idInTheList
+        }
+        if (postItems.isNotEmpty()) {
+            moderationPostList.addAll(postItems)
+            notifyDataSetChanged()
+        }
     }
 
-    fun getItem(position: Int): PostCompletoParaMostrarDTO {
+    fun getItem(position: Int): PostModeracionDTO {
         return moderationPostList[position]
+    }
+
+    fun getLastPosition(): Int {
+        return moderationPostList.lastIndex
     }
 
     inner class ModerationPostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

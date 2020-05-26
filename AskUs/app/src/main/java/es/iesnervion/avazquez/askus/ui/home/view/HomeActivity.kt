@@ -22,8 +22,8 @@ import es.iesnervion.avazquez.askus.ui.auth.view.AuthActivity
 import es.iesnervion.avazquez.askus.ui.details.view.DetailsPostActivity
 import es.iesnervion.avazquez.askus.ui.fragments.AddPostFragment
 import es.iesnervion.avazquez.askus.ui.fragments.HomeFragment
-import es.iesnervion.avazquez.askus.ui.fragments.ModerationFragment
 import es.iesnervion.avazquez.askus.ui.fragments.SettingsFragment
+import es.iesnervion.avazquez.askus.ui.fragments.moderation.view.ModerationFragment
 import es.iesnervion.avazquez.askus.ui.fragments.profileFragment.view.ProfileFragment
 import es.iesnervion.avazquez.askus.ui.fragments.tabs.viewmodel.MainViewModel
 import es.iesnervion.avazquez.askus.utils.AppConstants

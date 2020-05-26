@@ -2,10 +2,7 @@ package es.iesnervion.avazquez.askus.ui.repositories
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import es.iesnervion.avazquez.askus.DTOs.PaginHeader
-import es.iesnervion.avazquez.askus.DTOs.PostCompletoListadoComentariosDTO
-import es.iesnervion.avazquez.askus.DTOs.PostCompletoParaMostrarDTO
-import es.iesnervion.avazquez.askus.DTOs.PublicacionDTO
+import es.iesnervion.avazquez.askus.DTOs.*
 import es.iesnervion.avazquez.askus.ui.usecase.LoadPostsUseCase
 import es.iesnervion.avazquez.askus.ui.usecase.SendNewPostUseCase
 import javax.inject.Inject
@@ -19,6 +16,7 @@ class PostsRepository
 
     //    private val allNonDeletedPublicPostedPosts = MutableLiveData<List<PublicacionDTO>>()
     private val allVisiblePostsByGivenTag = MutableLiveData<List<PostCompletoParaMostrarDTO>>()
+    private val moderationPosts = MutableLiveData<List<PostModeracionDTO>>()
     private val allVisiblePostsByGivenTagTopRated =
             MutableLiveData<List<PostCompletoParaMostrarDTO>>()
     private val allVisiblePostsByGivenTagTopCommented =
@@ -31,6 +29,7 @@ class PostsRepository
     private val postWithComments = MutableLiveData<PostCompletoListadoComentariosDTO>()
     private val responseCode = MutableLiveData<Int>()
     private val paginHeader = MutableLiveData<PaginHeader>()
+    private val moderationPaginHeader = MutableLiveData<PaginHeader>()
     private val commentPaginHeader = MutableLiveData<PaginHeader>()
 
 
@@ -45,6 +44,30 @@ class PostsRepository
     fun getLoadingLiveData(): LiveData<Boolean> {
         return loadingLiveData
     }
+
+    fun useCaseLoadModerationPost(token: String,
+        pageNumber: Int,
+        pageSize: Int,
+        idUsuarioLogeado: Int) {
+        loadJSONUseCase.getListadoPostsModeracion(object : RepositoryInterface {
+            override fun showError(show: Boolean) {
+                showFinishMessage.postValue(show)
+            }
+
+            override fun onLoading(loading: Boolean) {
+                loadingLiveData.postValue(loading)
+            }
+
+            override fun <T, I> onSuccess(data: List<T>, moreInfo: I?) {
+                moderationPosts.postValue((data as List<PostModeracionDTO>))
+                moderationPaginHeader.postValue(moreInfo as PaginHeader)
+            }
+        }, token = token, pageSize = pageSize, pageNumber = pageNumber,
+            idUsuarioLogeado = idUsuarioLogeado)
+    }
+
+
+
 
     fun useCaseLoadNonDeletedPostedPosts(token: String,
         pageSize: Int,
@@ -236,6 +259,14 @@ class PostsRepository
 
     fun getAllNonDeletedPostedPostsTopCommented(): LiveData<List<PostCompletoParaMostrarDTO>> {
         return allNonDeletedPostedPostsTopCommented
+    }
+
+    fun getModerationPosts(): LiveData<List<PostModeracionDTO>> {
+        return moderationPosts
+    }
+
+    fun getModerationPaginHeaders(): LiveData<PaginHeader> {
+        return moderationPaginHeader
     }
 
     fun getAllVisiblePostsByGivenTag():LiveData<List<PostCompletoParaMostrarDTO>> {
