@@ -36,3 +36,5 @@ fun View.slideDown() {
     animate.fillAfter = true
     this.startAnimation(animate)
 }
+
+fun Float.round(decimals: Int = 2): Float = "%.${decimals}f".format(this).toFloat()

@@ -17,6 +17,7 @@ import es.iesnervion.avazquez.askus.adapters.LogroAdapter
 import es.iesnervion.avazquez.askus.ui.fragments.profileFragment.viewmodel.ProfileViewModel
 import es.iesnervion.avazquez.askus.utils.AppConstants
 import kotlinx.android.synthetic.main.fragment_profile.*
+import round
 import setVisibilityToGone
 import setVisibilityToVisible
 import java.text.SimpleDateFormat
@@ -93,7 +94,7 @@ class ProfileFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 lbl_written_comments.text = it.cantidadComentariosEscritos.toString()
                 lbl_sent_posts.text = it.cantidadPostsEnviados.toString()
                 lbl_posted_posts.text = it.cantidadPostsPublicados.toString()
-                user_mark.text = it.notaMediaEnPosts.toString()
+                user_mark.text = it.notaMediaEnPosts.round().toString()
                 last_login_date.text = formatDate(it?.fechaUltimoAcceso.toString())
                 register_date.text = formatDate(it?.fechaRegistro.toString())
             }
