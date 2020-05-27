@@ -25,7 +25,7 @@ import es.iesnervion.avazquez.askus.ui.fragments.HomeFragment
 import es.iesnervion.avazquez.askus.ui.fragments.SettingsFragment
 import es.iesnervion.avazquez.askus.ui.fragments.moderation.view.ModerationFragment
 import es.iesnervion.avazquez.askus.ui.fragments.profileFragment.view.ProfileFragment
-import es.iesnervion.avazquez.askus.ui.fragments.tabs.viewmodel.MainViewModel
+import es.iesnervion.avazquez.askus.ui.fragments.tabs.all.viewmodel.MainViewModel
 import es.iesnervion.avazquez.askus.utils.AppConstants
 import es.iesnervion.avazquez.askus.utils.AppConstants.EXTRA_PARAM_POST
 import es.iesnervion.avazquez.askus.utils.AppConstants.HOME_PAGE
@@ -135,22 +135,19 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_home       -> {
                 toolBar.title = resources.getText(R.string.menu_home)
                 loadFragmentLoader(HomeFragment.newInstance(0), HOME_PAGE)
-                //Este no puede tener add to back stack
             }
             R.id.nav_account    -> {
                 toolBar.title = resources.getText(R.string.menu_account)
-                loadFragmentLoaderBackStack((ProfileFragment.newInstance(currentUserId)),
+                loadFragmentLoader((ProfileFragment.newInstance(currentUserId)),
                     PROFILE_CURRENT_USER)
             }
             R.id.nav_settings   -> {
                 toolBar.title = resources.getText(R.string.menu_settings)
-                loadFragmentLoaderBackStack((SettingsFragment.newInstance()), SETTINGS)
+                loadFragmentLoader((SettingsFragment.newInstance()), SETTINGS)
             }
             R.id.nav_moderation -> {
                 toolBar.title = resources.getText(R.string.menu_moderation)
-                //                Toast.makeText(this, "Moderation section - work in progress", Toast.LENGTH_SHORT)
-                //                    .show()
-                loadFragmentLoaderBackStack((ModerationFragment.newInstance()), MODERATION)
+                loadFragmentLoader((ModerationFragment.newInstance()), MODERATION)
             }
             else                -> {
                 selectedTag = tagList.first { it.nombre == item.title }
@@ -169,21 +166,11 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.content_frame, fragment, tag)
         transaction.setTransition(TRANSIT_FRAGMENT_FADE)
-        //transaction.addToBackStack(null)
-        transaction.commit()
-    }
-
-    private fun loadFragmentLoaderBackStack(fragment: Fragment, tag: String = "") {
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.content_frame, fragment, tag)
-        transaction.setTransition(TRANSIT_FRAGMENT_FADE)
-        transaction.addToBackStack(null)
         transaction.commit()
     }
 
     override fun onAddPostClicked(idTagUserWasSeeing: Int) {
-        //No uso el método loadFragmentLoader porque aquí sí quiero añadir add to back stack
-        loadFragmentLoaderBackStack(AddPostFragment.newInstance(idTagUserWasSeeing), NEW_POST)
+        loadFragmentLoader(AddPostFragment.newInstance(idTagUserWasSeeing), NEW_POST)
         toolBar.title = getString(R.string.send_post)
     }
 
@@ -198,22 +185,6 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         startActivity(intent)
     }
 
-    //    override fun onPostClicked(post: PostCompletoParaMostrarDTO,
-    //    v: View,
-    //    title: Int,
-    //    txt: Int,
-    //    author: Int,
-    //    tags: Int) {
-    //    val intent = Intent(this, DetailsPostActivity::class.java)
-    //    intent.putExtra(EXTRA_PARAM_POST, post)
-    //    val activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(this,
-    //        Pair<View, String>(v.findViewById(title), VIEW_NAME_TITLE_POST),
-    //        Pair<View, String>(v.findViewById(txt), VIEW_NAME_BODY_POST),
-    //        Pair<View, String>(v.findViewById(tags), VIEW_NAME_TAGS_POST),
-    //        Pair<View, String>(v.findViewById(author), VIEW_NAME_AUTHOR_POST))
-    //    // Now we can start the Activity, providing the activity options as a bundle
-    //    ActivityCompat.startActivity(this, intent, activityOptions.toBundle())
-    //    }
     override fun onUserClicked(idUser: Int, nickname: String, fromDetails: Boolean) {
         if (fromDetails) {
             loadFragmentLoader(ProfileFragment.newInstance(idUser),
@@ -234,27 +205,31 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onBackPressed() {
         val currentFragment: Fragment? = supportFragmentManager.findFragmentById(R.id.content_frame)
         when {
-            (currentFragment?.tag == PROFILE_CURRENT_USER || currentFragment?.tag == PROFILE_ANOTHER_USER || currentFragment?.tag == SETTINGS) -> {
-                viewModel.saveStateMenu = 0
-                val menuItem: MenuItem = navigation.menu.findItem(viewModel.saveStateMenu)
-                        ?: navigation.menu.getItem(0)
-                onNavigationItemSelected(menuItem)
-                menuItem.isChecked = true
+            (currentFragment?.tag == NEW_POST)                        -> {
+                toolBar.title = selectedItemMenuTitle
+                navigationMenu()
             }
-            currentFragment?.tag == PROFILE_ANOTHER_USER_FROM_DETAILS                                                                          -> {
+            currentFragment?.tag == PROFILE_ANOTHER_USER_FROM_DETAILS -> {
                 super.onBackPressed()
             }
-            currentFragment?.tag == HOME_PAGE                                                                                                  -> {
-                AlertDialog.Builder(this).setIcon(android.R.drawable.ic_dialog_alert)
+            currentFragment?.tag == HOME_PAGE                         -> {
+                AlertDialog.Builder(this).setIcon(R.drawable.ic_exit_to_app_black_24dp)
                     .setTitle(resources.getString(R.string.exit))
                     .setMessage(resources.getString(R.string.user_want_to_exit))
                     .setPositiveButton(resources.getString(R.string.yes)) { _, _ -> finish() }
                     .setNegativeButton(resources.getString(R.string.no), null).show()
             }
-            else                                                                                                                               -> {
-                super.onBackPressed()
-                toolBar.title = selectedItemMenuTitle
+            else                                                      -> {
+                viewModel.saveStateMenu = 0
+                navigationMenu()
             }
         }
+    }
+
+    private fun navigationMenu() {
+        val menuItem: MenuItem =
+                navigation.menu.findItem(viewModel.saveStateMenu) ?: navigation.menu.getItem(0)
+        onNavigationItemSelected(menuItem)
+        menuItem.isChecked = true
     }
 }

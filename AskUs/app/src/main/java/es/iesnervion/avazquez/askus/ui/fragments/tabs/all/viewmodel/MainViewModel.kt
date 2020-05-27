@@ -1,4 +1,4 @@
-package es.iesnervion.avazquez.askus.ui.fragments.tabs.viewmodel
+package es.iesnervion.avazquez.askus.ui.fragments.tabs.all.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -29,8 +29,6 @@ class MainViewModel : ViewModel() {
     lateinit var tagList: List<Int>
     var saveStateMenu = 0
     var areValuesReadyAll = MediatorLiveData<Boolean>()
-    var areValuesReadyTopRated = MediatorLiveData<Boolean>()
-    var areValuesReadyTopCommented = MediatorLiveData<Boolean>()
     lateinit var currentPaginHeader: PaginHeader
     lateinit var postsList: List<PostCompletoParaMostrarDTO>
 
@@ -60,78 +58,14 @@ class MainViewModel : ViewModel() {
                 }
             }
         }
-        //TopRated
-        areValuesReadyTopRated = MediatorLiveData<Boolean>().apply {
-            var totalPagesFlag = false
-            var postsListFlag = false
-            value = false
-            addSource(getPaginHeaders()) { x ->
-                x?.let {
-                    totalPagesFlag = x.totalPages >= 0
-                    currentPaginHeader = x
-                    if (totalPagesFlag && postsListFlag) {
-                        value = true
-                    }
-                }
-            }
-            addSource(allVisiblePostsByTagTopRated()) { x ->
-                x?.let {
-                    postsListFlag = x.size >= 0
-                    postsList = x
-                    if (totalPagesFlag && postsListFlag) {
-                        value = true
-                    }
-                }
-            }
-        }
-        //TopCommented
-        areValuesReadyTopCommented = MediatorLiveData<Boolean>().apply {
-            var totalPagesFlag = false
-            var postsListFlag = false
-            value = false
-            addSource(getPaginHeaders()) { x ->
-                x?.let {
-                    totalPagesFlag = x.totalPages >= 0
-                    currentPaginHeader = x
-                    if (totalPagesFlag && postsListFlag) {
-                        value = true
-                    }
-                }
-            }
-            addSource(allVisiblePostsByTagTopCommented()) { x ->
-                x?.let {
-                    postsListFlag = x.size >= 0
-                    postsList = x
-                    if (totalPagesFlag && postsListFlag) {
-                        value = true
-                    }
-                }
-            }
-        }
     }
 
     fun areValuesReadyAll(): LiveData<Boolean> {
         return areValuesReadyAll
     }
 
-    fun areValuesReadyTopRated(): LiveData<Boolean> {
-        return areValuesReadyTopRated
-    }
-
-    fun areValuesReadyTopCommented(): LiveData<Boolean> {
-        return areValuesReadyTopCommented
-    }
-
     fun allVisiblePostsByTag(): LiveData<List<PostCompletoParaMostrarDTO>> {
         return postsRepository.getAllVisiblePostsByGivenTag()
-    }
-
-    fun allVisiblePostsByTagTopRated(): LiveData<List<PostCompletoParaMostrarDTO>> {
-        return postsRepository.getAllVisiblePostsByGivenTagTopRated()
-    }
-
-    fun allVisiblePostsByTagTopCommented(): LiveData<List<PostCompletoParaMostrarDTO>> {
-        return postsRepository.getAllVisiblePostsByGivenTagTopCommented()
     }
 
     fun loadingLiveData(): LiveData<Boolean> {
@@ -148,34 +82,6 @@ class MainViewModel : ViewModel() {
                 pageNumber = pageNumber, idUsuarioLogeado = idUsuarioLogeado)
         } else {
             postsRepository.useCaseLoadNonDeletedPostedPostsByTag(token, idTag,
-                pageNumber = pageNumber, pageSize = pageSize, idUsuarioLogeado = idUsuarioLogeado)
-        }
-    }
-
-    fun loadPostsByTagTopRated(token: String,
-        idTag: Int,
-        pageNumber: Int,
-        pageSize: Int,
-        idUsuarioLogeado: Int) {
-        if (idTag == 0) {
-            postsRepository.useCaseLoadNonDeletedPostedPostsTopRated(token, pageSize = pageSize,
-                pageNumber = pageNumber, idUsuarioLogeado = idUsuarioLogeado)
-        } else {
-            postsRepository.useCaseLoadNonDeletedPostedPostsByTagTopRated(token, idTag,
-                pageNumber = pageNumber, pageSize = pageSize, idUsuarioLogeado = idUsuarioLogeado)
-        }
-    }
-
-    fun loadPostsByTagTopCommented(token: String,
-        idTag: Int,
-        pageNumber: Int,
-        pageSize: Int,
-        idUsuarioLogeado: Int) {
-        if (idTag == 0) {
-            postsRepository.useCaseLoadNonDeletedPostedPostsTopCommented(token, pageSize = pageSize,
-                pageNumber = pageNumber, idUsuarioLogeado = idUsuarioLogeado)
-        } else {
-            postsRepository.useCaseLoadNonDeletedPostedPostsByTagTopCommented(token, idTag,
                 pageNumber = pageNumber, pageSize = pageSize, idUsuarioLogeado = idUsuarioLogeado)
         }
     }
