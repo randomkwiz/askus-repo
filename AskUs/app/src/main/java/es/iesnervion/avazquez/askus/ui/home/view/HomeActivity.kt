@@ -135,24 +135,18 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_home       -> {
                 toolBar.title = resources.getText(R.string.menu_home)
                 loadFragmentLoader(HomeFragment.newInstance(0), HOME_PAGE)
-                //Este no puede tener add to back stack
             }
             R.id.nav_account    -> {
                 toolBar.title = resources.getText(R.string.menu_account)
-                //loadFragmentLoaderBackStack((ProfileFragment.newInstance(currentUserId)),
                 loadFragmentLoader((ProfileFragment.newInstance(currentUserId)),
                     PROFILE_CURRENT_USER)
             }
             R.id.nav_settings   -> {
                 toolBar.title = resources.getText(R.string.menu_settings)
-                //loadFragmentLoaderBackStack((SettingsFragment.newInstance()), SETTINGS)
                 loadFragmentLoader((SettingsFragment.newInstance()), SETTINGS)
             }
             R.id.nav_moderation -> {
                 toolBar.title = resources.getText(R.string.menu_moderation)
-                //                Toast.makeText(this, "Moderation section - work in progress", Toast.LENGTH_SHORT)
-                //                    .show()
-                //loadFragmentLoaderBackStack((ModerationFragment.newInstance()), MODERATION)
                 loadFragmentLoader((ModerationFragment.newInstance()), MODERATION)
             }
             else                -> {
@@ -172,19 +166,10 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.content_frame, fragment, tag)
         transaction.setTransition(TRANSIT_FRAGMENT_FADE)
-        //transaction.addToBackStack(null)
         transaction.commit()
     }
-    //    private fun loadFragmentLoaderBackStack(fragment: Fragment, tag: String = "") {
-    //        val transaction = supportFragmentManager.beginTransaction()
-    //        transaction.replace(R.id.content_frame, fragment, tag)
-    //        transaction.setTransition(TRANSIT_FRAGMENT_FADE)
-    //        transaction.addToBackStack(null)
-    //        transaction.commit()
-    //    }
+
     override fun onAddPostClicked(idTagUserWasSeeing: Int) {
-        //No uso el método loadFragmentLoader porque aquí sí quiero añadir add to back stack
-        //loadFragmentLoaderBackStack(AddPostFragment.newInstance(idTagUserWasSeeing), NEW_POST)
         loadFragmentLoader(AddPostFragment.newInstance(idTagUserWasSeeing), NEW_POST)
         toolBar.title = getString(R.string.send_post)
     }
