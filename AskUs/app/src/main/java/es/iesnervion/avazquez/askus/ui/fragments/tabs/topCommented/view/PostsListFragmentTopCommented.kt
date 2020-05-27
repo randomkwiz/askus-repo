@@ -1,4 +1,4 @@
-package es.iesnervion.avazquez.askus.ui.fragments.tabs
+package es.iesnervion.avazquez.askus.ui.fragments.tabs.topCommented.view
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -18,7 +18,7 @@ import es.iesnervion.avazquez.askus.R
 import es.iesnervion.avazquez.askus.adapters.PostAdapter
 import es.iesnervion.avazquez.askus.interfaces.HomeActivityCallback
 import es.iesnervion.avazquez.askus.interfaces.RecyclerViewClickListener
-import es.iesnervion.avazquez.askus.ui.fragments.tabs.viewmodel.MainViewModel
+import es.iesnervion.avazquez.askus.ui.fragments.tabs.topCommented.viewmodel.MainViewModelTopCommented
 import es.iesnervion.avazquez.askus.utils.AppConstants
 import es.iesnervion.avazquez.askus.utils.AppConstants.INTERNAL_SERVER_ERROR
 import es.iesnervion.avazquez.askus.utils.AppConstants.NO_CONTENT
@@ -33,10 +33,9 @@ import setVisibilityToVisible
 /**
  * A simple [Fragment] subclass.
  */
-class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
-    lateinit var viewModel: MainViewModel
+class PostsListFragmentTopCommented : Fragment(), SwipeRefreshLayout.OnRefreshListener {
+    lateinit var viewModel: MainViewModelTopCommented
     lateinit var adapter: PostAdapter
-    lateinit var filterType: String
     lateinit var sharedPreference: SharedPreferences
     lateinit var token: String
     var idTag: Int = 0
@@ -51,26 +50,26 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     var itemCount = 0
 
     companion object {
-        fun newInstance(filter: String, idTag: Int): PostsListFragment {
-            val myFragment = PostsListFragment()
+        fun newInstance(idTag: Int): PostsListFragmentTopCommented {
+            val myFragment = PostsListFragmentTopCommented()
             val args = Bundle()
-            args.putString("filter", filter)
             args.putInt("idTag", idTag)
             myFragment.arguments = args
             return myFragment
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
-        filterType = arguments?.getString("filter") ?: ""
         return inflater.inflate(R.layout.fragment_posts, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
+        //viewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
         //viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        viewModel = ViewModelProviders.of(this).get(MainViewModelTopCommented::class.java)
         sharedPreference =
                 activity!!.getSharedPreferences(AppConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
         token = sharedPreference.getString("token", "").toString()
@@ -112,20 +111,8 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun doApiCall() {
-        when (filterType) {
-            "ALL"           -> {
-                viewModel.loadPostsByTag(token, idTag, pageNumber = currentPage,
-                    pageSize = PAGE_SIZE, idUsuarioLogeado = idCurrentUser)
-            }
-            "TOP_RATED"     -> {
-                viewModel.loadPostsByTagTopRated(token, idTag, pageNumber = currentPage,
-                    pageSize = PAGE_SIZE, idUsuarioLogeado = idCurrentUser)
-            }
-            "TOP_COMMENTED" -> {
-                viewModel.loadPostsByTagTopCommented(token, idTag, pageNumber = currentPage,
-                    pageSize = PAGE_SIZE, idUsuarioLogeado = idCurrentUser)
-            }
-        }
+        viewModel.loadPostsByTagTopCommented(token, idTag, pageNumber = currentPage,
+            pageSize = PAGE_SIZE, idUsuarioLogeado = idCurrentUser)
     }
 
     private fun onValuesReady(areLoaded: Boolean) {
@@ -183,23 +170,12 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun initObservers() {
-        adapter.clear()
+        //adapter.clear()
         viewModel.responseCodeVotoPublicacionSent()
             .observe(viewLifecycleOwner, Observer(::onResponseCodeVoteReceived))
         viewModel.loadingLiveData().observe(viewLifecycleOwner, Observer(::onLoadedData))
-        when (filterType) {
-            "ALL"           -> {
-                viewModel.areValuesReadyAll().observe(viewLifecycleOwner, Observer(::onValuesReady))
-            }
-            "TOP_RATED"     -> {
-                viewModel.areValuesReadyTopRated()
-                    .observe(viewLifecycleOwner, Observer(::onValuesReady))
-            }
-            "TOP_COMMENTED" -> {
-                viewModel.areValuesReadyTopCommented()
-                    .observe(viewLifecycleOwner, Observer(::onValuesReady))
-            }
-        }
+        viewModel.areValuesReadyTopCommented()
+            .observe(viewLifecycleOwner, Observer(::onValuesReady))
     }
 
     private fun initViews() {
@@ -299,5 +275,11 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             (context as HomeActivityCallback).onUserClicked(idUser = idUser, nickname = nickname,
                 fromDetails = false)
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        doApiCall()
+        //Toast.makeText(context,"TOP COMMENTED entra en on start", Toast.LENGTH_SHORT).show()
     }
 }

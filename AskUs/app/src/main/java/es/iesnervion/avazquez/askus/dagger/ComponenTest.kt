@@ -6,7 +6,9 @@ import es.iesnervion.avazquez.askus.ui.auth.viewmodel.AuthViewModel
 import es.iesnervion.avazquez.askus.ui.details.viewmodel.DetailsViewModel
 import es.iesnervion.avazquez.askus.ui.fragments.moderation.viewmodel.ModerationViewModel
 import es.iesnervion.avazquez.askus.ui.fragments.profileFragment.viewmodel.ProfileViewModel
-import es.iesnervion.avazquez.askus.ui.fragments.tabs.viewmodel.MainViewModel
+import es.iesnervion.avazquez.askus.ui.fragments.tabs.all.viewmodel.MainViewModel
+import es.iesnervion.avazquez.askus.ui.fragments.tabs.topCommented.viewmodel.MainViewModelTopCommented
+import es.iesnervion.avazquez.askus.ui.fragments.tabs.topRated.viewmodel.MainViewModelTopRated
 import es.iesnervion.avazquez.askus.ui.repositories.*
 import es.iesnervion.avazquez.askus.ui.usecase.*
 import javax.inject.Singleton
@@ -34,4 +36,6 @@ interface ComponenTest {
     fun inject(loadLogrosUseCase: LoadLogrosUseCase)
     fun inject(moderationViewModel: ModerationViewModel)
     fun inject(createModerationVoteUseCase: CreateModerationVoteUseCase)
+    fun inject(mainViewModelTopRated: MainViewModelTopRated)
+    fun inject(mainViewModelTopCommented: MainViewModelTopCommented)
 }

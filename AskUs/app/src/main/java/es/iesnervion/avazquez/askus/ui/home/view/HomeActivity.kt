@@ -25,7 +25,7 @@ import es.iesnervion.avazquez.askus.ui.fragments.HomeFragment
 import es.iesnervion.avazquez.askus.ui.fragments.SettingsFragment
 import es.iesnervion.avazquez.askus.ui.fragments.moderation.view.ModerationFragment
 import es.iesnervion.avazquez.askus.ui.fragments.profileFragment.view.ProfileFragment
-import es.iesnervion.avazquez.askus.ui.fragments.tabs.viewmodel.MainViewModel
+import es.iesnervion.avazquez.askus.ui.fragments.tabs.all.viewmodel.MainViewModel
 import es.iesnervion.avazquez.askus.utils.AppConstants
 import es.iesnervion.avazquez.askus.utils.AppConstants.EXTRA_PARAM_POST
 import es.iesnervion.avazquez.askus.utils.AppConstants.HOME_PAGE

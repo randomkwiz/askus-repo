@@ -17,7 +17,7 @@ import androidx.lifecycle.ViewModelProviders
 import es.iesnervion.avazquez.askus.DTOs.TagDTO
 import es.iesnervion.avazquez.askus.R
 import es.iesnervion.avazquez.askus.interfaces.HomeActivityCallback
-import es.iesnervion.avazquez.askus.ui.fragments.tabs.viewmodel.MainViewModel
+import es.iesnervion.avazquez.askus.ui.fragments.tabs.all.viewmodel.MainViewModel
 import es.iesnervion.avazquez.askus.utils.AppConstants
 import es.iesnervion.avazquez.askus.utils.UtilClass.Companion.getFormattedCurrentDatetime
 import kotlinx.android.synthetic.main.fragment_add_post.*
