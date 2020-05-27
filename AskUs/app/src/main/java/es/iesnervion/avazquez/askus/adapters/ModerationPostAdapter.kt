@@ -12,35 +12,39 @@ import inflate
 
 class ModerationPostAdapter :
     RecyclerView.Adapter<ModerationPostAdapter.ModerationPostViewHolder>() {
-    private var moderationPostList: MutableList<PostModeracionDTO> = mutableListOf()
+    private var moderationPostListToShow: MutableList<PostModeracionDTO> = mutableListOf()
+    private var moderationPostListId: MutableList<Int> = mutableListOf()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ModerationPostViewHolder {
         val itemView = parent.inflate(R.layout.moderation_row)
         return ModerationPostViewHolder(itemView)
     }
 
-    override fun getItemCount() = moderationPostList.size
+    fun getTotalCount() = moderationPostListId.size
+    override fun getItemCount() = moderationPostListToShow.size
     override fun onBindViewHolder(holder: ModerationPostViewHolder, position: Int) {
         holder.onBind(position)
     }
 
     fun addItems(postItems: MutableList<PostModeracionDTO>) {
         //checkear que el item a añadir no exista ya
-        val idInTheList = moderationPostList.map { it.idPublicacion }
         postItems.removeAll {
-            it.idPublicacion in idInTheList
+            it.idPublicacion in moderationPostListId
         }
         if (postItems.isNotEmpty()) {
-            moderationPostList.addAll(postItems)
+            moderationPostListId.addAll(postItems.map { it.idPublicacion })
+            moderationPostListToShow.clear()
+            moderationPostListToShow.addAll(postItems)
             notifyDataSetChanged()
         }
     }
 
     fun getItem(position: Int): PostModeracionDTO {
-        return moderationPostList[position]
+        return moderationPostListToShow[position]
     }
 
     fun getLastPosition(): Int {
-        return moderationPostList.lastIndex
+        return moderationPostListToShow.lastIndex
     }
 
     inner class ModerationPostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -48,7 +52,7 @@ class ModerationPostAdapter :
         val text = itemView.findViewById(R.id.moderation_row__body) as TextView
         val card = itemView.findViewById(R.id.moderation_row__card) as CardView
         fun onBind(position: Int) {
-            val currentItem = moderationPostList[position]
+            val currentItem = moderationPostListToShow[position]
             title.text = currentItem.tituloPost
             text.text = currentItem.cuerpoPost
             if (position % 2 == 0) {

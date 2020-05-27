@@ -122,9 +122,9 @@ class ModerationFragment : Fragment(), CardStackListener {
     }
 
     override fun onCardDisappeared(view: View?, position: Int) {
-        val lastPosition = adapter.itemCount - 2
+
         //Que vaya haciendo la llamada a la api con las siguientes cartas cuando queden 3
-        if (position == lastPosition && currentPage < viewModel.currentPaginHeader.totalPages && adapter.itemCount < viewModel.currentPaginHeader.totalCount) {
+        if (position == adapter.getLastPosition() && currentPage < viewModel.currentPaginHeader.totalPages && adapter.itemCount < viewModel.currentPaginHeader.totalCount) {
             currentPage++
             doApiCall()
         }
