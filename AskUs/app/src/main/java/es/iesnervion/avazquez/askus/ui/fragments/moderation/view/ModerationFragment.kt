@@ -81,6 +81,7 @@ class ModerationFragment : Fragment(), CardStackListener {
                 this.totalPage = viewModel.currentPaginHeader.totalPages
             }
             if (viewModel.postsList.isEmpty()) {
+                adapter.clearShowingCards()
                 moderation__label_no_more_posts.setVisibilityToVisible()
             } else {
                 moderation__label_no_more_posts.setVisibilityToGone()
@@ -122,8 +123,6 @@ class ModerationFragment : Fragment(), CardStackListener {
     }
 
     override fun onCardDisappeared(view: View?, position: Int) {
-
-        //Que vaya haciendo la llamada a la api con las siguientes cartas cuando queden 3
         if (position == adapter.getLastPosition() && currentPage < viewModel.currentPaginHeader.totalPages && adapter.itemCount < viewModel.currentPaginHeader.totalCount) {
             currentPage++
             doApiCall()

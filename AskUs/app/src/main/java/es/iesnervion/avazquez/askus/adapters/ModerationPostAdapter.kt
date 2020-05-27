@@ -39,6 +39,11 @@ class ModerationPostAdapter :
         }
     }
 
+    fun clearShowingCards() {
+        moderationPostListToShow.clear()
+        notifyDataSetChanged()
+    }
+
     fun getItem(position: Int): PostModeracionDTO {
         return moderationPostListToShow[position]
     }
