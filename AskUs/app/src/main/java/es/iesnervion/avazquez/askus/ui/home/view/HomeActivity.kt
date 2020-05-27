@@ -182,7 +182,6 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     //        transaction.addToBackStack(null)
     //        transaction.commit()
     //    }
-
     override fun onAddPostClicked(idTagUserWasSeeing: Int) {
         //No uso el método loadFragmentLoader porque aquí sí quiero añadir add to back stack
         //loadFragmentLoaderBackStack(AddPostFragment.newInstance(idTagUserWasSeeing), NEW_POST)
@@ -222,8 +221,8 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val currentFragment: Fragment? = supportFragmentManager.findFragmentById(R.id.content_frame)
         when {
             (currentFragment?.tag == NEW_POST)                        -> {
-                super.onBackPressed()
                 toolBar.title = selectedItemMenuTitle
+                navigationMenu()
             }
             currentFragment?.tag == PROFILE_ANOTHER_USER_FROM_DETAILS -> {
                 super.onBackPressed()
@@ -237,11 +236,15 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             else                                                      -> {
                 viewModel.saveStateMenu = 0
-                val menuItem: MenuItem = navigation.menu.findItem(viewModel.saveStateMenu)
-                        ?: navigation.menu.getItem(0)
-                onNavigationItemSelected(menuItem)
-                menuItem.isChecked = true
+                navigationMenu()
             }
         }
+    }
+
+    private fun navigationMenu() {
+        val menuItem: MenuItem =
+                navigation.menu.findItem(viewModel.saveStateMenu) ?: navigation.menu.getItem(0)
+        onNavigationItemSelected(menuItem)
+        menuItem.isChecked = true
     }
 }
