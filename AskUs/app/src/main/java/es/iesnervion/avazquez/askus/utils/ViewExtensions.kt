@@ -37,4 +37,4 @@ fun View.slideDown() {
     this.startAnimation(animate)
 }
 
-fun Float.round(decimals: Int = 2): Float = "%.${decimals}f".format(this).toFloat()
+fun Float.round(decimals: Int = 2): String = "%.${decimals}f".format(this)
