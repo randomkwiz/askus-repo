@@ -1,9 +1,6 @@
 package es.iesnervion.avazquez.askus.retrofit.interfaces
 
-import es.iesnervion.avazquez.askus.DTOs.CreatePostRequestBody
-import es.iesnervion.avazquez.askus.DTOs.PostCompletoListadoComentariosDTO
-import es.iesnervion.avazquez.askus.DTOs.PostCompletoParaMostrarDTO
-import es.iesnervion.avazquez.askus.DTOs.PublicacionDTO
+import es.iesnervion.avazquez.askus.DTOs.*
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -27,7 +24,8 @@ interface PublicacionesInterface {
     @GET("/api/Publicaciones?pagination=true")
     fun getListadoPostsCompletosParaMostrarCantidadComentarios(
         @Header("Authorization") authToken: String,
-        @Query("pageNumber") pageNumber: Int, @Query("idUsuarioLogeado") idUsuarioLogeado: Int,
+        @Query("pageNumber") pageNumber: Int,
+        @Query("idUsuarioLogeado") idUsuarioLogeado: Int,
         @Query("pageSize") pageSize: Int): Call<List<PostCompletoParaMostrarDTO>>
 
     //Obtiene una lista de posts publicados y no borrados (privados y no privados)
@@ -36,7 +34,8 @@ interface PublicacionesInterface {
     @GET("/api/Publicaciones?pagination=true&top=TOP_RATED")
     fun getListadoPostsCompletosParaMostrarCantidadComentariosTopRated(
         @Header("Authorization") authToken: String,
-        @Query("pageNumber") pageNumber: Int, @Query("idUsuarioLogeado") idUsuarioLogeado: Int,
+        @Query("pageNumber") pageNumber: Int,
+        @Query("idUsuarioLogeado") idUsuarioLogeado: Int,
         @Query("pageSize") pageSize: Int): Call<List<PostCompletoParaMostrarDTO>>
 
     //Obtiene una lista de posts publicados y no borrados (privados y no privados)
@@ -45,7 +44,8 @@ interface PublicacionesInterface {
     @GET("/api/Publicaciones?pagination=true&top=TOP_COMMENTED")
     fun getListadoPostsCompletosParaMostrarCantidadComentariosTopCommented(
         @Header("Authorization") authToken: String,
-        @Query("pageNumber") pageNumber: Int, @Query("idUsuarioLogeado") idUsuarioLogeado: Int,
+        @Query("pageNumber") pageNumber: Int,
+        @Query("idUsuarioLogeado") idUsuarioLogeado: Int,
         @Query("pageSize") pageSize: Int): Call<List<PostCompletoParaMostrarDTO>>
 
     //Obtiene una lista de posts publicados y no borrados (privados y no privados) que contengan un tag
@@ -54,7 +54,8 @@ interface PublicacionesInterface {
     fun getListadoPostsCompletosParaMostrarCantidadComentariosPorTag(
         @Header("Authorization") authToken: String,
         @Query("pageNumber") pageNumber: Int,
-        @Query("pageSize") pageSize: Int, @Query("idUsuarioLogeado") idUsuarioLogeado: Int,
+        @Query("pageSize") pageSize: Int,
+        @Query("idUsuarioLogeado") idUsuarioLogeado: Int,
         @Query("idTag") idTag: Int): Call<List<PostCompletoParaMostrarDTO>>
 
     //Obtiene una lista de posts publicados y no borrados (privados y no privados) que contengan un tag
@@ -64,7 +65,8 @@ interface PublicacionesInterface {
     fun getListadoPostsCompletosParaMostrarCantidadComentariosPorTagTopRated(
         @Header("Authorization") authToken: String,
         @Query("pageNumber") pageNumber: Int,
-        @Query("pageSize") pageSize: Int, @Query("idUsuarioLogeado") idUsuarioLogeado: Int,
+        @Query("pageSize") pageSize: Int,
+        @Query("idUsuarioLogeado") idUsuarioLogeado: Int,
         @Query("idTag") idTag: Int): Call<List<PostCompletoParaMostrarDTO>>
 
     //Obtiene una lista de posts publicados y no borrados (privados y no privados) que contengan un tag
@@ -74,15 +76,24 @@ interface PublicacionesInterface {
     fun getListadoPostsCompletosParaMostrarCantidadComentariosPorTagTopCommented(
         @Header("Authorization") authToken: String,
         @Query("pageNumber") pageNumber: Int,
-        @Query("pageSize") pageSize: Int, @Query("idUsuarioLogeado") idUsuarioLogeado: Int,
+        @Query("pageSize") pageSize: Int,
+        @Query("idUsuarioLogeado") idUsuarioLogeado: Int,
         @Query("idTag") idTag: Int): Call<List<PostCompletoParaMostrarDTO>>
 
     @GET("api/Publicaciones/{id}?type=clsPostCompletoParaMostrarListadoComentarios&pagination=true")
     fun getPostParaMostrarConListadoComentarios(@Header("Authorization") authToken: String,
         @Path("id") idPost: Int,
-        @Query("pageNumber") pageNumber: Int, @Query("idUsuarioLogeado") idUsuarioLogeado: Int,
+        @Query("pageNumber") pageNumber: Int,
+        @Query("idUsuarioLogeado") idUsuarioLogeado: Int,
         @Query("pageSize") pageSize: Int): Call<PostCompletoListadoComentariosDTO>
 
     @POST("api/Publicaciones")
     fun postNewPost(@Body post: CreatePostRequestBody): Call<Void>
+
+    /*Obtener post de moderacion*/
+    @GET("api/publicaciones?&pagination=true&type=clsPostModeracion&moderacion=true")
+    fun getPostModeracion(@Header("Authorization") authToken: String,
+        @Query("pageNumber") pageNumber: Int,
+        @Query("idUsuarioLogeado") idUsuarioLogeado: Int,
+        @Query("pageSize") pageSize: Int): Call<List<PostModeracionDTO>>
 }

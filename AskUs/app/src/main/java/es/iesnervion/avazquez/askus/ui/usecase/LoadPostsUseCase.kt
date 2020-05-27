@@ -1,10 +1,7 @@
 package es.iesnervion.avazquez.askus.ui.usecase
 
 import com.google.gson.Gson
-import es.iesnervion.avazquez.askus.DTOs.PaginHeader
-import es.iesnervion.avazquez.askus.DTOs.PostCompletoListadoComentariosDTO
-import es.iesnervion.avazquez.askus.DTOs.PostCompletoParaMostrarDTO
-import es.iesnervion.avazquez.askus.DTOs.PublicacionDTO
+import es.iesnervion.avazquez.askus.DTOs.*
 import es.iesnervion.avazquez.askus.retrofit.interfaces.PublicacionesInterface
 import es.iesnervion.avazquez.askus.ui.repositories.RepositoryInterface
 import es.iesnervion.avazquez.askus.utils.GlobalApplication
@@ -20,6 +17,35 @@ class LoadPostsUseCase {
     init {
         GlobalApplication.applicationComponent?.inject(this)
     }
+
+    /*Gets moderation post*/
+    fun getListadoPostsModeracion(repositoryInterface: RepositoryInterface,
+        token: String,
+        pageNumber: Int,
+        idUsuarioLogeado: Int,
+        pageSize: Int) {
+        val call = requestInterface.getPostModeracion(authToken = token, pageNumber = pageNumber,
+            pageSize = pageSize, idUsuarioLogeado = idUsuarioLogeado)
+        repositoryInterface.onLoading(true)
+        call.enqueue(object : Callback<List<PostModeracionDTO>> {
+            override fun onFailure(call: Call<List<PostModeracionDTO>>, t: Throwable) {
+                repositoryInterface.onLoading(false)
+                repositoryInterface.showError(false)
+            }
+
+            override fun onResponse(call: Call<List<PostModeracionDTO>>,
+                response: Response<List<PostModeracionDTO>>) {
+                repositoryInterface.onLoading(false)
+                val jsonString = response.headers().get("Paging-Headers")
+                val header = Gson().fromJson(jsonString, PaginHeader::class.java)
+                response.body()?.toList()?.let {
+                    repositoryInterface.onSuccess(it, header ?: null)
+                }
+            }
+        })
+    }
+
+
 
     /*Gets public and private posted posts ALL*/
     fun getListadoPostsCompletosParaMostrarCantidadComentarios(repositoryInterface: RepositoryInterface,

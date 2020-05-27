@@ -4,6 +4,7 @@ import dagger.Component
 import es.iesnervion.avazquez.askus.dagger.modules.AppModule
 import es.iesnervion.avazquez.askus.ui.auth.viewmodel.AuthViewModel
 import es.iesnervion.avazquez.askus.ui.details.viewmodel.DetailsViewModel
+import es.iesnervion.avazquez.askus.ui.fragments.moderation.viewmodel.ModerationViewModel
 import es.iesnervion.avazquez.askus.ui.fragments.profileFragment.viewmodel.ProfileViewModel
 import es.iesnervion.avazquez.askus.ui.fragments.tabs.viewmodel.MainViewModel
 import es.iesnervion.avazquez.askus.ui.repositories.*
@@ -31,4 +32,6 @@ interface ComponenTest {
     fun inject(createCommentUseCase: CreateCommentUseCase)
     fun inject(profileViewModel: ProfileViewModel)
     fun inject(loadLogrosUseCase: LoadLogrosUseCase)
+    fun inject(moderationViewModel: ModerationViewModel)
+    fun inject(createModerationVoteUseCase: CreateModerationVoteUseCase)
 }

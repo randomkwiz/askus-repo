@@ -13,7 +13,8 @@ android {
 
     defaultConfig {
         applicationId "es.iesnervion.avazquez.askus"
-        minSdkVersion 21  //okhttpclient necesita api 21 - > https://medium.com/square-corner-blog/okhttp-3-13-requires-android-5-818bb78d07ce
+        minSdkVersion 21
+        //okhttpclient necesita api 21 - > https://medium.com/square-corner-blog/okhttp-3-13-requires-android-5-818bb78d07ce
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -73,9 +74,13 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
 
     implementation 'com.google.android.material:material:1.1.0'
+    implementation 'com.google.android.material:material:1.2.0-alpha06'
+
+    //Card-Stack-View
+    implementation "com.yuyakaido.android:card-stack-view:2.3.4"
 
     //RecyclerView
-   // implementation 'androidx.recyclerview:recyclerview:1.2.0-alpha03'
+    // implementation 'androidx.recyclerview:recyclerview:1.2.0-alpha03'
 
     //See more
 //    implementation 'com.github.AhmMhd:SeeMoreTextView-Android:1.0.0'

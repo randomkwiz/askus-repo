@@ -6,7 +6,6 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -24,6 +23,7 @@ import es.iesnervion.avazquez.askus.ui.details.view.DetailsPostActivity
 import es.iesnervion.avazquez.askus.ui.fragments.AddPostFragment
 import es.iesnervion.avazquez.askus.ui.fragments.HomeFragment
 import es.iesnervion.avazquez.askus.ui.fragments.SettingsFragment
+import es.iesnervion.avazquez.askus.ui.fragments.moderation.view.ModerationFragment
 import es.iesnervion.avazquez.askus.ui.fragments.profileFragment.view.ProfileFragment
 import es.iesnervion.avazquez.askus.ui.fragments.tabs.viewmodel.MainViewModel
 import es.iesnervion.avazquez.askus.utils.AppConstants
@@ -31,6 +31,7 @@ import es.iesnervion.avazquez.askus.utils.AppConstants.EXTRA_PARAM_POST
 import es.iesnervion.avazquez.askus.utils.AppConstants.HOME_PAGE
 import es.iesnervion.avazquez.askus.utils.AppConstants.LOG_OUT
 import es.iesnervion.avazquez.askus.utils.AppConstants.MENU_NAV_DRAWER_SIZE
+import es.iesnervion.avazquez.askus.utils.AppConstants.MODERATION
 import es.iesnervion.avazquez.askus.utils.AppConstants.NEW_POST
 import es.iesnervion.avazquez.askus.utils.AppConstants.PROFILE_ANOTHER_USER
 import es.iesnervion.avazquez.askus.utils.AppConstants.PROFILE_ANOTHER_USER_FROM_DETAILS
@@ -147,8 +148,9 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.nav_moderation -> {
                 toolBar.title = resources.getText(R.string.menu_moderation)
-                Toast.makeText(this, "Moderation section - work in progress", Toast.LENGTH_SHORT)
-                    .show()
+                //                Toast.makeText(this, "Moderation section - work in progress", Toast.LENGTH_SHORT)
+                //                    .show()
+                loadFragmentLoaderBackStack((ModerationFragment.newInstance()), MODERATION)
             }
             else                -> {
                 selectedTag = tagList.first { it.nombre == item.title }
