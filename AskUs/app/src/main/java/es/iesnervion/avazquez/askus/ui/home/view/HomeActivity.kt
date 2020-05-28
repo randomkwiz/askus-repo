@@ -51,30 +51,20 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     lateinit var intentType: String
     var isDarkModeOn = false
     var currentUserId = 0
-    var tagsObserver: Observer<List<TagDTO>>
-
-    init {
-        tagsObserver = Observer { list ->
-            tagList = list
-            if (list.isNotEmpty() && navigation.menu.size() == MENU_NAV_DRAWER_SIZE) {
-                val menu: Menu = navigation.menu
-                val sortedList = list.sortedBy { it.nombre }
-                for (x in sortedList.iterator()) {
-                    menu.add(0, x.id, 0, x.nombre).isCheckable = true
-                }
-            }
-        }
-    }
+    var idTagToShowWhenAppIsOpened = 0
+    var isFirstTime = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+        isFirstTime = savedInstanceState == null
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
         intentType = intent.getStringExtra("type") ?: "auth"
         sharedPreference = getSharedPreferences(AppConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
         //        currentUserId = intent.getIntExtra("user_id", 0)
         currentUserId = sharedPreference.getInt("user_id", 0)
         isDarkModeOn = sharedPreference.getBoolean("isDarkModeEnabled", false)
+        idTagToShowWhenAppIsOpened = sharedPreference.getInt("idTagToShowWhenAppIsOpened", 0)
         //Para que al iniciar se ponga correctamente
         if (isDarkModeOn) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
@@ -90,19 +80,6 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         dlDrawerLayout.addDrawerListener(actionBarDrawerToggle)
         actionBarDrawerToggle.syncState()   //without this it doesn't show the hamburguer menu icon
         navigation.setNavigationItemSelectedListener(this)
-        initMenu()
-        if (savedInstanceState == null) {
-            val menuItem: MenuItem = navigation.menu.getItem(0)
-            onNavigationItemSelected(menuItem)
-            menuItem.isChecked = true
-            selectedItemMenuTitle = navigation.menu.getItem(0).title as String
-            viewModel.saveStateMenu = menuItem.itemId
-        } else {
-            val menuItem: MenuItem =
-                    navigation.menu.findItem(viewModel.saveStateMenu) ?: navigation.menu.getItem(0)
-            onNavigationItemSelected(menuItem)
-            menuItem.isChecked = true
-        }
         when (intentType) {
             "loadProfileFragment" -> {
                 val idUserClicked = intent.getIntExtra("idUserToLoad", 0)
@@ -113,20 +90,37 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    private fun initMenu() {
-        val menu: Menu = navigation.menu
-        tagList = viewModel.allTags().value ?: listOf()
-        val sortedList = viewModel.allTags().value?.sortedBy { it.nombre }
-        //TODO mejorar esto con funcionalidades de kotlin
-        if (!sortedList.isNullOrEmpty()) {
+    private fun setSelectedItemMenu() {
+        if (isFirstTime) {
+            val menuItem: MenuItem =
+                    navigation.menu.findItem(idTagToShowWhenAppIsOpened) ?: navigation.menu.getItem(
+                        0)
+            onNavigationItemSelected(menuItem)
+            menuItem.isChecked = true
+            selectedItemMenuTitle = navigation.menu.getItem(0).title as String
+            viewModel.saveStateMenu = menuItem.itemId
+        } else {
+            val menuItem: MenuItem =
+                    navigation.menu.findItem(viewModel.saveStateMenu) ?: navigation.menu.getItem(0)
+            onNavigationItemSelected(menuItem)
+            menuItem.isChecked = true
+        }
+    }
+
+    private fun onTagsLoaded(list: List<TagDTO>) {
+        tagList = list
+        if (list.isNotEmpty() && navigation.menu.size() == MENU_NAV_DRAWER_SIZE) {
+            val menu: Menu = navigation.menu
+            val sortedList = list.sortedBy { it.nombre }
             for (x in sortedList.iterator()) {
                 menu.add(0, x.id, 0, x.nombre).isCheckable = true
             }
         }
+        setSelectedItemMenu()
     }
 
     private fun initObservers() {
-        viewModel.allTags().observe(this, tagsObserver)
+        viewModel.allTags().observe(this, Observer(::onTagsLoaded))
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {

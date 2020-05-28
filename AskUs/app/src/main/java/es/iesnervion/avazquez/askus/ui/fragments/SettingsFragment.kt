@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
@@ -36,6 +37,7 @@ class SettingsFragment : Fragment(), View.OnClickListener {
     lateinit var sharedPreference: SharedPreferences
     lateinit var editor: SharedPreferences.Editor
     var isDarkModeOn = false
+    var idMainTagSelected = 0
     var tagNames = mutableListOf<String>()
     var tagIds = mutableListOf<Int>()
     override fun onCreateView(inflater: LayoutInflater,
@@ -53,8 +55,12 @@ class SettingsFragment : Fragment(), View.OnClickListener {
         editor = sharedPreference.edit()
         initListeners()
         initObservers()
+        spinnerOnItemSelected()
+        idMainTagSelected = sharedPreference.getInt("idTagToShowWhenAppIsOpened", 0)
         isDarkModeOn = sharedPreference.getBoolean("isDarkModeEnabled", false)
+
         //Para que al iniciar se ponga correctamente
+        //Theme
         if (isDarkModeOn) {
             settings__switch_dark_mode.isChecked = true
             AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES)
@@ -62,6 +68,24 @@ class SettingsFragment : Fragment(), View.OnClickListener {
             settings__switch_dark_mode.isChecked = false
             AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO)
         }
+    }
+
+    private fun spinnerOnItemSelected() {
+        settings__spinner_main_tag.onItemSelectedListener =
+                object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(parentView: AdapterView<*>?,
+                        selectedItemView: View,
+                        position: Int,
+                        id: Long) {
+                        val idSelectedTag = tagIds[position]
+                        editor.putInt("idTagToShowWhenAppIsOpened", idSelectedTag)
+                        editor.apply()
+                    }
+
+                    override fun onNothingSelected(parent: AdapterView<*>?) {
+                        //no-op
+                    }
+                }
     }
 
     private fun initListeners() {
@@ -103,7 +127,7 @@ class SettingsFragment : Fragment(), View.OnClickListener {
         if (tagList.isNotEmpty()) {
             tagNames.clear()
             tagIds.clear()
-            tagNames.add(resources.getString(R.string.spinner_select_category))
+            tagNames.add(resources.getString(R.string.menu_home))
             tagIds.add(0)
 
             tagNames.addAll(tagList.map { it.nombre })
@@ -112,6 +136,10 @@ class SettingsFragment : Fragment(), View.OnClickListener {
                 ArrayAdapter(it1, android.R.layout.simple_spinner_item, tagNames)
             }
             settings__spinner_main_tag.adapter = adapter
+        }
+        //Tag
+        if (idMainTagSelected != 0) {
+            settings__spinner_main_tag.setSelection(tagIds.indexOf(idMainTagSelected))
         }
     }
 
