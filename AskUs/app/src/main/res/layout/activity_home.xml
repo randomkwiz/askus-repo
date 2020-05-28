@@ -16,7 +16,7 @@
             app:popupTheme="@style/Widget.MaterialComponents.Toolbar"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:theme="@style/Widget.MaterialComponents.Toolbar"
+
             android:background="@color/colorPrimary"
             app:titleTextColor="@color/textColor"
             app:menu="@menu/toolbar_menu"
