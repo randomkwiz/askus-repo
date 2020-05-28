@@ -55,7 +55,6 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     var currentUserId = 0
     var idTagToShowWhenAppIsOpened = 0
     var isFirstTime = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -84,12 +83,15 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navigation.setNavigationItemSelectedListener(this)
         when (intentType) {
             "loadProfileFragment" -> {
-                val idUserClicked = intent.getIntExtra("idUserToLoad", 0)
-                val nicknameUserClicked = intent.getStringExtra("nicknameUserToLoad") ?: ""
-                onUserClicked(idUser = idUserClicked, nickname = nicknameUserClicked,
-                    fromDetails = true)
+                onOtherProfileClicked()
             }
         }
+    }
+
+    private fun onOtherProfileClicked() {
+        val idUserClicked = intent.getIntExtra("idUserToLoad", 0)
+        val nicknameUserClicked = intent.getStringExtra("nicknameUserToLoad") ?: ""
+        onUserClicked(idUser = idUserClicked, nickname = nicknameUserClicked, fromDetails = true)
     }
 
     private fun setSelectedItemMenu() {
@@ -120,7 +122,9 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 menu.add(0, x.id, 0, x.nombre).isCheckable = true
             }
         }
-        setSelectedItemMenu()
+        if (!intentType.equals("loadProfileFragment")) {
+            setSelectedItemMenu()
+        }
     }
 
     private fun initObservers() {
