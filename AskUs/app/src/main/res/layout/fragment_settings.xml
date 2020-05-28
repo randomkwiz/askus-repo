@@ -29,7 +29,7 @@
                 android:layout_height="0dp">
 
                 <LinearLayout
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -43,39 +43,36 @@
 
 
                     <Switch
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
                         android:id="@+id/settings__switch_dark_mode"
                         android:showText="false"
-                        android:layout_marginEnd="35dp"
-                        android:layout_weight="0.8"
+                        android:layout_gravity="end"
 
                         />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_marginTop="5dp"
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <TextView
                         android:textColor="@color/textColor"
                         android:id="@+id/settings__label_main_tag"
-                        android:layout_width="276dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:text="@string/tag_to_show_when_the_app_is_opened"
                         />
 
 
                     <Spinner
+                        android:layout_gravity="end"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/settings__spinner_main_tag"
-                        android:showText="false"
-                        android:layout_marginEnd="35dp"
-                        android:layout_weight="1" />
+                        android:showText="false" />
                 </LinearLayout>
 
             </LinearLayout>

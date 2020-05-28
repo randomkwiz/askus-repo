@@ -24,6 +24,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:layout_weight="1"
                     android:textColor="@color/textColor"
                     android:id="@+id/lbl_author_nick"
                     android:layout_width="wrap_content"
@@ -33,14 +34,15 @@
                     tools:text="@tools:sample/first_names" />
 
                 <ImageButton
-                    android:tint="@color/colorAccent"
+                    android:layout_weight="1"
                     android:id="@+id/is_private"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:background="@null"
                     android:scaleType="fitEnd"
-                    android:src="@drawable/ic_lock_open_black_24dp" />
+                    android:src="@drawable/ic_lock_open_black_24dp"
+                    android:tint="@color/colorAccent" />
 
             </LinearLayout>
 
