@@ -35,7 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start|left"
-        android:theme="@style/ThemeOverlay.MaterialComponents.Light"
+        android:theme="@style/navigationDrawerStyle"
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/my_navigation_items"
         tools:ignore="RtlHardcoded" />

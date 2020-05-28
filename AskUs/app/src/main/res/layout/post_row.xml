@@ -7,7 +7,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.cardview.widget.CardView
-        app:cardBackgroundColor="@color/background"
+        app:cardBackgroundColor="@color/backgroundCard"
         android:id="@+id/element_card_view"
         android:layout_width="0dp"
         android:maxHeight="300dp"

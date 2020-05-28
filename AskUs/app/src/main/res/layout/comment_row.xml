@@ -20,6 +20,7 @@
         android:textStyle="italic" />
 
     <TextView
+        android:textColor="@color/textColor"
         tools:text="@tools:sample/lorem"
         android:id="@+id/lbl_comment_title"
         android:layout_width="match_parent"
