@@ -39,6 +39,8 @@ import es.iesnervion.avazquez.askus.utils.AppConstants.PROFILE_ANOTHER_USER_FROM
 import es.iesnervion.avazquez.askus.utils.AppConstants.PROFILE_CURRENT_USER
 import es.iesnervion.avazquez.askus.utils.AppConstants.SETTINGS
 import kotlinx.android.synthetic.main.activity_home.*
+import setVisibilityToGone
+import setVisibilityToVisible
 
 class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
     HomeActivityCallback {
@@ -105,6 +107,8 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             onNavigationItemSelected(menuItem)
             menuItem.isChecked = true
         }
+        home__lottie_loading.setVisibilityToGone()
+        content_frame.setVisibilityToVisible()
     }
 
     private fun onTagsLoaded(list: List<TagDTO>) {

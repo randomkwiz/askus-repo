@@ -121,6 +121,7 @@ class AddPostFragment : Fragment(), View.OnClickListener {
                         Toast.LENGTH_LONG)
                         .show()
                 }
+                btnSend.isEnabled = true
             }
             btnSendHasBeenClicked = false
         }
@@ -180,6 +181,7 @@ class AddPostFragment : Fragment(), View.OnClickListener {
                 if (fieldsAreFilled()) {
                     setFieldsToViewModel()
                     viewModel.sendNewPost()
+                    btnSend.isEnabled = false
                 } else {
                     if (spinner_tag_one.selectedItemPosition == 0) {
                         lbl_select_one_category.setVisibilityToVisible()
