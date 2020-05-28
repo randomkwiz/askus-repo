@@ -5,6 +5,9 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
+import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -32,6 +35,7 @@ class AuthActivity : AppCompatActivity(), AuthActivityInterface {
     var isRememberPasswordActivated = false
     lateinit var nicknameSaved: String
     lateinit var tokenSaved: String
+    var isDarkModeOn = false
     var idSaved = 0
     var userHasLoggedOut = false
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,6 +45,13 @@ class AuthActivity : AppCompatActivity(), AuthActivityInterface {
         editor = sharedPreference.edit()
         viewModel = ViewModelProviders.of(this)[AuthViewModel::class.java]
         setDataFromSharedPref()
+        isDarkModeOn = sharedPreference.getBoolean("isDarkModeEnabled", false)
+        //Para que al iniciar se ponga correctamente
+        if (isDarkModeOn) {
+            AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO)
+        }
         userHasLoggedOut = intent.getBooleanExtra(LOG_OUT, false)
         if (isDataSaved()) {
             startActivity(Intent(this, HomeActivity::class.java).putExtra("type", "auth"))

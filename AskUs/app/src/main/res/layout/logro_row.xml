@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:layout_gravity="center"
     android:layout_margin="5dp"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:orientation="vertical">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/logro_img"
-        android:layout_gravity="center"
         android:layout_width="96dp"
         android:layout_height="96dp"
-        tools:src="@drawable/askcom"
+        android:layout_gravity="center"
         android:visibility="visible"
         app:civ_border_width="2dp"
-        app:civ_border_color="#FF000000" />
+        tools:src="@drawable/askcom" />
 
     <TextView
-        android:layout_gravity="center|bottom"
-        tools:text="@tools:sample/lorem"
         android:id="@+id/logro_name"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|bottom"
+        android:textColor="@color/textColor"
+        tools:text="@tools:sample/lorem" />
 </LinearLayout>

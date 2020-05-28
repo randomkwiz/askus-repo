@@ -1,27 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/background"
     tools:context=".ui.fragments.SettingsFragment">
 
-    <TextView
-        android:layout_weight="1"
-        android:text="Work in progress..."
-        android:textSize="50dp"
-        android:gravity="center"
+    <ScrollView
+
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:fillViewport="true"
+        android:layout_margin="10dp">
 
-    </TextView>
+        <LinearLayout
 
-    <com.google.android.material.button.MaterialButton
-        android:layout_height="wrap_content"
-        android:id="@+id/btn_logout"
-        android:layout_width="match_parent"
-        android:text="Cerrar sesión"
-        android:layout_margin="15dp"
-        android:layout_gravity="bottom"></com.google.android.material.button.MaterialButton>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-</LinearLayout>
+            <LinearLayout
+
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="0dp">
+
+                <TextView
+                    android:textColor="@color/textColor"
+                    android:layout_gravity="center"
+                    android:id="@+id/sectionTitleSettings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/menu_settings"
+                    android:textSize="50sp" />
+
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:textColor="@color/textColor"
+                        android:id="@+id/settings__label_dark_mode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="15dp"
+                        android:text="@string/dark_mode"
+                        android:textSize="20sp"
+
+                        />
+
+
+                    <Switch
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/settings__switch_dark_mode"
+                        android:showText="false"
+                        android:layout_marginEnd="35dp"
+                        android:layout_weight="0.8"
+
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:textColor="@color/textColor"
+                        android:id="@+id/settings__label_main_tag"
+                        android:layout_width="276dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="15dp"
+                        android:text="@string/tag_to_show_when_the_app_is_opened"
+                        android:textSize="20sp"
+
+                        />
+
+
+                    <Spinner
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/settings__spinner_main_tag"
+                        android:showText="false"
+                        android:layout_marginEnd="35dp"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_delete_account"
+                android:layout_width="match_parent"
+                android:text="@string/delete_account"
+                android:layout_margin="15dp"
+                android:layout_gravity="bottom" />
+
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_logout"
+                android:layout_width="match_parent"
+                android:text="@string/sign_out"
+                android:layout_margin="15dp"
+                android:layout_gravity="bottom" />
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+
+</FrameLayout>

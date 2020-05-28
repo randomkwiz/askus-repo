@@ -11,16 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!--        <com.google.android.material.appbar.MaterialToolbar-->
-        <!--            android:id="@+id/toolBar"-->
-        <!--            app:popupTheme="@style/Widget.MaterialComponents.Toolbar"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="?attr/actionBarSize"-->
-        <!--            tools:layout_height="45dp"-->
-        <!--            android:theme="@style/Widget.MaterialComponents.Toolbar"-->
-        <!--            android:background="@color/colorPrimary"-->
-        <!--            app:menu="@menu/toolbar_menu"-->
-        <!--            app:title="@string/tb_activity_main_title" />-->
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolBar"
             app:popupTheme="@style/Widget.MaterialComponents.Toolbar"
@@ -28,6 +18,7 @@
             android:layout_height="50dp"
             android:theme="@style/Widget.MaterialComponents.Toolbar"
             android:background="@color/colorPrimary"
+            app:titleTextColor="@color/textColor"
             app:menu="@menu/toolbar_menu"
             app:title="@string/tb_activity_main_title" />
         <FrameLayout
@@ -46,6 +37,7 @@
         android:layout_gravity="start|left"
         android:theme="@style/ThemeOverlay.MaterialComponents.Light"
         app:headerLayout="@layout/nav_header"
-        app:menu="@menu/my_navigation_items" />
+        app:menu="@menu/my_navigation_items"
+        tools:ignore="RtlHardcoded" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

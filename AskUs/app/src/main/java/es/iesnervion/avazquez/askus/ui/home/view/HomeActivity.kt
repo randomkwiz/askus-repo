@@ -9,6 +9,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE
 import androidx.lifecycle.Observer
@@ -48,6 +49,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     lateinit var selectedTag: TagDTO
     lateinit var sharedPreference: SharedPreferences
     lateinit var intentType: String
+    var isDarkModeOn = false
     var currentUserId = 0
     var tagsObserver: Observer<List<TagDTO>>
 
@@ -72,6 +74,13 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         sharedPreference = getSharedPreferences(AppConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
         //        currentUserId = intent.getIntExtra("user_id", 0)
         currentUserId = sharedPreference.getInt("user_id", 0)
+        isDarkModeOn = sharedPreference.getBoolean("isDarkModeEnabled", false)
+        //Para que al iniciar se ponga correctamente
+        if (isDarkModeOn) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
         viewModel.loadTags()
         initObservers()
         setSupportActionBar(toolBar)
@@ -82,7 +91,6 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         actionBarDrawerToggle.syncState()   //without this it doesn't show the hamburguer menu icon
         navigation.setNavigationItemSelectedListener(this)
         initMenu()
-
         if (savedInstanceState == null) {
             val menuItem: MenuItem = navigation.menu.getItem(0)
             onNavigationItemSelected(menuItem)

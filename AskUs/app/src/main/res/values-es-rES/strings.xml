@@ -63,4 +63,8 @@
     <string name="approve">Aprobar</string>
     <string name="reject">Rechazar</string>
     <string name="no_more_posts_to_moderate">No hay más publicaciones para moderar. Vuelve más tarde.</string>
+    <string name="sign_out">Cerrar sesión</string>
+    <string name="delete_account">Eliminar cuenta</string>
+    <string name="dark_mode">Modo noche / oscuro</string>
+    <string name="tag_to_show_when_the_app_is_opened">Categoría a mostrar cuando se abre la aplicación</string>
 </resources>

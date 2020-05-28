@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     android:theme="@style/ThemeOverlay.MaterialComponents.Light"
     tools:context=".ui.fragments.LoginFragment">
 
@@ -28,10 +29,11 @@
                 android:layout_weight="0.15"
                 android:src="@drawable/ic_launcher" />
             <TextView
+                android:textColor="@color/textColor"
                 android:layout_weight="0.01"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textSize="50dp"
+                android:textSize="50sp"
                 android:gravity="center"
                 android:text="@string/app_name" />
 
@@ -41,11 +43,14 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_margin="5dp"
+                android:textColorHint="@color/textColorHint"
+                app:placeholderTextColor="@color/textColorHint"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/input_nickname"
+                    android:textColor="@color/textColor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/lblNickname"
@@ -58,12 +63,15 @@
                 android:layout_width="match_parent"
                 app:endIconMode="password_toggle"
                 android:layout_margin="5dp"
+                app:placeholderTextColor="@color/textColorHint"
+                android:textColorHint="@color/textColorHint"
                 app:endIconTint="@color/colorPrimary"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/input_password"
+                    android:textColor="@color/textColor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/password"
@@ -72,6 +80,7 @@
 
             <com.google.android.material.checkbox.MaterialCheckBox
                 android:layout_margin="5dp"
+                android:textColor="@color/textColorHint"
                 android:theme="@style/ThemeOverlay.MaterialComponents"
                 android:id="@+id/cb_keep_sesion"
                 app:buttonTint="@color/colorPrimary"
@@ -107,6 +116,7 @@
                 android:text="@string/login" />
 
             <TextView
+                android:textColor="@color/textColorHint"
                 android:id="@+id/link_signup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -115,10 +125,11 @@
                 android:focusable="true"
                 android:gravity="center"
                 android:text="@string/linkSignUp"
-                android:textSize="16dip"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
+                android:textColor="@color/textColorHint"
                 android:id="@+id/rememberPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -127,7 +138,7 @@
                 android:focusable="true"
                 android:gravity="center"
                 android:text="@string/rememberPassword"
-                android:textSize="16dip"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
         </LinearLayout>
