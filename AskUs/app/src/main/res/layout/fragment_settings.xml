@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:fillViewport="true"
-        android:layout_margin="10dp">
+        android:layout_margin="15dp">
 
         <LinearLayout
 
@@ -39,8 +39,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/dark_mode"
-                        android:textSize="20sp"
-
                         />
 
 
@@ -67,8 +65,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/tag_to_show_when_the_app_is_opened"
-                        android:textSize="20sp"
-
                         />
 
 
