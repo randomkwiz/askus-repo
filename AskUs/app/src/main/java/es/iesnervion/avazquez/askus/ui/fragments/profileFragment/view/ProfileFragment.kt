@@ -10,12 +10,17 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import es.iesnervion.avazquez.askus.DTOs.ProfileDTO
 import es.iesnervion.avazquez.askus.R
 import es.iesnervion.avazquez.askus.adapters.LogroAdapter
+import es.iesnervion.avazquez.askus.adapters.PostAdapter
+import es.iesnervion.avazquez.askus.interfaces.RecyclerViewClickListener
 import es.iesnervion.avazquez.askus.ui.fragments.profileFragment.viewmodel.ProfileViewModel
 import es.iesnervion.avazquez.askus.utils.AppConstants
+import es.iesnervion.avazquez.askus.utils.PaginationScrollListener.Companion.PAGE_SIZE
+import es.iesnervion.avazquez.askus.utils.PaginationScrollListener.Companion.PAGE_START
 import kotlinx.android.synthetic.main.fragment_profile.*
 import round
 import setVisibilityToGone
@@ -26,7 +31,7 @@ import java.util.*
 /**
  * A simple [Fragment] subclass.
  */
-class ProfileFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
+class ProfileFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
     companion object {
         fun newInstance(idUserToLoad: Int): ProfileFragment {
             val myFragment = ProfileFragment()
@@ -43,8 +48,11 @@ class ProfileFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     lateinit var dataFromUserObserver: Observer<ProfileDTO>
     lateinit var loadingObserver: Observer<Boolean>
     lateinit var token: String
-    lateinit var adapter: LogroAdapter
+    lateinit var logroAdapter: LogroAdapter
+    lateinit var postAdapter: PostAdapter
+    var showPosts = false
     var idUserToLoad = 0
+    var pageNumber = PAGE_START
     override fun onCreateView(inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
@@ -65,25 +73,55 @@ class ProfileFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         }
         idUserToLoad.let { viewModel.loadLogrosFromUser(token, it) }
         viewModel.loadAllLogros()
+        viewModel.loadMyPosts(token = token, pageSize = PAGE_SIZE, pageNumber = pageNumber,
+            idUsuarioLogeado = idUserToLoad)
         progress_bar.setVisibilityToVisible()
-        recyclerview_logros.setVisibilityToGone()
-        swipeRefreshLayout.setOnRefreshListener(this)
+        profile__recyclerview.setVisibilityToGone()
+        postAdapter = PostAdapter(listener = object : RecyclerViewClickListener {
+            override fun onClick(view: View, position: Int) {
+                //no-op
+            }
+        })
+        initListeners()
         initRecyclerView()
         initObservers()
     }
 
     private fun initRecyclerView() {
-        recyclerview_logros.setHasFixedSize(true)
+        if (showPosts) {
+            initRecyclerViewForPosts()
+        } else {
+            initRecyclerViewForLogros()
+        }
+    }
+
+    private fun initListeners() {
+        swipeRefreshLayout.setOnRefreshListener(this)
+        profile__btn_logros.setOnClickListener(this)
+        profile__btn_posts.setOnClickListener(this)
+    }
+
+    private fun initRecyclerViewForLogros() {
+        profile__recyclerview.setHasFixedSize(true)
         val layoutManager = GridLayoutManager(context, 3)
-        recyclerview_logros.layoutManager = layoutManager
+        profile__recyclerview.layoutManager = layoutManager
+    }
+
+    private fun initRecyclerViewForPosts() {
+        profile__recyclerview.setHasFixedSize(true)
+        val layoutManager = LinearLayoutManager(context)
+        profile__recyclerview.layoutManager = layoutManager
     }
 
     private fun initObservers() {
         areValuesReadyObserver = Observer {
             if (it) {
-                adapter = LogroAdapter(listaLogrosOriginal = viewModel.allLogros,
-                    listaLogrosConseguidos = viewModel.idLogrosFromUser)
-                recyclerview_logros.adapter = adapter
+                if (!showPosts) {
+                    logroAdapter = LogroAdapter(listaLogrosOriginal = viewModel.allLogros,
+                        listaLogrosConseguidos = viewModel.idLogrosFromUser)
+                    profile__recyclerview.adapter = logroAdapter
+                }
+                postAdapter.addItems(viewModel.myPosts.toMutableList())
             }
         }
         viewModel.getAreValuesReady().observe(viewLifecycleOwner, areValuesReadyObserver)
@@ -107,22 +145,22 @@ class ProfileFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 if (swipeRefreshLayout.isRefreshing) {
                     progress_bar.setVisibilityToGone()
                     swipeRefreshLayout.setVisibilityToVisible()
-                    recyclerview_logros.setVisibilityToVisible()
+                    profile__recyclerview.setVisibilityToVisible()
                 } else {
                     progress_bar.setVisibilityToVisible()
                     swipeRefreshLayout.setVisibilityToGone()
-                    recyclerview_logros.setVisibilityToGone()
+                    profile__recyclerview.setVisibilityToGone()
                 }
             } else {
                 if (swipeRefreshLayout.isRefreshing) {
                     swipeRefreshLayout.isRefreshing = false
                     progress_bar.setVisibilityToGone()
                     swipeRefreshLayout.setVisibilityToVisible()
-                    recyclerview_logros.setVisibilityToVisible()
+                    profile__recyclerview.setVisibilityToVisible()
                 } else {
                     progress_bar.setVisibilityToGone()
                     swipeRefreshLayout.setVisibilityToVisible()
-                    recyclerview_logros.setVisibilityToVisible()
+                    profile__recyclerview.setVisibilityToVisible()
                 }
             }
         }
@@ -141,5 +179,26 @@ class ProfileFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         val outputFormat = SimpleDateFormat("dd-MM-yyyy")
         val date: Date = inputFormat.parse(date)
         return outputFormat.format(date)
+    }
+
+    override fun onClick(v: View) {
+        when (v.id) {
+            R.id.profile__btn_logros -> {
+                showPosts = false
+            }
+            R.id.profile__btn_posts  -> {
+                showPosts = true
+            }
+        }
+        initRecyclerView()
+        setAdapter()
+    }
+
+    private fun setAdapter() {
+        if (showPosts) {
+            profile__recyclerview.adapter = postAdapter
+        } else {
+            profile__recyclerview.adapter = logroAdapter
+        }
     }
 }

@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
-    android:background="@color/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context=".ui.fragments.profileFragment.view.ProfileFragment">
 
     <LinearLayout
@@ -18,168 +18,206 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="15dp"
-                tools:background="@color/colorPrimary">
+                android:orientation="vertical">
 
-                <TextView
-                    android:textColor="@color/textColor"
-                    android:id="@+id/lbl_profile_nickname"
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="10dp"
-                    android:gravity="center"
-                    android:text="@string/loading"
-                    android:textSize="19sp"
-                    app:layout_constrainedHeight="true"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="randomkwiz" />
+                    android:layout_margin="15dp"
+                    android:background="@color/backgroundCard"
+                    android:elevation="12dp"
+                    app:contentPadding="10dp">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp">
+
+                        <TextView
+                            android:id="@+id/lbl_profile_nickname"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="10dp"
+                            android:gravity="center"
+                            android:text="@string/loading"
+                            android:textColor="@color/textColor"
+                            android:textSize="19sp"
+                            app:layout_constrainedHeight="true"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:text="randomkwiz" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/lbl_profile_nickname">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="5dp"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="5dp"
+                                    android:text="@string/number_of_written_comments"
+                                    android:textColor="@color/textColor" />
+
+                                <TextView
+                                    android:id="@+id/lbl_written_comments"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/loading"
+                                    android:textColor="@color/textColor"
+                                    tools:text="50" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="5dp"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="5dp"
+                                    android:text="@string/number_of_publications_sent"
+                                    android:textColor="@color/textColor" />
+
+                                <TextView
+                                    android:id="@+id/lbl_sent_posts"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/loading"
+                                    android:textColor="@color/textColor"
+                                    tools:text="50" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="5dp"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="5dp"
+                                    android:text="@string/number_of_published_publications"
+                                    android:textColor="@color/textColor" />
+
+                                <TextView
+                                    android:id="@+id/lbl_posted_posts"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/loading"
+                                    android:textColor="@color/textColor"
+                                    tools:text="50" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="5dp"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="5dp"
+                                    android:text="@string/average_user_rating"
+                                    android:textColor="@color/textColor" />
+
+                                <TextView
+                                    android:id="@+id/user_mark"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/loading"
+                                    android:textColor="@color/textColor"
+                                    tools:text="50" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="5dp"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="5dp"
+                                    android:text="@string/last_login_date"
+                                    android:textColor="@color/textColor" />
+
+                                <TextView
+                                    android:id="@+id/last_login_date"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/loading"
+                                    android:textColor="@color/textColor"
+                                    tools:text="@tools:sample/date/ddmmyy" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="5dp"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="5dp"
+                                    android:text="@string/account_creation_date"
+                                    android:textColor="@color/textColor" />
+
+                                <TextView
+                                    android:id="@+id/register_date"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/loading"
+                                    android:textColor="@color/textColor"
+                                    tools:text="@tools:sample/date/ddmmyy" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/lbl_profile_nickname">
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:orientation="horizontal">
+                    <ImageButton
+                        android:id="@+id/profile__btn_logros"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginEnd="15dp"
+                        android:background="@drawable/logro"
+                        android:scaleType="centerInside" />
 
-                        <TextView
-                            android:textColor="@color/textColor"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="5dp"
-                            android:text="@string/number_of_written_comments" />
-
-                        <TextView
-                            android:textColor="@color/textColor"
-                            android:id="@+id/lbl_written_comments"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/loading"
-                            tools:text="50" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:textColor="@color/textColor"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="5dp"
-                            android:text="@string/number_of_publications_sent" />
-
-                        <TextView
-                            android:textColor="@color/textColor"
-                            android:id="@+id/lbl_sent_posts"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/loading"
-                            tools:text="50" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:textColor="@color/textColor"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="5dp"
-                            android:text="@string/number_of_published_publications" />
-
-                        <TextView
-                            android:textColor="@color/textColor"
-                            android:id="@+id/lbl_posted_posts"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/loading"
-                            tools:text="50" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:textColor="@color/textColor"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="5dp"
-                            android:text="@string/average_user_rating" />
-
-                        <TextView
-                            android:textColor="@color/textColor"
-                            android:id="@+id/user_mark"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/loading"
-                            tools:text="50" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:textColor="@color/textColor"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="5dp"
-                            android:text="@string/last_login_date" />
-
-                        <TextView
-                            android:textColor="@color/textColor"
-                            android:id="@+id/last_login_date"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/loading"
-                            tools:text="@tools:sample/date/ddmmyy" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:textColor="@color/textColor"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="5dp"
-                            android:text="@string/account_creation_date" />
-
-                        <TextView
-                            android:textColor="@color/textColor"
-                            android:id="@+id/register_date"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/loading"
-                            tools:text="@tools:sample/date/ddmmyy" />
-                    </LinearLayout>
+                    <ImageButton
+                        android:id="@+id/profile__btn_posts"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="15dp"
+                        android:background="@drawable/post"
+                        android:scaleType="centerInside" />
                 </LinearLayout>
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+
         </ScrollView>
 
         <com.airbnb.lottie.LottieAnimationView
@@ -198,21 +236,18 @@
             android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="bottom"
-            android:visibility="gone"
-            tools:background="@color/colorAccent"
-            tools:visibility="visible">
+            android:layout_gravity="bottom">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerview_logros"
+                android:id="@+id/profile__recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 tools:itemCount="5"
                 tools:listitem="@layout/logro_row">
 
             </androidx.recyclerview.widget.RecyclerView>
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
     </LinearLayout>
 
     <ImageView
