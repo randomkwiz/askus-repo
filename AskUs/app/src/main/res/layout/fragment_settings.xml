@@ -45,7 +45,8 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
                             android:layout_alignParentTop="true"
-                            android:text="Enable night mode"
+                            android:text="@string/enable_night_mode"
+                            android:layout_marginBottom="5dp"
                             android:textColor="@color/textColor"
                             android:textStyle="bold" />
 
@@ -90,7 +91,8 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
                             android:layout_alignParentTop="true"
-                            android:text="Main tag"
+                            android:text="@string/main_tag"
+                            android:layout_marginBottom="5dp"
                             android:textColor="@color/textColor"
                             android:textStyle="bold" />
 
@@ -100,6 +102,7 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@id/settings__label_main_tag_title"
                             android:layout_alignParentStart="true"
+                            android:layout_marginBottom="2dp"
                             android:text="@string/tag_to_show_when_the_app_is_opened"
                             android:textColor="@color/textColor" />
 
