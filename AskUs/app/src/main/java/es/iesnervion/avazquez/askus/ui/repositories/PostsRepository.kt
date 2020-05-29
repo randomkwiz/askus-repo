@@ -22,6 +22,7 @@ class PostsRepository
     private val allVisiblePostsByGivenTagTopCommented =
             MutableLiveData<List<PostCompletoParaMostrarDTO>>()
     private val allNonDeletedPostedPosts = MutableLiveData<List<PostCompletoParaMostrarDTO>>()
+    private val postsByAuthor = MutableLiveData<List<PostCompletoParaMostrarDTO>>()
     private val allNonDeletedPostedPostsTopRated =
             MutableLiveData<List<PostCompletoParaMostrarDTO>>()
     private val allNonDeletedPostedPostsTopCommented =
@@ -66,8 +67,27 @@ class PostsRepository
             idUsuarioLogeado = idUsuarioLogeado)
     }
 
+    fun useCaseLoadNonDeletedPostedPostsByAuthor(token: String,
+        pageSize: Int,
+        pageNumber: Int,
+        idUsuarioLogeado: Int,
+        idAutor: Int) {
+        loadJSONUseCase.getListadoPostsCompletosParaMostrarDeAutor(object : RepositoryInterface {
+            override fun showError(show: Boolean) {
+                showFinishMessage.postValue(show)
+            }
 
+            override fun onLoading(loading: Boolean) {
+                loadingLiveData.postValue(loading)
+            }
 
+            override fun <T, I> onSuccess(data: List<T>, moreInfo: I?) {
+                postsByAuthor.postValue(data as List<PostCompletoParaMostrarDTO>)
+                paginHeader.postValue(moreInfo as PaginHeader)
+            }
+        }, token, pageSize = pageSize, pageNumber = pageNumber, idUsuarioLogeado = idUsuarioLogeado,
+            idAutor = idAutor)
+    }
 
     fun useCaseLoadNonDeletedPostedPosts(token: String,
         pageSize: Int,
@@ -251,6 +271,10 @@ class PostsRepository
     //    }
     fun getAllNonDeletedPostedPosts(): LiveData<List<PostCompletoParaMostrarDTO>> {
         return allNonDeletedPostedPosts
+    }
+
+    fun getPostsByAuthor(): LiveData<List<PostCompletoParaMostrarDTO>> {
+        return postsByAuthor
     }
 
     fun getAllNonDeletedPostedPostsTopRated(): LiveData<List<PostCompletoParaMostrarDTO>> {

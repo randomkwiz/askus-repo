@@ -30,6 +30,15 @@ interface PublicacionesInterface {
 
     //Obtiene una lista de posts publicados y no borrados (privados y no privados)
     //Los obtiene en formato PostVisibleParaMostrar con cantidad de comentarios
+    @GET("/api/Publicaciones?pagination=true")
+    fun getListadoPostsCompletosParaMostrarFromAuthor(@Header("Authorization") authToken: String,
+        @Query("pageNumber") pageNumber: Int,
+        @Query("idUsuarioLogeado") idUsuarioLogeado: Int,
+        @Query("idAutorPosts") idAutorPosts: Int,
+        @Query("pageSize") pageSize: Int): Call<List<PostCompletoParaMostrarDTO>>
+
+    //Obtiene una lista de posts publicados y no borrados (privados y no privados)
+    //Los obtiene en formato PostVisibleParaMostrar con cantidad de comentarios
     //Top rated
     @GET("/api/Publicaciones?pagination=true&top=TOP_RATED")
     fun getListadoPostsCompletosParaMostrarCantidadComentariosTopRated(

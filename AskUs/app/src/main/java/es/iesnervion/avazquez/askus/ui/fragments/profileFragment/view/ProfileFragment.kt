@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import es.iesnervion.avazquez.askus.DTOs.PostCompletoParaMostrarDTO
 import es.iesnervion.avazquez.askus.DTOs.ProfileDTO
 import es.iesnervion.avazquez.askus.R
 import es.iesnervion.avazquez.askus.adapters.LogroAdapter
@@ -19,6 +20,7 @@ import es.iesnervion.avazquez.askus.adapters.PostAdapter
 import es.iesnervion.avazquez.askus.interfaces.RecyclerViewClickListener
 import es.iesnervion.avazquez.askus.ui.fragments.profileFragment.viewmodel.ProfileViewModel
 import es.iesnervion.avazquez.askus.utils.AppConstants
+import es.iesnervion.avazquez.askus.utils.PaginationScrollListener
 import es.iesnervion.avazquez.askus.utils.PaginationScrollListener.Companion.PAGE_SIZE
 import es.iesnervion.avazquez.askus.utils.PaginationScrollListener.Companion.PAGE_START
 import kotlinx.android.synthetic.main.fragment_profile.*
@@ -52,7 +54,14 @@ class ProfileFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, View.O
     lateinit var postAdapter: PostAdapter
     var showPosts = false
     var idUserToLoad = 0
-    var pageNumber = PAGE_START
+    var currentLoggedUser = 0
+
+    //Pagination
+    private var currentPage: Int = PAGE_START
+    private var mIsLastPage = false
+    private var totalPage = 2
+    private var mIsLoading = false
+    var itemCount = 0
     override fun onCreateView(inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
@@ -67,14 +76,14 @@ class ProfileFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, View.O
         sharedPreference =
                 activity!!.getSharedPreferences(AppConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
         token = sharedPreference.getString("token", "").toString()
+        currentLoggedUser = sharedPreference.getInt("user_id", 0)
         idUserToLoad = arguments?.getInt("idUserToLoad") ?: 0
         idUserToLoad.let {
             viewModel.loadUserProfile(it)
         }
         idUserToLoad.let { viewModel.loadLogrosFromUser(token, it) }
         viewModel.loadAllLogros()
-        viewModel.loadMyPosts(token = token, pageSize = PAGE_SIZE, pageNumber = pageNumber,
-            idUsuarioLogeado = idUserToLoad)
+        doApiCallForPosts()
         progress_bar.setVisibilityToVisible()
         profile__recyclerview.setVisibilityToGone()
         postAdapter = PostAdapter(listener = object : RecyclerViewClickListener {
@@ -111,6 +120,31 @@ class ProfileFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, View.O
         profile__recyclerview.setHasFixedSize(true)
         val layoutManager = LinearLayoutManager(context)
         profile__recyclerview.layoutManager = layoutManager
+        setRecyclerViewListener()
+    }
+
+    private fun setRecyclerViewListener() {
+        profile__recyclerview.addOnScrollListener(object :
+            PaginationScrollListener(profile__recyclerview.layoutManager as LinearLayoutManager) {
+            override fun loadMoreItems() {
+                mIsLoading = true
+                currentPage++
+                doApiCallForPosts()
+            }
+
+            override fun getIsLastPage(): Boolean {
+                return mIsLastPage
+            }
+
+            override fun getIsLoading(): Boolean {
+                return mIsLoading
+            }
+        })
+    }
+
+    private fun doApiCallForPosts() {
+        viewModel.loadPostsByAuthor(token = token, pageSize = PAGE_SIZE, pageNumber = currentPage,
+            idUsuarioLogeado = currentLoggedUser, idAuthor = idUserToLoad)
     }
 
     private fun initObservers() {
@@ -121,7 +155,9 @@ class ProfileFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, View.O
                         listaLogrosConseguidos = viewModel.idLogrosFromUser)
                     profile__recyclerview.adapter = logroAdapter
                 }
-                postAdapter.addItems(viewModel.myPosts.toMutableList())
+                if (viewModel.myPosts.all { it.idAutor == idUserToLoad }) {
+                    addElements(viewModel.myPosts.toMutableList())
+                }
             }
         }
         viewModel.getAreValuesReady().observe(viewLifecycleOwner, areValuesReadyObserver)
@@ -172,6 +208,34 @@ class ProfileFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, View.O
             viewModel.loadUserProfile(it)
         }
         idUserToLoad.let { viewModel.loadLogrosFromUser(token, it) }
+
+        itemCount = 0
+        currentPage = PAGE_START
+        mIsLastPage = false
+        postAdapter.clear()
+        doApiCallForPosts()
+    }
+
+    private fun addElements(items: List<PostCompletoParaMostrarDTO>) {
+        if (currentPage != PAGE_START) {
+            postAdapter.removeLoading()
+        }
+        postAdapter.addItems(items.toMutableList())
+        swipeRefreshLayout.isRefreshing = false
+        //check weather is last page or not
+        if (currentPage < totalPage) {
+            postAdapter.addLoading()
+        } else {
+            mIsLastPage = true
+        }
+        mIsLoading = false
+        //Aquí sólo entrará cuando el valor de
+        //currentPaginHeader esté seteado
+        //por eso nunca será null y por eso
+        //necesito el MediatorLiveData
+        if (postAdapter.itemCount >= viewModel.currentPaginHeader.totalCount) {
+            postAdapter.removeLoading()
+        }
     }
 
     private fun formatDate(date: String): String {
