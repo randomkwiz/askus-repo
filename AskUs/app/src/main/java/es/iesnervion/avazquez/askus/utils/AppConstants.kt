@@ -25,4 +25,6 @@ object AppConstants {
     const val SETTINGS = "SETTINGS"
     const val LOG_OUT = "LOG_OUT"
     const val MENU_NAV_DRAWER_SIZE = 4
+    const val LOGIN_FRAGMENT = "LOGIN_FRAGMENT"
+    const val SIGNUP_FRAGMENT = "SIGNUP_FRAGMENT"
 }

@@ -11,6 +11,5 @@
         <item name="colorControlNormal">@color/colorAccent</item>
     </style>
 
-    <style name="navigationDrawerStyle" parent="ThemeOverlay.MaterialComponents.Light" />
-
+    <style name="navigationDrawerStyle" parent="ThemeOverlay.MaterialComponents.Dark" />
 </resources>

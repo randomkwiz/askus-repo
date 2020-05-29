@@ -5,9 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
+    android:background="@color/background"
     android:orientation="vertical">
 
     <TextView
+        android:textColor="@color/textColorHint"
         tools:text="@tools:sample/first_names"
         android:id="@+id/lbl_author_nick"
         android:clickable="true"
@@ -18,6 +20,7 @@
         android:textStyle="italic" />
 
     <TextView
+        android:textColor="@color/textColorHint"
         tools:text="@tools:sample/lorem"
         android:id="@+id/lbl_comment_title"
         android:layout_width="match_parent"
@@ -25,6 +28,7 @@
         android:textStyle="bold" />
 
     <TextView
+        android:textColor="@color/textColorHint"
         tools:text="@tools:sample/lorem/random"
         android:id="@+id/lbl_comment_text"
         android:layout_width="match_parent"

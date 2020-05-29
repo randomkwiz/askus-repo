@@ -66,4 +66,10 @@
     <string name="approve">Approve</string>
     <string name="reject">Reject</string>
     <string name="no_more_posts_to_moderate">There\'s no more post to moderate. Come again later.</string>
+    <string name="sign_out">Sign out</string>
+    <string name="delete_account">Delete account</string>
+    <string name="dark_mode">Night mode</string>
+    <string name="tag_to_show_when_the_app_is_opened">Tag to show when the app is opened</string>
+    <string name="main_tag">Main tag</string>
+    <string name="enable_night_mode">Enable night mode</string>
 </resources>

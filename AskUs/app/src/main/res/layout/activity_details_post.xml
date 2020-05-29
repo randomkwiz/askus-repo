@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context=".ui.details.view.DetailsPostActivity">
 
     <ProgressBar
@@ -39,6 +40,7 @@
 
                     <androidx.cardview.widget.CardView
                         android:maxHeight="500dp"
+                        android:background="@color/backgroundCard"
                         android:id="@+id/element_card_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -49,6 +51,7 @@
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="match_parent"
+                            android:background="@color/background"
                             android:layout_height="wrap_content">
 
                             <ImageButton
@@ -100,6 +103,7 @@
                                 tools:text="0" />
 
                             <TextView
+                                android:textColor="@color/textColor"
                                 android:id="@+id/lbl_post_title"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -116,6 +120,7 @@
                                 tools:text="@tools:sample/lorem" />
 
                             <TextView
+                                android:textColor="@color/textColor"
                                 android:id="@+id/lbl_author_nick"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -133,6 +138,7 @@
 
                                 />
                             <TextView
+                                android:textColor="@color/textColor"
                                 android:id="@+id/lbl_post_text"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -146,6 +152,7 @@
                                 tools:text="@tools:sample/lorem/random" />
 
                             <TextView
+                                android:textColor="@color/textColor"
                                 android:id="@+id/lbl_tag_lists"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -248,6 +255,8 @@
             android:hint="@string/title"
             android:inputType="text"
             android:maxLength="30"
+            android:textColor="@color/textColor"
+            android:textColorHint="@color/textColorHint"
             android:maxLines="1"
             android:padding="1dp" />
 
@@ -258,6 +267,8 @@
             android:layout_margin="1dp"
             android:background="@drawable/roundedshape"
             android:gravity="start"
+            android:textColor="@color/textColor"
+            android:textColorHint="@color/textColorHint"
             android:hint="@string/what_s_going_on"
             android:inputType="textMultiLine"
             android:maxLines="4"

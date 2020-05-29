@@ -47,15 +47,8 @@ class CommentsAdapter(private val idAutorPost: Int, listener: RecyclerViewClickL
             author.text = currentComment.nickAutor
             text.text = currentComment.texto
             title.text = currentComment.titulo
-            //        if(position%2 ==0){
-            //            holder.container.setBackgroundColor(Color.LTGRAY)
-            //        }else{
-            //            holder.container.setBackgroundColor(Color.DKGRAY)
-            //        }
             if (position == 0 && currentComment.idUsuario == idAutorPost) {
                 container.setBackgroundColor(Color.LTGRAY)
-            } else {
-                container.setBackgroundColor(Color.WHITE)
             }
         }
 

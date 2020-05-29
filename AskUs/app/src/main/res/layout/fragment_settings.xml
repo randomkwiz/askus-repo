@@ -1,27 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     android:orientation="vertical"
     tools:context=".ui.fragments.SettingsFragment">
 
-    <TextView
-        android:layout_weight="1"
-        android:text="Work in progress..."
-        android:textSize="50dp"
-        android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <ScrollView
 
-    </TextView>
-
-    <com.google.android.material.button.MaterialButton
-        android:layout_height="wrap_content"
-        android:id="@+id/btn_logout"
         android:layout_width="match_parent"
-        android:text="Cerrar sesión"
+        android:layout_height="match_parent"
         android:layout_margin="15dp"
-        android:layout_gravity="bottom"></com.google.android.material.button.MaterialButton>
+        android:fillViewport="true"
+        android:orientation="vertical">
 
-</LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="25dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:elevation="12dp"
+                    app:contentPadding="15dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/settings__label_dark_mode_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentTop="true"
+                            android:text="@string/enable_night_mode"
+                            android:layout_marginBottom="5dp"
+                            android:textColor="@color/textColor"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/settings__label_dark_mode"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/settings__label_dark_mode_title"
+                            android:layout_alignParentStart="true"
+                            android:text="@string/dark_mode"
+                            android:textColor="@color/textColor" />
+
+                        <Switch
+                            tools:checked="true"
+                            android:id="@+id/settings__switch_dark_mode"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_below="@id/settings__label_dark_mode_title"
+                            android:layout_alignParentEnd="true"
+                            android:layout_gravity="end"
+                            android:layout_toEndOf="@id/settings__label_dark_mode"
+                            android:showText="false"
+
+                            />
+                    </RelativeLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    app:contentPadding="15dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp">
+
+                        <TextView
+                            android:id="@+id/settings__label_main_tag_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentTop="true"
+                            android:text="@string/main_tag"
+                            android:layout_marginBottom="5dp"
+                            android:textColor="@color/textColor"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/settings__label_main_tag"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/settings__label_main_tag_title"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginBottom="2dp"
+                            android:text="@string/tag_to_show_when_the_app_is_opened"
+                            android:textColor="@color/textColor" />
+
+
+                        <Spinner
+                            android:id="@+id/settings__spinner_main_tag"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/settings__label_main_tag"
+                            android:layout_alignParentStart="true"
+                            android:showText="false" />
+                    </RelativeLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_delete_account"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_margin="15dp"
+                android:text="@string/delete_account" />
+
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_logout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_margin="15dp"
+                android:text="@string/sign_out" />
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+
+</FrameLayout>

@@ -9,6 +9,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE
 import androidx.lifecycle.Observer
@@ -38,6 +39,8 @@ import es.iesnervion.avazquez.askus.utils.AppConstants.PROFILE_ANOTHER_USER_FROM
 import es.iesnervion.avazquez.askus.utils.AppConstants.PROFILE_CURRENT_USER
 import es.iesnervion.avazquez.askus.utils.AppConstants.SETTINGS
 import kotlinx.android.synthetic.main.activity_home.*
+import setVisibilityToGone
+import setVisibilityToVisible
 
 class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
     HomeActivityCallback {
@@ -48,30 +51,27 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     lateinit var selectedTag: TagDTO
     lateinit var sharedPreference: SharedPreferences
     lateinit var intentType: String
+    var isDarkModeOn = false
     var currentUserId = 0
-    var tagsObserver: Observer<List<TagDTO>>
-
-    init {
-        tagsObserver = Observer { list ->
-            tagList = list
-            if (list.isNotEmpty() && navigation.menu.size() == MENU_NAV_DRAWER_SIZE) {
-                val menu: Menu = navigation.menu
-                val sortedList = list.sortedBy { it.nombre }
-                for (x in sortedList.iterator()) {
-                    menu.add(0, x.id, 0, x.nombre).isCheckable = true
-                }
-            }
-        }
-    }
-
+    var idTagToShowWhenAppIsOpened = 0
+    var isFirstTime = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+        isFirstTime = savedInstanceState == null
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
         intentType = intent.getStringExtra("type") ?: "auth"
         sharedPreference = getSharedPreferences(AppConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
         //        currentUserId = intent.getIntExtra("user_id", 0)
         currentUserId = sharedPreference.getInt("user_id", 0)
+        isDarkModeOn = sharedPreference.getBoolean("isDarkModeEnabled", false)
+        idTagToShowWhenAppIsOpened = sharedPreference.getInt("idTagToShowWhenAppIsOpened", 0)
+        //Para que al iniciar se ponga correctamente
+        if (isDarkModeOn) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
         viewModel.loadTags()
         initObservers()
         setSupportActionBar(toolBar)
@@ -81,10 +81,24 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         dlDrawerLayout.addDrawerListener(actionBarDrawerToggle)
         actionBarDrawerToggle.syncState()   //without this it doesn't show the hamburguer menu icon
         navigation.setNavigationItemSelectedListener(this)
-        initMenu()
+        when (intentType) {
+            "loadProfileFragment" -> {
+                onOtherProfileClicked()
+            }
+        }
+    }
 
-        if (savedInstanceState == null) {
-            val menuItem: MenuItem = navigation.menu.getItem(0)
+    private fun onOtherProfileClicked() {
+        val idUserClicked = intent.getIntExtra("idUserToLoad", 0)
+        val nicknameUserClicked = intent.getStringExtra("nicknameUserToLoad") ?: ""
+        onUserClicked(idUser = idUserClicked, nickname = nicknameUserClicked, fromDetails = true)
+    }
+
+    private fun setSelectedItemMenu() {
+        if (isFirstTime) {
+            val menuItem: MenuItem =
+                    navigation.menu.findItem(idTagToShowWhenAppIsOpened) ?: navigation.menu.getItem(
+                        0)
             onNavigationItemSelected(menuItem)
             menuItem.isChecked = true
             selectedItemMenuTitle = navigation.menu.getItem(0).title as String
@@ -95,30 +109,26 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             onNavigationItemSelected(menuItem)
             menuItem.isChecked = true
         }
-        when (intentType) {
-            "loadProfileFragment" -> {
-                val idUserClicked = intent.getIntExtra("idUserToLoad", 0)
-                val nicknameUserClicked = intent.getStringExtra("nicknameUserToLoad") ?: ""
-                onUserClicked(idUser = idUserClicked, nickname = nicknameUserClicked,
-                    fromDetails = true)
-            }
-        }
+        home__lottie_loading.setVisibilityToGone()
+        content_frame.setVisibilityToVisible()
     }
 
-    private fun initMenu() {
-        val menu: Menu = navigation.menu
-        tagList = viewModel.allTags().value ?: listOf()
-        val sortedList = viewModel.allTags().value?.sortedBy { it.nombre }
-        //TODO mejorar esto con funcionalidades de kotlin
-        if (!sortedList.isNullOrEmpty()) {
+    private fun onTagsLoaded(list: List<TagDTO>) {
+        tagList = list
+        if (list.isNotEmpty() && navigation.menu.size() == MENU_NAV_DRAWER_SIZE) {
+            val menu: Menu = navigation.menu
+            val sortedList = list.sortedBy { it.nombre }
             for (x in sortedList.iterator()) {
                 menu.add(0, x.id, 0, x.nombre).isCheckable = true
             }
         }
+        if (!intentType.equals("loadProfileFragment")) {
+            setSelectedItemMenu()
+        }
     }
 
     private fun initObservers() {
-        viewModel.allTags().observe(this, tagsObserver)
+        viewModel.allTags().observe(this, Observer(::onTagsLoaded))
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {

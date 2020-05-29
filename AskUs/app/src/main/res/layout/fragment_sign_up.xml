@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:theme="@style/ThemeOverlay.MaterialComponents.Light"
     tools:context=".ui.fragments.SignUpFragment">
@@ -30,10 +31,11 @@
                 android:src="@drawable/ic_launcher" />
 
             <TextView
+                android:textColor="@color/textColor"
                 android:layout_weight="0.01"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textSize="50dp"
+                android:textSize="50sp"
                 android:gravity="center"
                 android:text="@string/app_name" />
 
@@ -41,6 +43,9 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 app:counterEnabled="true"
+                app:hintTextColor="@color/textColorHint"
+                android:textColorHint="@color/textColorHint"
+                app:placeholderTextColor="@color/textColorHint"
                 app:counterMaxLength="25"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_height="wrap_content">
@@ -50,6 +55,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/lblNickname"
+                    android:textColor="@color/textColor"
                     android:inputType="text"
                     android:maxLength="25"
                     android:singleLine="true" />
@@ -59,6 +65,8 @@
                 android:layout_width="match_parent"
                 app:counterEnabled="true"
                 app:counterMaxLength="254"
+                android:textColorHint="@color/textColorHint"
+                app:placeholderTextColor="@color/textColorHint"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_height="wrap_content">
 
@@ -67,6 +75,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/lblEmail_account"
+                    android:textColor="@color/textColor"
                     android:inputType="textEmailAddress"
                     android:maxLength="254"
                     android:singleLine="true" />
@@ -80,6 +89,8 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 app:counterEnabled="true"
+                android:textColorHint="@color/textColorHint"
+                app:placeholderTextColor="@color/textColorHint"
                 app:endIconTint="@color/colorPrimary"
                 app:counterMaxLength="20"
                 android:layout_height="wrap_content">
@@ -89,6 +100,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/password"
+                    android:textColor="@color/textColor"
                     android:maxLength="20"
                     android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -96,6 +108,8 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 app:endIconMode="password_toggle"
+                android:textColorHint="@color/textColorHint"
+                app:placeholderTextColor="@color/textColorHint"
                 app:endIconTint="@color/colorPrimary"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_height="wrap_content">
@@ -103,6 +117,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/input_repeat_password"
                     android:layout_width="match_parent"
+                    android:textColor="@color/textColor"
                     android:layout_height="wrap_content"
                     android:maxLength="20"
                     android:hint="@string/repeat_password"
@@ -137,6 +152,7 @@
                 android:text="@string/signup" />
 
             <TextView
+                android:textColor="@color/textColorHint"
                 android:id="@+id/link_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
