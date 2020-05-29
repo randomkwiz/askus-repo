@@ -3,13 +3,11 @@ package es.iesnervion.avazquez.askus.ui.fragments.profileFragment.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
-import es.iesnervion.avazquez.askus.DTOs.LogroDTO
-import es.iesnervion.avazquez.askus.DTOs.PaginHeader
-import es.iesnervion.avazquez.askus.DTOs.PostCompletoParaMostrarDTO
-import es.iesnervion.avazquez.askus.DTOs.ProfileDTO
+import es.iesnervion.avazquez.askus.DTOs.*
 import es.iesnervion.avazquez.askus.ui.repositories.LogrosRepository
 import es.iesnervion.avazquez.askus.ui.repositories.PostsRepository
 import es.iesnervion.avazquez.askus.ui.repositories.UsersRepository
+import es.iesnervion.avazquez.askus.ui.repositories.VotesRepository
 import es.iesnervion.avazquez.askus.utils.GlobalApplication
 import javax.inject.Inject
 
@@ -22,6 +20,9 @@ class ProfileViewModel : ViewModel() {
 
     @Inject
     lateinit var logrosRepository: LogrosRepository
+
+    @Inject
+    lateinit var votesRepository: VotesRepository
     var areValuesReady = MediatorLiveData<Boolean>()
     lateinit var allLogros: List<LogroDTO>
     lateinit var myPosts: List<PostCompletoParaMostrarDTO>
@@ -78,6 +79,15 @@ class ProfileViewModel : ViewModel() {
 
     fun getAreValuesReady(): LiveData<Boolean> {
         return areValuesReady
+    }
+
+    fun insertVotoPublicacion(token: String, votoPublicacionDTO: VotoPublicacionDTO) {
+        votesRepository.useCaseInsertVotoPublicacion(votoPublicacion = votoPublicacionDTO,
+            token = token)
+    }
+
+    fun responseCodeVotoPublicacionSent(): LiveData<Int> {
+        return votesRepository.getResponseCodeVotoPublicacionSent()
     }
 
     init {

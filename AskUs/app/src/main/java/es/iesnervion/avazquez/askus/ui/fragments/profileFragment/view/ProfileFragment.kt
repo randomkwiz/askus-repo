@@ -12,17 +12,21 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.snackbar.Snackbar
 import es.iesnervion.avazquez.askus.DTOs.PostCompletoParaMostrarDTO
 import es.iesnervion.avazquez.askus.DTOs.ProfileDTO
+import es.iesnervion.avazquez.askus.DTOs.VotoPublicacionDTO
 import es.iesnervion.avazquez.askus.R
 import es.iesnervion.avazquez.askus.adapters.LogroAdapter
 import es.iesnervion.avazquez.askus.adapters.PostAdapter
+import es.iesnervion.avazquez.askus.interfaces.HomeActivityCallback
 import es.iesnervion.avazquez.askus.interfaces.RecyclerViewClickListener
 import es.iesnervion.avazquez.askus.ui.fragments.profileFragment.viewmodel.ProfileViewModel
 import es.iesnervion.avazquez.askus.utils.AppConstants
 import es.iesnervion.avazquez.askus.utils.PaginationScrollListener
 import es.iesnervion.avazquez.askus.utils.PaginationScrollListener.Companion.PAGE_SIZE
 import es.iesnervion.avazquez.askus.utils.PaginationScrollListener.Companion.PAGE_START
+import es.iesnervion.avazquez.askus.utils.UtilClass
 import kotlinx.android.synthetic.main.fragment_profile.*
 import round
 import setVisibilityToGone
@@ -46,6 +50,7 @@ class ProfileFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, View.O
 
     lateinit var viewModel: ProfileViewModel
     lateinit var sharedPreference: SharedPreferences
+    var imgBtnUpDownVoteHasBeenClicked = false
     lateinit var areValuesReadyObserver: Observer<Boolean>
     lateinit var dataFromUserObserver: Observer<ProfileDTO>
     lateinit var loadingObserver: Observer<Boolean>
@@ -88,12 +93,76 @@ class ProfileFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, View.O
         profile__recyclerview.setVisibilityToGone()
         postAdapter = PostAdapter(listener = object : RecyclerViewClickListener {
             override fun onClick(view: View, position: Int) {
-                //no-op
+                val currentItem = postAdapter.getItem(position)
+                var valoracion = false
+                when (view.id) {
+                    R.id.arrow_up                -> {
+                        imgBtnUpDownVoteHasBeenClicked = true
+                        valoracion = true
+                    }
+                    R.id.arrow_down              -> {
+                        imgBtnUpDownVoteHasBeenClicked = true
+                        valoracion = false
+                    }
+                    R.id.lbl_post_title_post_row -> {
+                        postClicked(post = currentItem)
+                    }
+                    R.id.lbl_post_text_post_row  -> {
+                        postClicked(post = currentItem)
+                    }
+                }
+                if (imgBtnUpDownVoteHasBeenClicked) {
+                    if (currentItem.votoDeUsuarioLogeado == null) {
+                        val votoPublicacionDTO = VotoPublicacionDTO(currentLoggedUser,
+                            postAdapter.getItem(position).IdPost, valoracion,
+                            UtilClass.getFormattedCurrentDatetime())
+                        viewModel.insertVotoPublicacion(token = token,
+                            votoPublicacionDTO = votoPublicacionDTO)
+                    } else {
+                        //ya has votado aqui
+                        Snackbar.make(profile__recyclerview,
+                            getString(R.string.you_cant_vote_twice), Snackbar.LENGTH_SHORT).show()
+                        imgBtnUpDownVoteHasBeenClicked = false
+                    }
+                }
             }
         })
         initListeners()
         initRecyclerView()
         initObservers()
+    }
+
+    private fun onResponseCodeVoteReceived(it: Int) {
+        //Hago esto de imgBtnUpDownVoteHasBeenClicked porque
+        //si no, entra aquí cada vez que cambias de pestaña en el view pager
+        //y te muestra el snackbar aunque no hayas pulsado el boton
+        //porque el observer entra con el ultimo dato del live data
+        if (imgBtnUpDownVoteHasBeenClicked) {
+            when (it) {
+                AppConstants.INTERNAL_SERVER_ERROR -> {
+                    //ya has votado aqui
+                    Snackbar.make(profile__recyclerview, getString(R.string.you_cant_vote_twice),
+                        Snackbar.LENGTH_SHORT).show()
+                }
+                AppConstants.NO_CONTENT            -> {
+                    //ok
+                    Snackbar.make(profile__recyclerview, getString(R.string.processed_vote),
+                        Snackbar.LENGTH_SHORT).show()
+                }
+                else                               -> {
+                    //error
+                    Snackbar.make(profile__recyclerview, getString(R.string.there_was_an_error),
+                        Snackbar.LENGTH_SHORT).show()
+                }
+            }
+        }
+        imgBtnUpDownVoteHasBeenClicked = false
+    }
+
+    private fun postClicked(post: PostCompletoParaMostrarDTO) {
+        if (context is HomeActivityCallback) {
+            (context as HomeActivityCallback).onPostClicked(post)
+        }
     }
 
     private fun initRecyclerView() {
@@ -148,6 +217,8 @@ class ProfileFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, View.O
     }
 
     private fun initObservers() {
+        viewModel.responseCodeVotoPublicacionSent()
+            .observe(viewLifecycleOwner, Observer(::onResponseCodeVoteReceived))
         areValuesReadyObserver = Observer {
             if (it) {
                 if (!showPosts) {
