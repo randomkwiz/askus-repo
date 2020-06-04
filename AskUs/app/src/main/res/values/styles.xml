@@ -12,5 +12,4 @@
     </style>
 
     <style name="navigationDrawerStyle" parent="ThemeOverlay.MaterialComponents.Light" />
-
 </resources>

@@ -45,7 +45,34 @@ class LoadPostsUseCase {
         })
     }
 
+    /*Gets public and private posted posts from an author*/
+    fun getListadoPostsCompletosParaMostrarDeAutor(repositoryInterface: RepositoryInterface,
+        token: String,
+        pageNumber: Int,
+        idUsuarioLogeado: Int,
+        idAutor: Int,
+        pageSize: Int) {
+        val call = requestInterface.getListadoPostsCompletosParaMostrarFromAuthor(authToken = token,
+            pageNumber = pageNumber, pageSize = pageSize, idUsuarioLogeado = idUsuarioLogeado,
+            idAutorPosts = idAutor)
+        repositoryInterface.onLoading(true)
+        call.enqueue(object : Callback<List<PostCompletoParaMostrarDTO>> {
+            override fun onFailure(call: Call<List<PostCompletoParaMostrarDTO>>, t: Throwable) {
+                repositoryInterface.onLoading(false)
+                repositoryInterface.showError(false)
+            }
 
+            override fun onResponse(call: Call<List<PostCompletoParaMostrarDTO>>,
+                response: Response<List<PostCompletoParaMostrarDTO>>) {
+                repositoryInterface.onLoading(false)
+                val jsonString = response.headers().get("Paging-Headers")
+                val header = Gson().fromJson(jsonString, PaginHeader::class.java)
+                response.body()?.toList()?.let {
+                    repositoryInterface.onSuccess(it, header ?: null)
+                }
+            }
+        })
+    }
 
     /*Gets public and private posted posts ALL*/
     fun getListadoPostsCompletosParaMostrarCantidadComentarios(repositoryInterface: RepositoryInterface,
