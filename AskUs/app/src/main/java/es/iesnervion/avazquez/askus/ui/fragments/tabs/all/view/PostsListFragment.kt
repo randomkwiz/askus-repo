@@ -120,6 +120,8 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         if (areLoaded) {
             //Si llega aquí significa que ya están seteados ambos valores
             this.totalPage = viewModel.currentPaginHeader.totalPages
+            this.mIsLastPage =
+                    viewModel.currentPaginHeader.currentPage == viewModel.currentPaginHeader.totalPages
             if (idTag == 0   //si es 0 porque significa que pide todos los posts
                 || viewModel.postsList.all { post -> idTag in post.listadoTags.map { it.id } } //o que todos los posts tengan el tag indicado
             ) {

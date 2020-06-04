@@ -30,9 +30,9 @@
                 >
 
                 <LinearLayout
-                    android:background="@color/background"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:background="@color/background"
                     android:orientation="vertical">
 
                     <com.google.android.material.card.MaterialCardView
@@ -249,14 +249,13 @@
         android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="top|center"
+        android:layout_gravity="bottom|center"
         android:visibility="visible"
         app:lottie_autoPlay="true"
         app:lottie_fileName="trophy.json"
         app:lottie_loop="true"
         tools:background="@tools:sample/backgrounds/scenic"
-        tools:visibility="gone" />
-
+        tools:visibility="visible" />
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
@@ -276,7 +275,6 @@
 
         </androidx.recyclerview.widget.RecyclerView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="40dp"
