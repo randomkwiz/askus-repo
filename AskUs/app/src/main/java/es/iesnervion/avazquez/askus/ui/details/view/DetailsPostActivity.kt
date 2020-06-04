@@ -301,6 +301,8 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
         openCommentBox_btn.setVisibilityToGone()
         openCommentBox_btn.slideDown()
         create_comment_content_l_layout.slideUp()
+        comment_title.isEnabled = true
+        comment_text.isEnabled = true
     }
 
     private fun onHideCommentBoxClicked() {
@@ -310,6 +312,10 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
         create_comment_content_l_layout.slideDown()
         openCommentBox_btn.setVisibilityToVisible()
         openCommentBox_btn.slideUp()
+        //        comment_title.setVisibilityToGone()
+        //        comment_text.setVisibilityToGone()
+        comment_title.isEnabled = false
+        comment_text.isEnabled = false
     }
 
     private fun onSendCommentClicked() {
