@@ -117,13 +117,13 @@ class PostsListFragmentTopCommented : Fragment(), SwipeRefreshLayout.OnRefreshLi
 
     private fun onValuesReady(areLoaded: Boolean) {
         if (areLoaded) {
+            this.totalPage = viewModel.currentPaginHeader.totalPages
             //Si llega aquí significa que ya están seteados ambos valores
             if (idTag == 0   //si es 0 porque significa que pide todos los posts
                 || viewModel.postsList.all { post -> idTag in post.listadoTags.map { it.id } } //o que todos los posts tengan el tag indicado
             ) {
                 addElements(viewModel.postsList.toMutableList())
             }
-            this.totalPage = viewModel.currentPaginHeader.totalPages
         }
     }
 
