@@ -60,7 +60,8 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
         //filterType = arguments?.getString("filter") ?: ""
         return inflater.inflate(R.layout.fragment_posts, container, false)
@@ -281,5 +282,4 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         doApiCall()
         //Toast.makeText(context,"ALL entra en on start",Toast.LENGTH_SHORT).show()
     }
-
 }
