@@ -87,10 +87,13 @@ class PostAdapter(listener: RecyclerViewClickListener) : RecyclerView.Adapter<Ba
     fun removeLoading() {
         isLoaderVisible = false
         val position: Int = (posts.size - 1)
-        if (position >= 0 && getItem(position).IdPost == 0) {
-            posts.removeAt(position)
-            notifyItemRemoved(position)
+        posts.removeAll {
+            it.IdPost == 0
         }
+        //        if (position >= 0 && getItem(position).IdPost == 0) {
+        //            posts.removeAt(position)
+        //            notifyItemRemoved(position)
+        //        }
     }
 
     fun clear() {
