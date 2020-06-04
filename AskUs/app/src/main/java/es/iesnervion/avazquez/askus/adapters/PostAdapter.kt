@@ -90,6 +90,7 @@ class PostAdapter(listener: RecyclerViewClickListener) : RecyclerView.Adapter<Ba
         posts.removeAll {
             it.IdPost == 0
         }
+        notifyDataSetChanged()
         //        if (position >= 0 && getItem(position).IdPost == 0) {
         //            posts.removeAt(position)
         //            notifyItemRemoved(position)
