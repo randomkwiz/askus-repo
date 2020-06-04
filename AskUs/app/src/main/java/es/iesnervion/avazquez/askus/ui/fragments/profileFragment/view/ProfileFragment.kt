@@ -91,6 +91,7 @@ class ProfileFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, View.O
         doApiCallForPosts()
         progress_bar.setVisibilityToVisible()
         profile__recyclerview.setVisibilityToGone()
+        setCorrectImages()
         postAdapter = PostAdapter(listener = object : RecyclerViewClickListener {
             override fun onClick(view: View, position: Int) {
                 val currentItem = postAdapter.getItem(position)
@@ -325,6 +326,7 @@ class ProfileFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, View.O
                 showPosts = true
             }
         }
+        setCorrectImages()
         initRecyclerView()
         setAdapter()
     }
@@ -334,6 +336,17 @@ class ProfileFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, View.O
             profile__recyclerview.adapter = postAdapter
         } else {
             profile__recyclerview.adapter = logroAdapter
+        }
+        setCorrectImages()
+    }
+
+    private fun setCorrectImages() {
+        if (showPosts) {
+            profile__btn_posts.setBackgroundResource(R.drawable.post)
+            profile__btn_logros.setBackgroundResource(R.drawable.ic_logros_off_xml)
+        } else {
+            profile__btn_posts.setBackgroundResource(R.drawable.ic_post_off)
+            profile__btn_logros.setBackgroundResource(R.drawable.logros_on)
         }
     }
 }
