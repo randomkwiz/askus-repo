@@ -278,10 +278,14 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 fromDetails = false)
         }
     }
-
-    override fun onStart() {
-        super.onStart()
+    //    override fun onStart() {
+    //        super.onStart()
+    //        doApiCall()
+    //        //Toast.makeText(context,"ALL entra en on start",Toast.LENGTH_SHORT).show()
+    //    }
+    override fun onResume() {
+        super.onResume()
+        adapter.clear()
         doApiCall()
-        //Toast.makeText(context,"ALL entra en on start",Toast.LENGTH_SHORT).show()
     }
 }

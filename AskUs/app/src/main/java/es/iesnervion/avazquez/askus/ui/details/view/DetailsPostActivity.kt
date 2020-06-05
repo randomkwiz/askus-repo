@@ -165,6 +165,7 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
             NO_CONTENT -> {
                 showToast(getString(R.string.comment_sent))
                 clearCommentEditText()
+                loadData()
             }
             else       -> {
                 showToast(getString(R.string.error_sending_comment))

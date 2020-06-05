@@ -278,10 +278,14 @@ class PostsListFragmentTopCommented : Fragment(), SwipeRefreshLayout.OnRefreshLi
                 fromDetails = false)
         }
     }
-
-    override fun onStart() {
-        super.onStart()
+    //    override fun onStart() {
+    //        super.onStart()
+    //        doApiCall()
+    //        //Toast.makeText(context,"TOP COMMENTED entra en on start", Toast.LENGTH_SHORT).show()
+    //    }
+    override fun onResume() {
+        super.onResume()
+        adapter.clear()
         doApiCall()
-        //Toast.makeText(context,"TOP COMMENTED entra en on start", Toast.LENGTH_SHORT).show()
     }
 }

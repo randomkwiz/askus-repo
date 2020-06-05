@@ -279,9 +279,10 @@ class PostsListFragmentTopRated : Fragment(), SwipeRefreshLayout.OnRefreshListen
         }
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onResume() {
+        super.onResume()
+        adapter.clear()
         doApiCall()
-        //Toast.makeText(context,"TOP RATED entra en on start", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(context,"TOP RATED entra en on resume", Toast.LENGTH_SHORT).show()
     }
 }
