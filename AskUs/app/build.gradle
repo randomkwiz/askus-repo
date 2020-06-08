@@ -80,4 +80,6 @@ dependencies {
     //Card-Stack-View
     implementation "com.yuyakaido.android:card-stack-view:2.3.4"
 
+    //Tuto
+    implementation 'com.github.florent37:tutoshowcase:1.0.1'
 }

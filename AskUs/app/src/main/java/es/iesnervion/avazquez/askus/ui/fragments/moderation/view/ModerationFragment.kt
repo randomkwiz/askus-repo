@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DefaultItemAnimator
+import com.github.florent37.tutoshowcase.TutoShowcase
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager
 import com.yuyakaido.android.cardstackview.CardStackListener
 import com.yuyakaido.android.cardstackview.Direction
@@ -66,6 +67,9 @@ class ModerationFragment : Fragment(), CardStackListener {
         initAdapter()
         doApiCall()
         setObservers()
+
+        TutoShowcase.from(activity!!).setContentView(R.layout.moderation_tutorial_layout)
+            .on(R.id.stack_view).displaySwipableRight().showOnce("MODERATION_TUTORIAL")
     }
 
     private fun setObservers() {
