@@ -121,18 +121,10 @@ class SignUpFragment : Fragment()
                     ) {
                         lbl_error_login.setVisibilityToGone()
 
-                        viewModel.newUser = User(
-                            "",
+                        viewModel.newUser = User(0,
                             input_nickname.text.toString().trim({ it <= ' ' }),
-                            input_email.text.toString().trim({ it <= ' ' }),
-                            false,
-                            false,
-                            "",
-                            0,
-                            "",
-                            "",
-                            false,
-                            input_password.text.toString().trim({ it <= ' ' })
+                            input_email.text.toString().trim({ it <= ' ' }), false, false, "", 0,
+                            "", "", false, input_password.text.toString().trim({ it <= ' ' })
                         )
                         viewModel.createUser()
                     } else {

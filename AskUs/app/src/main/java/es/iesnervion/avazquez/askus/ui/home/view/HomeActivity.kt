@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -17,6 +18,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.navigation.NavigationView
 import es.iesnervion.avazquez.askus.DTOs.PostCompletoParaMostrarDTO
 import es.iesnervion.avazquez.askus.DTOs.TagDTO
+import es.iesnervion.avazquez.askus.DTOs.UserDTO
 import es.iesnervion.avazquez.askus.R
 import es.iesnervion.avazquez.askus.interfaces.HomeActivityCallback
 import es.iesnervion.avazquez.askus.ui.auth.view.AuthActivity
@@ -50,9 +52,12 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     lateinit var selectedItemMenuTitle: String
     lateinit var selectedTag: TagDTO
     lateinit var sharedPreference: SharedPreferences
+    lateinit var edit: SharedPreferences.Editor
     lateinit var intentType: String
     var isDarkModeOn = false
+    var token = ""
     var currentUserId = 0
+    var isModerador = false
     var idTagToShowWhenAppIsOpened = 0
     var isFirstTime = false
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,7 +68,10 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         intentType = intent.getStringExtra("type") ?: "auth"
         sharedPreference = getSharedPreferences(AppConstants.PREFERENCE_NAME, Context.MODE_PRIVATE)
         //        currentUserId = intent.getIntExtra("user_id", 0)
+        edit = sharedPreference.edit()
         currentUserId = sharedPreference.getInt("user_id", 0)
+        token = sharedPreference.getString("token", "").toString()
+        viewModel.loadMyUser(id = currentUserId, token = token)
         isDarkModeOn = sharedPreference.getBoolean("isDarkModeEnabled", false)
         idTagToShowWhenAppIsOpened = sharedPreference.getInt("idTagToShowWhenAppIsOpened", 0)
         //Para que al iniciar se ponga correctamente
@@ -113,6 +121,15 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         content_frame.setVisibilityToVisible()
     }
 
+    private fun onFullUserLoaded(myUser: UserDTO) {
+        if (myUser.id == currentUserId) {
+            //guardo datos en sharedpref (is moderador)
+            edit.putBoolean("isModerador", myUser.isModerador ?: false)
+            edit.commit()
+            isModerador = myUser.isModerador ?: false
+        }
+    }
+
     private fun onTagsLoaded(list: List<TagDTO>) {
         tagList = list
         if (list.isNotEmpty() && navigation.menu.size() == MENU_NAV_DRAWER_SIZE) {
@@ -129,6 +146,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun initObservers() {
         viewModel.allTags().observe(this, Observer(::onTagsLoaded))
+        viewModel.getFullUser().observe(this, Observer(::onFullUserLoaded))
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -156,8 +174,14 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 loadFragmentLoader((SettingsFragment.newInstance()), SETTINGS)
             }
             R.id.nav_moderation -> {
-                toolBar.title = resources.getText(R.string.menu_moderation)
-                loadFragmentLoader((ModerationFragment.newInstance()), MODERATION)
+                viewModel.loadMyUser(id = currentUserId, token = token)
+                if (isModerador) {
+                    toolBar.title = resources.getText(R.string.menu_moderation)
+                    loadFragmentLoader((ModerationFragment.newInstance()), MODERATION)
+                } else {
+                    Toast.makeText(applicationContext, "No tienes acceso", Toast.LENGTH_SHORT)
+                        .show()
+                }
             }
             else                -> {
                 selectedTag = tagList.first { it.nombre == item.title }

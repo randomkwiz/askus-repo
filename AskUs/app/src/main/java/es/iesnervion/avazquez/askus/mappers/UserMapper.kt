@@ -22,17 +22,8 @@ class UserMapper() : Mapper<UserDTO, User>() {
     }
 
     override fun modelToDto(obj: User): UserDTO {
-        return UserDTO(
-            obj.id ?: "",
-            obj.nickname,
-            obj.email,
-            obj.isModerador,
-            obj.isBanned,
-            obj.fechaInicioBaneo,
-            obj.duracionBaneoEnDias,
-            obj.fechaCreacionCuenta,
-            obj.fechaUltimoAcceso,
-            obj.isAdmin
-        )
+        return UserDTO(obj.id, obj.nickname, obj.email, obj.isModerador, obj.isBanned,
+            obj.fechaInicioBaneo, obj.duracionBaneoEnDias, obj.fechaCreacionCuenta,
+            obj.fechaUltimoAcceso, obj.isAdmin)
     }
 }

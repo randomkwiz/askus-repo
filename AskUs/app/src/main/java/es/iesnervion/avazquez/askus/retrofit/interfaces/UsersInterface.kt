@@ -9,15 +9,14 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface UsersInterface {
-
-    @GET("/api/Users/")
-    fun getUserList(@Header("Authorization") authToken:String): Call<List<UserDTO>>
-
     @GET("/api/Users")
-    fun getIDUserByNickname(@Header("Authorization") authToken: String
-        , @Query("nickname") nickname: String
-    ): Call<Int>
+    fun getIDUserByNickname(@Header("Authorization") authToken: String,
+        @Query("nickname") nickname: String): Call<Int>
 
     @GET("/api/Users/{id}?type=userprofile")
     fun getUserProfile(@Path("id") idUser: Int): Call<ProfileDTO>
+
+    @GET("/api/Users/{id}")
+    fun getFullUser(@Header("Authorization") authToken: String,
+        @Path("id") idUser: Int): Call<UserDTO>
 }

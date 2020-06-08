@@ -3,14 +3,12 @@ package es.iesnervion.avazquez.askus.ui.fragments.tabs.all.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
-import es.iesnervion.avazquez.askus.DTOs.PaginHeader
-import es.iesnervion.avazquez.askus.DTOs.PostCompletoParaMostrarDTO
-import es.iesnervion.avazquez.askus.DTOs.TagDTO
-import es.iesnervion.avazquez.askus.DTOs.VotoPublicacionDTO
+import es.iesnervion.avazquez.askus.DTOs.*
 import es.iesnervion.avazquez.askus.mappers.PublicacionMapper
 import es.iesnervion.avazquez.askus.models.Publicacion
 import es.iesnervion.avazquez.askus.ui.repositories.PostsRepository
 import es.iesnervion.avazquez.askus.ui.repositories.TagsRepository
+import es.iesnervion.avazquez.askus.ui.repositories.UsersRepository
 import es.iesnervion.avazquez.askus.ui.repositories.VotesRepository
 import es.iesnervion.avazquez.askus.utils.GlobalApplication
 import javax.inject.Inject
@@ -23,8 +21,10 @@ class MainViewModel : ViewModel() {
     lateinit var tagsRepository: TagsRepository
 
     @Inject
-    lateinit var votesRepository: VotesRepository
+    lateinit var usersRepository: UsersRepository
 
+    @Inject
+    lateinit var votesRepository: VotesRepository
     var newPost: Publicacion = Publicacion(id = 0, idAutor = 0, texto = "")
     lateinit var tagList: List<Int>
     var saveStateMenu = 0
@@ -75,8 +75,7 @@ class MainViewModel : ViewModel() {
     fun loadPostsByTag(token: String,
         idTag: Int,
         pageNumber: Int,
-        pageSize: Int,
-        idUsuarioLogeado: Int) {
+        pageSize: Int, idUsuarioLogeado: Int) {
         if (idTag == 0) {
             postsRepository.useCaseLoadNonDeletedPostedPosts(token, pageSize = pageSize,
                 pageNumber = pageNumber, idUsuarioLogeado = idUsuarioLogeado)
@@ -84,6 +83,14 @@ class MainViewModel : ViewModel() {
             postsRepository.useCaseLoadNonDeletedPostedPostsByTag(token, idTag,
                 pageNumber = pageNumber, pageSize = pageSize, idUsuarioLogeado = idUsuarioLogeado)
         }
+    }
+
+    fun loadMyUser(id: Int, token: String) {
+        usersRepository.useCaseLoadFullUser(token = token, id = id)
+    }
+
+    fun getFullUser(): LiveData<UserDTO> {
+        return usersRepository.getFullUser()
     }
 
     fun sendNewPost() {
@@ -118,5 +125,4 @@ class MainViewModel : ViewModel() {
     fun responseCodeVotoPublicacionSent(): LiveData<Int> {
         return votesRepository.getResponseCodeVotoPublicacionSent()
     }
-
 }
