@@ -1,6 +1,7 @@
 package es.iesnervion.avazquez.askus.ui.fragments.tabs.all.view
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -60,7 +61,8 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
         //filterType = arguments?.getString("filter") ?: ""
         return inflater.inflate(R.layout.fragment_posts, container, false)
@@ -183,12 +185,27 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         recyclerView.layoutManager = layoutManager
     }
 
+    private fun onBtnShareClicked(post: PostCompletoParaMostrarDTO) {
+        val shareIntent = Intent(Intent.ACTION_SEND)
+        shareIntent.type = "text/plain"
+        val shareBody = "↓↓↓" + getString(
+            R.string.check_out_this_post) + "↓↓↓" + "\n" + post.tituloPost + "\n" + "\n" + post.cuerpoPost + "\n" + "---------" + "\n" + getString(
+            R.string.download) + " → " + getString(R.string.app_name) + "\n" + getString(
+            R.string.link_download)
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name))
+        shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody)
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.share_using)))
+    }
+
     private fun initAdapter() {
         adapter = PostAdapter(object : RecyclerViewClickListener {
             override fun onClick(view: View, position: Int) {
                 val currentItem = adapter.getItem(position)
                 var valoracion = false
                 when (view.id) {
+                    R.id.post_row__btn__share     -> {
+                        onBtnShareClicked(currentItem)
+                    }
                     R.id.arrow_up                 -> {
                         imgBtnUpDownVoteHasBeenClicked = true
                         valoracion = true
@@ -281,5 +298,4 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         doApiCall()
         //Toast.makeText(context,"ALL entra en on start",Toast.LENGTH_SHORT).show()
     }
-
 }

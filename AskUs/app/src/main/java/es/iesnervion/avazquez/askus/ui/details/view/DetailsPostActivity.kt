@@ -92,6 +92,7 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun initListeners() {
         lbl_author_nick.setOnClickListener(this)
+        details__btn__share.setOnClickListener(this)
         hideCommentBox_btn.setOnClickListener(this)
         openCommentBox_btn.setOnClickListener(this)
         arrow_up.setOnClickListener(this)
@@ -255,30 +256,45 @@ class DetailsPostActivity : AppCompatActivity(), View.OnClickListener {
         var valoracion = false
         var isBtnVoteClicked = false
         when (v.id) {
-            R.id.arrow_up           -> {
+            R.id.details__btn__share -> {
+                onBtnShareClicked()
+            }
+            R.id.arrow_up            -> {
                 valoracion = true
                 isBtnVoteClicked = true
             }
-            R.id.arrow_down         -> {
+            R.id.arrow_down          -> {
                 valoracion = false
                 isBtnVoteClicked = true
             }
-            R.id.btn_send_comment   -> {
+            R.id.btn_send_comment    -> {
                 onSendCommentClicked()
             }
-            R.id.hideCommentBox_btn -> {
+            R.id.hideCommentBox_btn  -> {
                 onHideCommentBoxClicked()
             }
-            R.id.openCommentBox_btn -> {
+            R.id.openCommentBox_btn  -> {
                 onOpenCommentBoxClicked()
             }
-            R.id.lbl_author_nick    -> {
+            R.id.lbl_author_nick     -> {
                 goToUser(intentPost.idAutor, intentPost.nickAutor)
             }
         }
         if (isBtnVoteClicked) {
             onVoteBtnClicked(valoracion)
         }
+    }
+
+    private fun onBtnShareClicked() {
+        val shareIntent = Intent(Intent.ACTION_SEND)
+        shareIntent.type = "text/plain"
+        val shareBody = "↓↓↓" + getString(
+            R.string.check_out_this_post) + "↓↓↓" + "\n" + this.intentPost.tituloPost + "\n" + "\n" + this.intentPost.cuerpoPost + "\n" + "---------" + "\n" + getString(
+            R.string.download) + " → " + getString(R.string.app_name) + "\n" + getString(
+            R.string.link_download)
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name))
+        shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody)
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.share_using)))
     }
 
     private fun onVoteBtnClicked(valoracion: Boolean) {

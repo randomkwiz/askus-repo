@@ -114,6 +114,7 @@ class PostAdapter(listener: RecyclerViewClickListener) : RecyclerView.Adapter<Ba
         val arrowUp = itemView.findViewById(R.id.arrow_up) as ImageButton
         val arrowDown = itemView.findViewById(R.id.arrow_down) as ImageButton
         val cardView = itemView.findViewById(R.id.element_card_view) as CardView
+        val btnShare = itemView.findViewById(R.id.post_row__btn__share) as ImageButton
 
         init {
             //cardView.setOnClickListener(this)
@@ -122,6 +123,7 @@ class PostAdapter(listener: RecyclerViewClickListener) : RecyclerView.Adapter<Ba
             title.setOnClickListener(this)
             text.setOnClickListener(this)
             author.setOnClickListener(this)
+            btnShare.setOnClickListener(this)
         }
 
         override fun onClick(v: View) {
