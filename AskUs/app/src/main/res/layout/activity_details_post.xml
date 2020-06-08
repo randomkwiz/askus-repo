@@ -102,6 +102,15 @@
                                 app:layout_constraintStart_toStartOf="@id/arrow_down"
                                 tools:text="0" />
 
+                            <ImageButton
+                                android:id="@+id/details__btn__share"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/ic_baseline_share_24"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toEndOf="@id/arrow_down"
+                                app:layout_constraintTop_toTopOf="@id/arrow_down" />
+
                             <TextView
                                 android:textColor="@color/textColor"
                                 android:id="@+id/lbl_post_title"
@@ -144,7 +153,6 @@
                                 android:layout_height="wrap_content"
                                 android:maxHeight="400dp"
                                 android:layout_margin="5dp"
-
                                 app:layout_constraintBottom_toTopOf="@id/upvotes_count"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"

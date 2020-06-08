@@ -69,4 +69,7 @@
     <string name="tag_to_show_when_the_app_is_opened">Categoría a mostrar cuando se abre la aplicación</string>
     <string name="main_tag">Categoría principal</string>
     <string name="enable_night_mode">Activar modo noche</string>
+    <string name="share_using">Compartir con …</string>
+    <string name="download">Descarga</string>
+    <string name="check_out_this_post">Mira este post de Askus!!</string>
 </resources>

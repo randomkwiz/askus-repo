@@ -1,6 +1,7 @@
 package es.iesnervion.avazquez.askus.ui.fragments.profileFragment.view
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -97,6 +98,9 @@ class ProfileFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, View.O
                 val currentItem = postAdapter.getItem(position)
                 var valoracion = false
                 when (view.id) {
+                    R.id.post_row__btn__share    -> {
+                        onBtnShareClicked(currentItem)
+                    }
                     R.id.arrow_up                -> {
                         imgBtnUpDownVoteHasBeenClicked = true
                         valoracion = true
@@ -131,6 +135,18 @@ class ProfileFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, View.O
         initListeners()
         initRecyclerView()
         initObservers()
+    }
+
+    private fun onBtnShareClicked(post: PostCompletoParaMostrarDTO) {
+        val shareIntent = Intent(Intent.ACTION_SEND)
+        shareIntent.type = "text/plain"
+        val shareBody = "↓↓↓" + getString(
+            R.string.check_out_this_post) + "↓↓↓" + "\n" + post.tituloPost + "\n" + "\n" + post.cuerpoPost + "\n" + "---------" + "\n" + getString(
+            R.string.download) + " → " + getString(R.string.app_name) + "\n" + getString(
+            R.string.link_download)
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name))
+        shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody)
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.share_using)))
     }
 
     private fun onResponseCodeVoteReceived(it: Int) {

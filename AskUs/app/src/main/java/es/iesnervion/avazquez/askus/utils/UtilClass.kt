@@ -22,6 +22,10 @@ class UtilClass {
             return success
         }
 
+        fun getEmoji(unicode: Int): String {
+            return String(Character.toChars(unicode))
+        }
+
         fun getFormattedCurrentDatetime(): String {
             val date = Calendar.getInstance().time
             val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
