@@ -189,11 +189,11 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         .setMessage(resources.getString(R.string.terms_of_use_moderation_sec))
                         .setNegativeBtnText(resources.getString(R.string.reject))
                         .setPositiveBtnBackground(
-                            Color.parseColor("#FF4081")) //Don't pass R.color.colorvalue
+                            Color.parseColor(color)) //Don't pass R.color.colorvalue
                         .setPositiveBtnText(resources.getString(R.string.accept))
                         .setNegativeBtnBackground(
-                            Color.parseColor("#FFA9A7A8")) //Don't pass R.color.colorvalue
-                        .setAnimation(Animation.POP).isCancellable(true)
+                            Color.parseColor("#bdb5b3")) //Don't pass R.color.colorvalue
+                        .setAnimation(Animation.SLIDE).isCancellable(true)
                         .setIcon(R.drawable.ic_check_black_24dp, Icon.Visible).OnPositiveClicked {
                             Toast.makeText(applicationContext,
                                 "Has aceptado ser moderador - EN CONSTRUCCIÓN", Toast.LENGTH_SHORT)
