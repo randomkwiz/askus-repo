@@ -60,7 +60,8 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
         //filterType = arguments?.getString("filter") ?: ""
         return inflater.inflate(R.layout.fragment_posts, container, false)
@@ -118,12 +119,14 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private fun onValuesReady(areLoaded: Boolean) {
         if (areLoaded) {
             //Si llega aquí significa que ya están seteados ambos valores
+            this.totalPage = viewModel.currentPaginHeader.totalPages
+            this.mIsLastPage =
+                    viewModel.currentPaginHeader.currentPage == viewModel.currentPaginHeader.totalPages
             if (idTag == 0   //si es 0 porque significa que pide todos los posts
                 || viewModel.postsList.all { post -> idTag in post.listadoTags.map { it.id } } //o que todos los posts tengan el tag indicado
             ) {
                 addElements(viewModel.postsList.toMutableList())
             }
-            this.totalPage = viewModel.currentPaginHeader.totalPages
         }
     }
 
@@ -275,11 +278,14 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 fromDetails = false)
         }
     }
-
-    override fun onStart() {
-        super.onStart()
+    //    override fun onStart() {
+    //        super.onStart()
+    //        doApiCall()
+    //        //Toast.makeText(context,"ALL entra en on start",Toast.LENGTH_SHORT).show()
+    //    }
+    override fun onResume() {
+        super.onResume()
+        adapter.clear()
         doApiCall()
-        //Toast.makeText(context,"ALL entra en on start",Toast.LENGTH_SHORT).show()
     }
-
 }

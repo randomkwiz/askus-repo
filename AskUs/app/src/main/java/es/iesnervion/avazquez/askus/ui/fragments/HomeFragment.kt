@@ -40,6 +40,7 @@ class HomeFragment : Fragment(), View.OnClickListener {
     }
 
     private fun initViewPager() {
+        viewPager.offscreenPageLimit = 0
         val adapter = TabAdapter(childFragmentManager)
         adapter.addFragment(PostsListFragment.newInstance(idTag),
             resources.getString(R.string.allPosts))

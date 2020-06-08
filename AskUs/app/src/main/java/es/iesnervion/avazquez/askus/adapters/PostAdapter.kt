@@ -69,6 +69,7 @@ class PostAdapter(listener: RecyclerViewClickListener) : RecyclerView.Adapter<Ba
             posts.addAll(postItems)
             notifyDataSetChanged()
         }
+        //notifyDataSetChanged()
     }
 
     fun addLoading() {
@@ -81,16 +82,21 @@ class PostAdapter(listener: RecyclerViewClickListener) : RecyclerView.Adapter<Ba
         posts.add(
             PostCompletoParaMostrarDTO(0, 0, "", "", "", 0, "", "", 0, 0, false, listOf(), null))
         val pos = (posts.size - 1)
-        notifyItemInserted(pos)
+        //notifyItemInserted(pos)
+        notifyDataSetChanged()
     }
 
     fun removeLoading() {
         isLoaderVisible = false
         val position: Int = (posts.size - 1)
-        if (position >= 0 && getItem(position).IdPost == 0) {
-            posts.removeAt(position)
-            notifyItemRemoved(position)
+        posts.removeAll {
+            it.IdPost == 0
         }
+        notifyDataSetChanged()
+        //        if (position >= 0 && getItem(position).IdPost == 0) {
+        //            posts.removeAt(position)
+        //            notifyItemRemoved(position)
+        //        }
     }
 
     fun clear() {

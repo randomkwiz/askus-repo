@@ -117,13 +117,15 @@ class PostsListFragmentTopCommented : Fragment(), SwipeRefreshLayout.OnRefreshLi
 
     private fun onValuesReady(areLoaded: Boolean) {
         if (areLoaded) {
+            this.totalPage = viewModel.currentPaginHeader.totalPages
+            this.mIsLastPage =
+                    viewModel.currentPaginHeader.currentPage == viewModel.currentPaginHeader.totalPages
             //Si llega aquí significa que ya están seteados ambos valores
             if (idTag == 0   //si es 0 porque significa que pide todos los posts
                 || viewModel.postsList.all { post -> idTag in post.listadoTags.map { it.id } } //o que todos los posts tengan el tag indicado
             ) {
                 addElements(viewModel.postsList.toMutableList())
             }
-            this.totalPage = viewModel.currentPaginHeader.totalPages
         }
     }
 
@@ -276,10 +278,14 @@ class PostsListFragmentTopCommented : Fragment(), SwipeRefreshLayout.OnRefreshLi
                 fromDetails = false)
         }
     }
-
-    override fun onStart() {
-        super.onStart()
+    //    override fun onStart() {
+    //        super.onStart()
+    //        doApiCall()
+    //        //Toast.makeText(context,"TOP COMMENTED entra en on start", Toast.LENGTH_SHORT).show()
+    //    }
+    override fun onResume() {
+        super.onResume()
+        adapter.clear()
         doApiCall()
-        //Toast.makeText(context,"TOP COMMENTED entra en on start", Toast.LENGTH_SHORT).show()
     }
 }
