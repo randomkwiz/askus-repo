@@ -3,6 +3,7 @@ package es.iesnervion.avazquez.askus.ui.home.view
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -16,6 +17,9 @@ import androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.navigation.NavigationView
+import com.shashank.sony.fancydialoglib.Animation
+import com.shashank.sony.fancydialoglib.FancyAlertDialog
+import com.shashank.sony.fancydialoglib.Icon
 import es.iesnervion.avazquez.askus.DTOs.PostCompletoParaMostrarDTO
 import es.iesnervion.avazquez.askus.DTOs.TagDTO
 import es.iesnervion.avazquez.askus.DTOs.UserDTO
@@ -179,8 +183,26 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     toolBar.title = resources.getText(R.string.menu_moderation)
                     loadFragmentLoader((ModerationFragment.newInstance()), MODERATION)
                 } else {
-                    Toast.makeText(applicationContext, "No tienes acceso", Toast.LENGTH_SHORT)
-                        .show()
+                    val color = resources.getString(0 + R.color.colorPrimary)
+                    FancyAlertDialog.Builder(this).setTitle(getString(R.string.menu_moderation))
+                        .setBackgroundColor(Color.parseColor(color)) //Don't pass R.color.colorvalue
+                        .setMessage(resources.getString(R.string.terms_of_use_moderation_sec))
+                        .setNegativeBtnText(resources.getString(R.string.reject))
+                        .setPositiveBtnBackground(
+                            Color.parseColor("#FF4081")) //Don't pass R.color.colorvalue
+                        .setPositiveBtnText(resources.getString(R.string.accept))
+                        .setNegativeBtnBackground(
+                            Color.parseColor("#FFA9A7A8")) //Don't pass R.color.colorvalue
+                        .setAnimation(Animation.POP).isCancellable(true)
+                        .setIcon(R.drawable.ic_check_black_24dp, Icon.Visible).OnPositiveClicked {
+                            Toast.makeText(applicationContext,
+                                "Has aceptado ser moderador - EN CONSTRUCCIÓN", Toast.LENGTH_SHORT)
+                                .show()
+                            //TODO acepta ser moderador
+                        }.OnNegativeClicked {
+                            Toast.makeText(applicationContext, "Cancelar", Toast.LENGTH_SHORT)
+                                .show()
+                        }.build()
                 }
             }
             else                -> {

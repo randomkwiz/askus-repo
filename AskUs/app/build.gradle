@@ -82,4 +82,7 @@ dependencies {
 
     //Tuto
     implementation 'com.github.florent37:tutoshowcase:1.0.1'
+
+    //Fancy dialog
+    implementation 'com.github.Shashank02051997:FancyAlertDialog-Android:0.1'
 }

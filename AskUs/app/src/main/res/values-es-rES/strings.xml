@@ -61,6 +61,7 @@
     <string name="yes">Sí</string>
     <string name="no">No</string>
     <string name="approve">Aprobar</string>
+    <string name="accept">Aceptar</string>
     <string name="reject">Rechazar</string>
     <string name="no_more_posts_to_moderate">No hay más publicaciones para moderar. Vuelve más tarde.</string>
     <string name="sign_out">Cerrar sesión</string>
@@ -72,4 +73,7 @@
     <string name="share_using">Compartir con …</string>
     <string name="download">Descarga</string>
     <string name="check_out_this_post">Mira este post de Askus!!</string>
+    <string name="terms_of_use_moderation_sec">Si accedes a ser moderador deberás cumplir una serie de normas:
+        \n1. El motivo principal para rechazar posts es ortográfico, no debes guiarte por gustos. Para eso están los votos estándares de publicaciones ya publicadas.
+        \n2. También se rechazarán publicaciones que violen los derechos a la intimidad de otras personas o supongan un delito de odio.</string>
 </resources>
