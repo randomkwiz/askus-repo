@@ -77,6 +77,7 @@ class AuthActivity : AppCompatActivity(), AuthActivityInterface {
                 val token = it.joinToString("")
                 editor.putString("token", token)
                 editor.putString("user_nickname", viewModel.login.nickname)
+                editor.putString("passwordToSave", viewModel.login.password)
                 editor.commit()
                 viewModel.loadUserIDByNickname(nickname = viewModel.login.nickname, token = token)
             }

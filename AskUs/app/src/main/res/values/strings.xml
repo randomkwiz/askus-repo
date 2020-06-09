@@ -81,5 +81,7 @@
         \n2. Publications that violate the privacy rights of others or constitute a hate crime will also be rejected.</string>
     <string name="accept">Accept</string>
     <string name="agree_moderator">You have agreed to be a moderator. Reload the page in a few minutes.</string>
+    <string name="introduce_la_nueva_contrase_a">Introduce new password</string>
+    <string name="introduce_tu_contrase_a_actual">Introduce current password</string>
 
 </resources>

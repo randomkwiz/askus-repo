@@ -45,8 +45,8 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
                             android:layout_alignParentTop="true"
-                            android:text="@string/enable_night_mode"
                             android:layout_marginBottom="5dp"
+                            android:text="@string/enable_night_mode"
                             android:textColor="@color/textColor"
                             android:textStyle="bold" />
 
@@ -60,7 +60,6 @@
                             android:textColor="@color/textColor" />
 
                         <Switch
-                            tools:checked="true"
                             android:id="@+id/settings__switch_dark_mode"
                             android:layout_width="wrap_content"
                             android:layout_height="0dp"
@@ -69,6 +68,7 @@
                             android:layout_gravity="end"
                             android:layout_toEndOf="@id/settings__label_dark_mode"
                             android:showText="false"
+                            tools:checked="true"
 
                             />
                     </RelativeLayout>
@@ -91,8 +91,8 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
                             android:layout_alignParentTop="true"
-                            android:text="@string/main_tag"
                             android:layout_marginBottom="5dp"
+                            android:text="@string/main_tag"
                             android:textColor="@color/textColor"
                             android:textStyle="bold" />
 
@@ -114,6 +114,142 @@
                             android:layout_below="@id/settings__label_main_tag"
                             android:layout_alignParentStart="true"
                             android:showText="false" />
+                    </RelativeLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    app:contentPadding="15dp">
+
+                    <RelativeLayout
+                        android:animateLayoutChanges="true"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp">
+
+                        <TextView
+                            android:id="@+id/settings__label_change_password_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginBottom="5dp"
+                            android:text="Change password"
+                            android:textColor="@color/textColor"
+                            android:textStyle="bold" />
+
+                        <ImageButton
+                            android:backgroundTint="@color/textColor"
+                            android:id="@+id/settings__btn_expandable_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:layout_alignParentEnd="true"
+                            android:background="@drawable/ic_expand_more_black_24dp" />
+
+                        <LinearLayout
+                            tools:visibility="visible"
+                            android:visibility="gone"
+                            android:id="@+id/settings__expandable_view_change_password"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/settings__label_change_password_title"
+                            android:orientation="vertical">
+                            <!-- Password Label -->
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/settings__textinput_old_password"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="15dp"
+                                android:layout_marginEnd="15dp"
+                                android:textColorHint="@color/textColorHint"
+                                app:endIconMode="password_toggle"
+                                app:endIconTint="@color/colorPrimary"
+                                app:placeholderTextColor="@color/textColorHint">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/settings__input_old_password"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:hint="@string/introduce_tu_contrase_a_actual"
+                                    android:inputType="textPassword"
+                                    android:maxLength="20"
+                                    android:textColor="@color/textColor" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/settings__textinput_new_password"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="15dp"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginEnd="15dp"
+                                android:textColorHint="@color/textColorHint"
+                                app:counterEnabled="true"
+                                app:counterMaxLength="20"
+                                app:endIconMode="password_toggle"
+                                app:endIconTint="@color/colorPrimary"
+                                app:placeholderTextColor="@color/textColorHint">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/settings_input_new_password"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:hint="@string/introduce_la_nueva_contrase_a"
+                                    android:inputType="textPassword"
+                                    android:maxLength="20"
+                                    android:textColor="@color/textColor" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="15dp"
+                                android:layout_marginEnd="15dp"
+                                android:textColorHint="@color/textColorHint"
+                                app:endIconMode="password_toggle"
+                                app:endIconTint="@color/colorPrimary"
+                                app:placeholderTextColor="@color/textColorHint">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/settings__input_repeat_new_password"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:hint="@string/repeat_password"
+                                    android:inputType="textPassword"
+                                    android:maxLength="20"
+                                    android:textColor="@color/textColor" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <TextView
+                                android:id="@+id/settings__change_password_lbl_error"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="start"
+                                android:layout_marginStart="15dp"
+                                android:layout_marginTop="5dp"
+                                android:textColor="#FF0000" />
+
+                            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                                android:id="@+id/settings__change_password__save"
+                                app:fabSize="mini"
+                                app:borderWidth="0dp"
+                                android:elevation="12dp"
+                                android:src="@drawable/ic_check_black_24dp"
+                                android:backgroundTint="@color/colorPrimary"
+                                android:layout_marginStart="15dp"
+                                android:layout_marginEnd="15dp"
+                                android:layout_gravity="end"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+                        </LinearLayout>
+
                     </RelativeLayout>
 
                 </com.google.android.material.card.MaterialCardView>

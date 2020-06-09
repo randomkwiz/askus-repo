@@ -102,6 +102,11 @@ class MainViewModel : ViewModel() {
         postsRepository.useCaseSendNewPosts(PublicacionMapper().modelToDto(newPost), tagList)
     }
 
+    fun changePassword(token: String, idUser: Int, newPassword: String) {
+        usersRepository.useCaseChangePassword(token = token, idUser = idUser,
+            newPassword = newPassword)
+    }
+
     fun responseCodePostSent(): LiveData<Int> {
         return postsRepository.getResponseCodePostSent()
     }

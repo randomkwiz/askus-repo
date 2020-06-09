@@ -20,6 +20,8 @@ import es.iesnervion.avazquez.askus.interfaces.HomeActivityCallback
 import es.iesnervion.avazquez.askus.ui.fragments.tabs.all.viewmodel.MainViewModel
 import es.iesnervion.avazquez.askus.utils.AppConstants
 import kotlinx.android.synthetic.main.fragment_settings.*
+import setVisibilityToGone
+import setVisibilityToVisible
 
 /**
  * A simple [Fragment] subclass.
@@ -38,8 +40,11 @@ class SettingsFragment : Fragment(), View.OnClickListener {
     lateinit var editor: SharedPreferences.Editor
     var isDarkModeOn = false
     var idMainTagSelected = 0
+    var currentPassword = ""
     var tagNames = mutableListOf<String>()
     var tagIds = mutableListOf<Int>()
+    var idCurrentUser = 0
+    var token = ""
     override fun onCreateView(inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
@@ -56,9 +61,11 @@ class SettingsFragment : Fragment(), View.OnClickListener {
         initListeners()
         initObservers()
         spinnerOnItemSelected()
+        token = sharedPreference.getString("token", "").toString()
+        idCurrentUser = sharedPreference.getInt("user_id", 0)
         idMainTagSelected = sharedPreference.getInt("idTagToShowWhenAppIsOpened", 0)
         isDarkModeOn = sharedPreference.getBoolean("isDarkModeEnabled", false)
-
+        currentPassword = sharedPreference.getString("passwordToSave", "").toString()
         //Para que al iniciar se ponga correctamente
         //Theme
         if (isDarkModeOn) {
@@ -90,17 +97,71 @@ class SettingsFragment : Fragment(), View.OnClickListener {
 
     private fun initListeners() {
         btn_logout.setOnClickListener(this)
+        settings__change_password__save.setOnClickListener(this)
+        settings__btn_expandable_view.setOnClickListener(this)
         btn_delete_account.setOnClickListener(this)
         settings__switch_dark_mode.setOnClickListener(this)
     }
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.btn_logout                 -> onLogOutClicked()
-            R.id.btn_delete_account         -> onDeleteAccountClicked()
-            R.id.settings__switch_dark_mode -> onDarkModeSwitched()
+            R.id.btn_logout                      -> onLogOutClicked()
+            R.id.btn_delete_account              -> onDeleteAccountClicked()
+            R.id.settings__switch_dark_mode      -> onDarkModeSwitched()
+            R.id.settings__btn_expandable_view   -> onExpandBtnClicked()
+            R.id.settings__change_password__save -> onChangePasswordSaveBtnClicked()
         }
     }
+
+    private fun onChangePasswordSaveBtnClicked() {
+        //TODO revisa esto bien
+        //        if(newPasswordMatchs() && currentPasswordIscorrect() && settings_input_new_password.text?.length ?: 0 >= PASSWORD_MIN_LENGHT){
+        //            viewModel.changePassword(token = token, idUser = idCurrentUser, newPassword = settings_input_new_password.text.toString())
+        //        }else{
+        //            if(!newPasswordMatchs()){
+        //                settings__change_password_lbl_error.text = "Las contraseñas no coinciden"
+        //            }else{
+        //                settings__change_password_lbl_error.text = ""
+        //            }
+        //            if(!currentPasswordIscorrect()){
+        //                settings__change_password_lbl_error.text = "La contraseña no es correcta"
+        //            }else{
+        //                settings__change_password_lbl_error.text = ""
+        //            }
+        //            if(settings_input_new_password.text?.length ?: 0 < PASSWORD_MIN_LENGHT){
+        //                settings__change_password_lbl_error.text = "La contraseña debe ser superior a seis caracteres"
+        //            }else{
+        //                settings__change_password_lbl_error.text = ""
+        //            }
+        //        }
+    }
+
+    private fun currentPasswordIscorrect() =
+            settings__input_old_password.text.toString() == currentPassword
+
+    private fun onExpandBtnClicked() {
+        if (settings__expandable_view_change_password.visibility == View.VISIBLE) {
+            //si está abierto se debe cerrar
+            settings__expandable_view_change_password.setVisibilityToGone()
+            settings__input_old_password.isEnabled = false
+            settings_input_new_password.isEnabled = false
+            settings__input_repeat_new_password.isEnabled = false
+            settings__change_password__save.isEnabled = false
+            settings__btn_expandable_view.setBackgroundResource(
+                R.drawable.ic_expand_more_black_24dp)
+        } else {
+            settings__expandable_view_change_password.setVisibilityToVisible()
+            settings__input_old_password.isEnabled = true
+            settings_input_new_password.isEnabled = true
+            settings__input_repeat_new_password.isEnabled = true
+            settings__change_password__save.isEnabled = true
+            settings__btn_expandable_view.setBackgroundResource(
+                R.drawable.ic_expand_less_black_24dp)
+        }
+    }
+
+    private fun newPasswordMatchs() =
+            settings_input_new_password.text.toString() == settings__input_repeat_new_password.text.toString()
 
     private fun onDarkModeSwitched() {
         if (isDarkModeOn) {
