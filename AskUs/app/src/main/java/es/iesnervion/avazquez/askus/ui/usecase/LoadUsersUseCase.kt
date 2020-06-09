@@ -1,6 +1,7 @@
 package es.iesnervion.avazquez.askus.ui.usecase
 
 import es.iesnervion.avazquez.askus.DTOs.ProfileDTO
+import es.iesnervion.avazquez.askus.DTOs.UserDTO
 import es.iesnervion.avazquez.askus.retrofit.interfaces.UsersInterface
 import es.iesnervion.avazquez.askus.ui.repositories.RepositoryInterface
 import es.iesnervion.avazquez.askus.utils.GlobalApplication
@@ -31,6 +32,22 @@ class LoadUsersUseCase {
             override fun onResponse(call: Call<Int>, response: Response<Int>) {
                 repositoryInterface.onLoading(false)
                 repositoryInterface.onSuccess(listOf(response.body()), null)
+            }
+        })
+    }
+
+    fun getFullUser(repositoryInterface: RepositoryInterface, token: String, idUser: Int) {
+        val call = requestInterface.getFullUser(idUser = idUser, authToken = token)
+        repositoryInterface.onLoading(true)
+        call.enqueue(object : Callback<UserDTO> {
+            override fun onFailure(call: Call<UserDTO>, t: Throwable) {
+                repositoryInterface.onLoading(false)
+                repositoryInterface.showError(false)
+            }
+
+            override fun onResponse(call: Call<UserDTO>, response: Response<UserDTO>) {
+                repositoryInterface.onLoading(false)
+                repositoryInterface.onSuccess(listOf(response.body()), response.code())
             }
         })
     }

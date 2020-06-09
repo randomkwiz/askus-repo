@@ -76,5 +76,10 @@
     <string name="download">Download</string>
     <string name="check_out_this_post">"Check out this post from Askus!! "</string>
     <string name="link_download" translatable="false"><![CDATA[https://play.google.com/store/apps/details?id=es.iesnervion.avazquez.puntokus&gl=ES]]></string>
+    <string name="terms_of_use_moderation_sec">If you agree to be a moderator you must meet a series of rules:
+        \n1. The main reason for rejecting posts is orthographic, you should not be guided by tastes. That\'s what the standard votes for published publications are for.
+        \n2. Publications that violate the privacy rights of others or constitute a hate crime will also be rejected.</string>
+    <string name="accept">Accept</string>
+    <string name="agree_moderator">You have agreed to be a moderator. Reload the page in a few minutes.</string>
 
 </resources>
