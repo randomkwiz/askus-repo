@@ -80,5 +80,6 @@
         \n1. The main reason for rejecting posts is orthographic, you should not be guided by tastes. That\'s what the standard votes for published publications are for.
         \n2. Publications that violate the privacy rights of others or constitute a hate crime will also be rejected.</string>
     <string name="accept">Accept</string>
+    <string name="agree_moderator">You have agreed to be a moderator. Reload the page in a few minutes.</string>
 
 </resources>

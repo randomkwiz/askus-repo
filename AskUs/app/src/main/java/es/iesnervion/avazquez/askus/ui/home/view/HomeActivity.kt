@@ -178,31 +178,11 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 loadFragmentLoader((SettingsFragment.newInstance()), SETTINGS)
             }
             R.id.nav_moderation -> {
-                viewModel.loadMyUser(id = currentUserId, token = token)
                 if (isModerador) {
                     toolBar.title = resources.getText(R.string.menu_moderation)
                     loadFragmentLoader((ModerationFragment.newInstance()), MODERATION)
                 } else {
-                    val color = resources.getString(0 + R.color.colorPrimary)
-                    FancyAlertDialog.Builder(this).setTitle(getString(R.string.menu_moderation))
-                        .setBackgroundColor(Color.parseColor(color)) //Don't pass R.color.colorvalue
-                        .setMessage(resources.getString(R.string.terms_of_use_moderation_sec))
-                        .setNegativeBtnText(resources.getString(R.string.reject))
-                        .setPositiveBtnBackground(
-                            Color.parseColor(color)) //Don't pass R.color.colorvalue
-                        .setPositiveBtnText(resources.getString(R.string.accept))
-                        .setNegativeBtnBackground(
-                            Color.parseColor("#bdb5b3")) //Don't pass R.color.colorvalue
-                        .setAnimation(Animation.SLIDE).isCancellable(true)
-                        .setIcon(R.drawable.ic_check_black_24dp, Icon.Visible).OnPositiveClicked {
-                            Toast.makeText(applicationContext,
-                                "Has aceptado ser moderador - EN CONSTRUCCIÓN", Toast.LENGTH_SHORT)
-                                .show()
-                            //TODO acepta ser moderador
-                        }.OnNegativeClicked {
-                            Toast.makeText(applicationContext, "Cancelar", Toast.LENGTH_SHORT)
-                                .show()
-                        }.build()
+                    showWantToBeAModeratorDialog()
                 }
             }
             else                -> {
@@ -213,6 +193,24 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         selectedItemMenuTitle = toolBar.title as String
         viewModel.saveStateMenu = item.itemId
+    }
+
+    private fun showWantToBeAModeratorDialog() {
+        val color = resources.getString(0 + R.color.colorPrimary)
+        FancyAlertDialog.Builder(this).setTitle(getString(R.string.menu_moderation))
+            .setBackgroundColor(Color.parseColor(color)) //Don't pass R.color.colorvalue
+            .setMessage(resources.getString(R.string.terms_of_use_moderation_sec))
+            .setNegativeBtnText(resources.getString(R.string.reject))
+            .setPositiveBtnBackground(Color.parseColor(color)) //Don't pass R.color.colorvalue
+            .setPositiveBtnText(resources.getString(R.string.accept))
+            .setNegativeBtnBackground(Color.parseColor("#bdb5b3")) //Don't pass R.color.colorvalue
+            .setAnimation(Animation.SLIDE).isCancellable(true)
+            .setIcon(R.drawable.ic_check_black_24dp, Icon.Visible).OnPositiveClicked {
+                viewModel.makeUserAModerator(token = token, idUser = currentUserId)
+                Toast.makeText(applicationContext, getString(R.string.agree_moderator),
+                    Toast.LENGTH_LONG).show()
+                viewModel.loadMyUser(id = currentUserId, token = token)
+            }.OnNegativeClicked {}.build()
     }
 
     /**

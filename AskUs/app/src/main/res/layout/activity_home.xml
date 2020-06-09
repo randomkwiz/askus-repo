@@ -16,7 +16,6 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@color/colorPrimary"
-
             app:menu="@menu/toolbar_menu"
             app:popupTheme="@style/Widget.MaterialComponents.Toolbar"
             app:title="@string/tb_activity_main_title"

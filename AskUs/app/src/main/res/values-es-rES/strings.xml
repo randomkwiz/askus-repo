@@ -76,4 +76,5 @@
     <string name="terms_of_use_moderation_sec">Si accedes a ser moderador deberás cumplir una serie de normas:
         \n1. El motivo principal para rechazar posts es ortográfico, no debes guiarte por gustos. Para eso están los votos estándares de publicaciones ya publicadas.
         \n2. También se rechazarán publicaciones que violen los derechos a la intimidad de otras personas o supongan un delito de odio.</string>
+    <string name="agree_moderator">Has aceptado ser moderador. Recarga la página en unos minutos.</string>
 </resources>

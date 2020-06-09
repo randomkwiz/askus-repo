@@ -5,21 +5,25 @@ import androidx.lifecycle.MutableLiveData
 import es.iesnervion.avazquez.askus.DTOs.ProfileDTO
 import es.iesnervion.avazquez.askus.DTOs.UserDTO
 import es.iesnervion.avazquez.askus.ui.usecase.LoadUsersUseCase
+import es.iesnervion.avazquez.askus.ui.usecase.UpdateUserUseCase
 import javax.inject.Inject
 
-class UsersRepository @Inject
-constructor() {
+class UsersRepository @Inject constructor() {
     internal var loadJSONUseCase: LoadUsersUseCase
+    internal var updateUseCase: UpdateUserUseCase
     private val loadingLiveData = MutableLiveData<Boolean>()
     private val showFinishMessage = MutableLiveData<Boolean>()
     private val userIDByNickname = MutableLiveData<List<Int>>()
     private val userProfile = MutableLiveData<ProfileDTO>()
     private val userDto = MutableLiveData<UserDTO>()
+    private val responseCodeChangePassword = MutableLiveData<Int>()
+    private val responseCodeMakeUserAModerator = MutableLiveData<Int>()
     val finishMessage: LiveData<Boolean>
         get() = showFinishMessage
 
     init {
         loadJSONUseCase = LoadUsersUseCase()
+        updateUseCase = UpdateUserUseCase()
     }
 
     fun getLoadingLiveData(): LiveData<Boolean> {
@@ -80,15 +84,41 @@ constructor() {
         }, idUser = idUser)
     }
 
-    fun getUserIDByNickname(): LiveData<List<Int>> {
-        return userIDByNickname
+    fun useCaseChangePassword(token: String, idUser: Int, newPassword: String) {
+        updateUseCase.changePassword(object : RepositoryInterface {
+            override fun showError(show: Boolean) {
+                showFinishMessage.postValue(show)
+            }
+
+            override fun onLoading(loading: Boolean) {
+                loadingLiveData.postValue(loading)
+            }
+
+            override fun <T, I> onSuccess(data: List<T>, moreInfo: I?) {
+                responseCodeChangePassword.postValue(moreInfo as Int)
+            }
+        }, token = token, idUser = idUser, newPassword = newPassword)
     }
 
-    fun getUserProfile(): LiveData<ProfileDTO> {
-        return userProfile
+    fun useCaseMakeUserAModerator(token: String, idUser: Int) {
+        updateUseCase.makeUserAModerator(object : RepositoryInterface {
+            override fun showError(show: Boolean) {
+                showFinishMessage.postValue(show)
+            }
+
+            override fun onLoading(loading: Boolean) {
+                loadingLiveData.postValue(loading)
+            }
+
+            override fun <T, I> onSuccess(data: List<T>, moreInfo: I?) {
+                responseCodeMakeUserAModerator.postValue(moreInfo as Int)
+            }
+        }, token = token, idUser = idUser)
     }
 
-    fun getFullUser(): LiveData<UserDTO> {
-        return userDto
-    }
+    fun getUserIDByNickname(): LiveData<List<Int>> = userIDByNickname
+    fun getUserProfile(): LiveData<ProfileDTO> = userProfile
+    fun getFullUser(): LiveData<UserDTO> = userDto
+    fun getResponseCodeMakeUserAModerator(): LiveData<Int> = responseCodeMakeUserAModerator
+    fun getResponseCodeChangePassword(): LiveData<Int> = responseCodeChangePassword
 }

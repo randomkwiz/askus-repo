@@ -93,6 +93,11 @@ class MainViewModel : ViewModel() {
         return usersRepository.getFullUser()
     }
 
+    fun makeUserAModerator(token: String, idUser: Int) {
+        usersRepository.useCaseMakeUserAModerator(token = token, idUser = idUser)
+    }
+
+    fun getResponseCodeMakeUserAModerator() = usersRepository.getResponseCodeMakeUserAModerator()
     fun sendNewPost() {
         postsRepository.useCaseSendNewPosts(PublicacionMapper().modelToDto(newPost), tagList)
     }
