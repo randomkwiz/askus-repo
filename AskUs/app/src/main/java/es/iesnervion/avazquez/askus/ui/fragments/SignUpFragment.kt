@@ -28,6 +28,7 @@ class SignUpFragment : Fragment()
     lateinit var observerLoadingData: Observer<Boolean>
     lateinit var observerError: Observer<Boolean>
     lateinit var observerCredentials: Observer<List<Char>>
+    var isCreateBtnClicked = false
 
     companion object {
         fun newInstance(): SignUpFragment {
@@ -74,9 +75,12 @@ class SignUpFragment : Fragment()
         observerCredentials = Observer {
             if (it == listOf(OK)) {
                 lbl_error_login.setVisibilityToGone()
-                if (context is AuthActivityInterface) {
-                    (context as AuthActivityInterface).goToLogIn()
+                if (isCreateBtnClicked) {
+                    if (context is AuthActivityInterface) {
+                        (context as AuthActivityInterface).goToLogIn()
+                    }
                 }
+                isCreateBtnClicked = false
             } else {
                 if (it == listOf(CONFLICT)) {
                     lbl_error_login.text = resources.getText(R.string.error_create_user_conflict)
@@ -121,11 +125,12 @@ class SignUpFragment : Fragment()
                     ) {
                         lbl_error_login.setVisibilityToGone()
 
-                        viewModel.newUser = User(0,
-                            input_nickname.text.toString().trim({ it <= ' ' }),
-                            input_email.text.toString().trim({ it <= ' ' }), false, false, "", 0,
-                            "", "", false, input_password.text.toString().trim({ it <= ' ' })
-                        )
+                        viewModel.newUser =
+                                User(0, input_nickname.text.toString().trim({ it <= ' ' }),
+                                    input_email.text.toString().trim({ it <= ' ' }), false, false,
+                                    "", 0, "", "", false,
+                                    input_password.text.toString().trim({ it <= ' ' }))
+                        isCreateBtnClicked = true
                         viewModel.createUser()
                     } else {
                         lbl_error_login.text = resources.getText(R.string.error_sign_up)

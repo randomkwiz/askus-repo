@@ -111,11 +111,13 @@ class AuthActivity : AppCompatActivity(), AuthActivityInterface {
     }
 
     override fun goToSignUp() {
-        loadFragmentLoader(signUpFragment, SIGNUP_FRAGMENT)
+        //loadFragmentLoader(signUpFragment, SIGNUP_FRAGMENT)
+        loadFragmentLoader(SignUpFragment.newInstance(), SIGNUP_FRAGMENT)
     }
 
     override fun goToLogIn() {
-        loadFragmentLoader(loginFragment, LOGIN_FRAGMENT)
+        //loadFragmentLoader(loginFragment, LOGIN_FRAGMENT)
+        loadFragmentLoader(LoginFragment.newInstance(), LOGIN_FRAGMENT)
     }
 
     override fun userIsTryingToLogIn() {
