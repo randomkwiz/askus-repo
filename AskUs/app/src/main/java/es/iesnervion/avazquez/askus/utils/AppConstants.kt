@@ -9,7 +9,7 @@ object AppConstants {
     const val INTERNAL_SERVER_ERROR = 500
     const val PREFERENCE_NAME = "AskUsPreferences"
     const val CACHE_SIZE = (5 * 1024 * 1024).toLong() //5 MB
-    const val PASSWORD_MIN_LENGHT = 3   //just for testing, this should be at least 6 char
+    const val PASSWORD_MIN_LENGHT = 6   //just for testing, this should be at least 6 char
     const val EXTRA_PARAM_POST = "detail:_post"
     const val VIEW_NAME_TITLE_POST = "detail:_title"
     const val VIEW_NAME_BODY_POST = "detail:_body"
