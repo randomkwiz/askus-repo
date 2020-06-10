@@ -83,5 +83,9 @@
     <string name="agree_moderator">You have agreed to be a moderator. Reload the page in a few minutes.</string>
     <string name="introduce_la_nueva_contrase_a">Introduce new password</string>
     <string name="introduce_tu_contrase_a_actual">Introduce current password</string>
+    <string name="passwords_dont_match">Passwords do not match</string>
+    <string name="incorrect_password">Incorrect password</string>
+    <string name="password_changed">Your password has been successfully changed</string>
+    <string name="error_changing_password">There was an error while changing your password. Try again later.</string>
 
 </resources>

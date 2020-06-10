@@ -14,11 +14,13 @@ import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.material.snackbar.Snackbar
 import es.iesnervion.avazquez.askus.DTOs.TagDTO
 import es.iesnervion.avazquez.askus.R
 import es.iesnervion.avazquez.askus.interfaces.HomeActivityCallback
 import es.iesnervion.avazquez.askus.ui.fragments.tabs.all.viewmodel.MainViewModel
 import es.iesnervion.avazquez.askus.utils.AppConstants
+import es.iesnervion.avazquez.askus.utils.AppConstants.PASSWORD_MIN_LENGHT
 import kotlinx.android.synthetic.main.fragment_settings.*
 import setVisibilityToGone
 import setVisibilityToVisible
@@ -45,6 +47,8 @@ class SettingsFragment : Fragment(), View.OnClickListener {
     var tagIds = mutableListOf<Int>()
     var idCurrentUser = 0
     var token = ""
+    var changePasswordClicked = false
+    var newPassword = ""
     override fun onCreateView(inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
@@ -113,27 +117,42 @@ class SettingsFragment : Fragment(), View.OnClickListener {
         }
     }
 
+    private fun onResponseCodeReceived(responseCode: Int) {
+        if (changePasswordClicked) {
+            if (responseCode == 204) {
+                Snackbar.make(settings__container, getString(R.string.password_changed),
+                    Snackbar.LENGTH_SHORT).show()
+                editor.putString("passwordToSave", newPassword)
+                currentPassword = newPassword
+                editor.commit()
+                onExpandBtnClicked()
+            } else {
+                Snackbar.make(settings__container, getString(R.string.error_changing_password),
+                    Snackbar.LENGTH_SHORT).show()
+            }
+        }
+        changePasswordClicked = false
+    }
+
     private fun onChangePasswordSaveBtnClicked() {
-        //TODO revisa esto bien
-        //        if(newPasswordMatchs() && currentPasswordIscorrect() && settings_input_new_password.text?.length ?: 0 >= PASSWORD_MIN_LENGHT){
-        //            viewModel.changePassword(token = token, idUser = idCurrentUser, newPassword = settings_input_new_password.text.toString())
-        //        }else{
-        //            if(!newPasswordMatchs()){
-        //                settings__change_password_lbl_error.text = "Las contraseñas no coinciden"
-        //            }else{
-        //                settings__change_password_lbl_error.text = ""
-        //            }
-        //            if(!currentPasswordIscorrect()){
-        //                settings__change_password_lbl_error.text = "La contraseña no es correcta"
-        //            }else{
-        //                settings__change_password_lbl_error.text = ""
-        //            }
-        //            if(settings_input_new_password.text?.length ?: 0 < PASSWORD_MIN_LENGHT){
-        //                settings__change_password_lbl_error.text = "La contraseña debe ser superior a seis caracteres"
-        //            }else{
-        //                settings__change_password_lbl_error.text = ""
-        //            }
-        //        }
+        changePasswordClicked = true
+        if (newPasswordMatchs() && currentPasswordIscorrect() && settings_input_new_password.text?.length ?: 0 >= PASSWORD_MIN_LENGHT) {
+            settings__change_password_lbl_error.text = ""
+            newPassword = settings_input_new_password.text.toString()
+            viewModel.changePassword(token = token, idUser = idCurrentUser,
+                newPassword = settings_input_new_password.text.toString())
+        } else {
+            if (!newPasswordMatchs()) {
+                settings__change_password_lbl_error.text = getString(R.string.passwords_dont_match)
+            }
+            if (!currentPasswordIscorrect()) {
+                settings__change_password_lbl_error.text = getString(R.string.incorrect_password)
+            }
+            if (settings_input_new_password.text?.length ?: 0 < PASSWORD_MIN_LENGHT) {
+                settings__change_password_lbl_error.text =
+                        resources.getString(R.string.invalidPassword)
+            }
+        }
     }
 
     private fun currentPasswordIscorrect() =
@@ -206,6 +225,8 @@ class SettingsFragment : Fragment(), View.OnClickListener {
 
     private fun initObservers() {
         viewModel.allTags().observe(viewLifecycleOwner, Observer(::onTagsLoaded))
+        viewModel.getResponseCodePasswordChange()
+            .observe(viewLifecycleOwner, Observer(::onResponseCodeReceived))
     }
 
     private fun deleteAllRememberedData() {

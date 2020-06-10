@@ -98,6 +98,7 @@ class MainViewModel : ViewModel() {
     }
 
     fun getResponseCodeMakeUserAModerator() = usersRepository.getResponseCodeMakeUserAModerator()
+    fun getResponseCodePasswordChange() = usersRepository.getResponseCodeChangePassword()
     fun sendNewPost() {
         postsRepository.useCaseSendNewPosts(PublicacionMapper().modelToDto(newPost), tagList)
     }

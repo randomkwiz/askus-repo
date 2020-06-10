@@ -79,4 +79,8 @@
     <string name="agree_moderator">Has aceptado ser moderador. Recarga la página en unos minutos.</string>
     <string name="introduce_la_nueva_contrase_a">Introduce la nueva contraseña</string>
     <string name="introduce_tu_contrase_a_actual">Introduce la contraseña actual</string>
+    <string name="passwords_dont_match">Las contraseñas no coinciden</string>
+    <string name="incorrect_password">Contraseña incorrecta</string>
+    <string name="password_changed">La contraseña ha sido cambiada con éxito</string>
+    <string name="error_changing_password">Hubo un error cambiando la contraseña. Inténtalo de nuevo más tarde.</string>
 </resources>

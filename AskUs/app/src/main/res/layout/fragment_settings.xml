@@ -2,6 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/settings__container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
@@ -125,10 +126,10 @@
                     app:contentPadding="15dp">
 
                     <RelativeLayout
-                        android:animateLayoutChanges="true"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp">
+                        android:layout_marginTop="5dp"
+                        android:animateLayoutChanges="true">
 
                         <TextView
                             android:id="@+id/settings__label_change_password_title"
@@ -142,22 +143,22 @@
                             android:textStyle="bold" />
 
                         <ImageButton
-                            android:backgroundTint="@color/textColor"
                             android:id="@+id/settings__btn_expandable_view"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentTop="true"
                             android:layout_alignParentEnd="true"
-                            android:background="@drawable/ic_expand_more_black_24dp" />
+                            android:background="@drawable/ic_expand_more_black_24dp"
+                            android:backgroundTint="@color/textColor" />
 
                         <LinearLayout
-                            tools:visibility="visible"
-                            android:visibility="gone"
                             android:id="@+id/settings__expandable_view_change_password"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/settings__label_change_password_title"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            android:visibility="gone"
+                            tools:visibility="visible">
                             <!-- Password Label -->
                             <com.google.android.material.textfield.TextInputLayout
                                 android:id="@+id/settings__textinput_old_password"
@@ -238,16 +239,16 @@
 
                             <com.google.android.material.floatingactionbutton.FloatingActionButton
                                 android:id="@+id/settings__change_password__save"
-                                app:fabSize="mini"
-                                app:borderWidth="0dp"
-                                android:elevation="12dp"
-                                android:src="@drawable/ic_check_black_24dp"
-                                android:backgroundTint="@color/colorPrimary"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="end"
                                 android:layout_marginStart="15dp"
                                 android:layout_marginEnd="15dp"
-                                android:layout_gravity="end"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
+                                android:backgroundTint="@color/colorPrimary"
+                                android:elevation="12dp"
+                                android:src="@drawable/ic_check_black_24dp"
+                                app:borderWidth="0dp"
+                                app:fabSize="mini" />
                         </LinearLayout>
 
                     </RelativeLayout>
