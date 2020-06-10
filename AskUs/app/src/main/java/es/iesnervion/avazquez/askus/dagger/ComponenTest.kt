@@ -39,4 +39,5 @@ interface ComponenTest {
     fun inject(mainViewModelTopRated: MainViewModelTopRated)
     fun inject(mainViewModelTopCommented: MainViewModelTopCommented)
     fun inject(updateUserUseCase: UpdateUserUseCase)
+    fun inject(deleteUserUseCase: DeleteUserUseCase)
 }

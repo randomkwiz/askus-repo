@@ -249,13 +249,26 @@
         android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center"
+        android:layout_gravity="bottom"
         android:visibility="visible"
         app:lottie_autoPlay="true"
         app:lottie_fileName="trophy.json"
         app:lottie_loop="true"
         tools:background="@tools:sample/backgrounds/scenic"
-        tools:visibility="visible" />
+        tools:visibility="gone" />
+
+    <TextView
+        android:id="@+id/profile__label_empty_post"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/textColor"
+        android:text="@string/there_are_no_posts_send_one_and_see_if_you_are_lucky"
+        android:layout_gravity="bottom"
+        android:gravity="center"
+        android:textSize="21sp"
+        android:paddingBottom="40dp" />
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
@@ -268,10 +281,9 @@
             android:layout_height="match_parent"
             android:clipToPadding="false"
             android:paddingBottom="20dp"
-            tools:background="@tools:sample/backgrounds/scenic"
             tools:itemCount="5"
             tools:listitem="@layout/logro_row"
-            tools:visibility="visible">
+            tools:visibility="gone">
 
         </androidx.recyclerview.widget.RecyclerView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

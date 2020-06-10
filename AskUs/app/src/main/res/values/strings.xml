@@ -81,5 +81,15 @@
         \n2. Publications that violate the privacy rights of others or constitute a hate crime will also be rejected.</string>
     <string name="accept">Accept</string>
     <string name="agree_moderator">You have agreed to be a moderator. Reload the page in a few minutes.</string>
+    <string name="introduce_la_nueva_contrase_a">Introduce new password</string>
+    <string name="introduce_tu_contrase_a_actual">Introduce current password</string>
+    <string name="passwords_dont_match">Passwords do not match</string>
+    <string name="incorrect_password">Incorrect password</string>
+    <string name="password_changed">Your password has been successfully changed</string>
+    <string name="error_changing_password">There was an error while changing your password. Try again later.</string>
+    <string name="delete_account_text">Are you sure you want to delete the account? This action can not be undone.All data related to your account will be deleted.</string>
+    <string name="account_successfully_removed">Account was successfully removed.</string>
+    <string name="error_deleting_account">There was an error deleting the account. Try again later.</string>
+    <string name="there_are_no_posts_send_one_and_see_if_you_are_lucky">There are no posts, send one and see if you are lucky!</string>
 
 </resources>

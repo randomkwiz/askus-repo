@@ -7,7 +7,6 @@ object AppConstants {
     const val OK = 200
     const val NO_CONTENT = 204
     const val INTERNAL_SERVER_ERROR = 500
-    const val TOKEN_LENGHT = 3
     const val PREFERENCE_NAME = "AskUsPreferences"
     const val CACHE_SIZE = (5 * 1024 * 1024).toLong() //5 MB
     const val PASSWORD_MIN_LENGHT = 3   //just for testing, this should be at least 6 char

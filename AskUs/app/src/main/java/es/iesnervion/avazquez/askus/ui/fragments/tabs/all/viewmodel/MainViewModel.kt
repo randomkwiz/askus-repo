@@ -98,8 +98,15 @@ class MainViewModel : ViewModel() {
     }
 
     fun getResponseCodeMakeUserAModerator() = usersRepository.getResponseCodeMakeUserAModerator()
+    fun getResponseCodePasswordChange() = usersRepository.getResponseCodeChangePassword()
+    fun getResponseCodeDeleteUser() = usersRepository.getResponseCodeDeleteUser()
     fun sendNewPost() {
         postsRepository.useCaseSendNewPosts(PublicacionMapper().modelToDto(newPost), tagList)
+    }
+
+    fun changePassword(token: String, idUser: Int, newPassword: String) {
+        usersRepository.useCaseChangePassword(token = token, idUser = idUser,
+            newPassword = newPassword)
     }
 
     fun responseCodePostSent(): LiveData<Int> {
@@ -129,5 +136,9 @@ class MainViewModel : ViewModel() {
 
     fun responseCodeVotoPublicacionSent(): LiveData<Int> {
         return votesRepository.getResponseCodeVotoPublicacionSent()
+    }
+
+    fun deleteAccount(idCurrentUser: Int, token: String) {
+        usersRepository.useCaseDeleteUser(token = token, idUser = idCurrentUser)
     }
 }

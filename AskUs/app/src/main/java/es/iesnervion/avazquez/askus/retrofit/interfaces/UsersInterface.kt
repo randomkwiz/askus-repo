@@ -25,4 +25,7 @@ interface UsersInterface {
     fun changePassword(@Header("Authorization") authToken: String,
         @Path("id") idUser: Int,
         @Query("newPassword") newPassword: String): Call<Void>
+
+    @DELETE("api/Users/{id}")
+    fun deleteUser(@Header("Authorization") authToken: String, @Path("id") idUser: Int): Call<Void>
 }
