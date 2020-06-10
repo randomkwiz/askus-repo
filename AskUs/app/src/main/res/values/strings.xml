@@ -90,5 +90,6 @@
     <string name="delete_account_text">Are you sure you want to delete the account? This action can not be undone.All data related to your account will be deleted.</string>
     <string name="account_successfully_removed">Account was successfully removed.</string>
     <string name="error_deleting_account">There was an error deleting the account. Try again later.</string>
+    <string name="there_are_no_posts_send_one_and_see_if_you_are_lucky">There are no posts, send one and see if you are lucky!</string>
 
 </resources>

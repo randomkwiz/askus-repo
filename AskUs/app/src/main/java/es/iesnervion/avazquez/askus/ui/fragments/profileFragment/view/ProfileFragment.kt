@@ -345,6 +345,15 @@ class ProfileFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, View.O
         setCorrectImages()
         initRecyclerView()
         setAdapter()
+        showEmptyImgPostIfNeeded()
+    }
+
+    private fun showEmptyImgPostIfNeeded() {
+        if (showPosts && postAdapter.itemCount == 0) {
+            profile__label_empty_post.setVisibilityToVisible()
+        } else {
+            profile__label_empty_post.setVisibilityToGone()
+        }
     }
 
     private fun setAdapter() {

@@ -86,4 +86,5 @@
     <string name="delete_account_text">¿Está seguro de que desea borrar la cuenta? Esta acción no se puede deshacer. Todos los datos de su cuenta serán borrados.</string>
     <string name="account_successfully_removed">La cuenta se eliminó con éxito.</string>
     <string name="error_deleting_account">Hubo un error al borrar la cuenta. Inténtalo de nuevo más tarde.</string>
+    <string name="there_are_no_posts_send_one_and_see_if_you_are_lucky">No hay posts, ¡Envía uno y a ver si hay suerte!</string>
 </resources>
