@@ -83,4 +83,7 @@
     <string name="incorrect_password">Contraseña incorrecta</string>
     <string name="password_changed">La contraseña ha sido cambiada con éxito</string>
     <string name="error_changing_password">Hubo un error cambiando la contraseña. Inténtalo de nuevo más tarde.</string>
+    <string name="delete_account_text">¿Está seguro de que desea borrar la cuenta? Esta acción no se puede deshacer. Todos los datos de su cuenta serán borrados.</string>
+    <string name="account_successfully_removed">La cuenta se eliminó con éxito.</string>
+    <string name="error_deleting_account">Hubo un error al borrar la cuenta. Inténtalo de nuevo más tarde.</string>
 </resources>

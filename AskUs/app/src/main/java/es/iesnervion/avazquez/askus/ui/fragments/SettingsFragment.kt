@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
@@ -20,6 +21,7 @@ import es.iesnervion.avazquez.askus.R
 import es.iesnervion.avazquez.askus.interfaces.HomeActivityCallback
 import es.iesnervion.avazquez.askus.ui.fragments.tabs.all.viewmodel.MainViewModel
 import es.iesnervion.avazquez.askus.utils.AppConstants
+import es.iesnervion.avazquez.askus.utils.AppConstants.NO_CONTENT
 import es.iesnervion.avazquez.askus.utils.AppConstants.PASSWORD_MIN_LENGHT
 import kotlinx.android.synthetic.main.fragment_settings.*
 import setVisibilityToGone
@@ -119,7 +121,7 @@ class SettingsFragment : Fragment(), View.OnClickListener {
 
     private fun onResponseCodeReceived(responseCode: Int) {
         if (changePasswordClicked) {
-            if (responseCode == 204) {
+            if (responseCode == NO_CONTENT) {
                 Snackbar.make(settings__container, getString(R.string.password_changed),
                     Snackbar.LENGTH_SHORT).show()
                 editor.putString("passwordToSave", newPassword)
@@ -179,6 +181,17 @@ class SettingsFragment : Fragment(), View.OnClickListener {
         }
     }
 
+    private fun onResponseCodeDeleteUserReceived(responseCode: Int) {
+        if (responseCode == NO_CONTENT) {
+            Snackbar.make(settings__container, getString(R.string.account_successfully_removed),
+                Snackbar.LENGTH_SHORT).show()
+            closeSession()
+        } else {
+            Snackbar.make(settings__container, getString(R.string.error_deleting_account),
+                Snackbar.LENGTH_SHORT).show()
+        }
+    }
+
     private fun newPasswordMatchs() =
             settings_input_new_password.text.toString() == settings__input_repeat_new_password.text.toString()
 
@@ -194,9 +207,28 @@ class SettingsFragment : Fragment(), View.OnClickListener {
     }
 
     private fun onDeleteAccountClicked() {
+        context?.let {
+            AlertDialog.Builder(it).setIcon(R.drawable.ic_baseline_delete_forever_24)
+                .setTitle(getString(R.string.delete_account))
+                .setMessage(getString(R.string.delete_account_text))
+                .setPositiveButton(resources.getString(R.string.yes)) { _, _ ->
+                    viewModel.deleteAccount(idCurrentUser = idCurrentUser, token = token)
+                }.setNegativeButton(resources.getString(R.string.no), null).show()
+        }
     }
 
     private fun onLogOutClicked() {
+        context?.let {
+            AlertDialog.Builder(it).setIcon(R.drawable.ic_exit_to_app_black_24dp)
+                .setTitle(resources.getString(R.string.exit))
+                .setMessage(resources.getString(R.string.user_want_to_exit))
+                .setPositiveButton(resources.getString(R.string.yes)) { _, _ ->
+                    closeSession()
+                }.setNegativeButton(resources.getString(R.string.no), null).show()
+        }
+    }
+
+    private fun closeSession() {
         deleteAllRememberedData()
         if (context is HomeActivityCallback) {
             (context as HomeActivityCallback).logOut()
@@ -227,6 +259,8 @@ class SettingsFragment : Fragment(), View.OnClickListener {
         viewModel.allTags().observe(viewLifecycleOwner, Observer(::onTagsLoaded))
         viewModel.getResponseCodePasswordChange()
             .observe(viewLifecycleOwner, Observer(::onResponseCodeReceived))
+        viewModel.getResponseCodeDeleteUser()
+            .observe(viewLifecycleOwner, Observer(::onResponseCodeDeleteUserReceived))
     }
 
     private fun deleteAllRememberedData() {

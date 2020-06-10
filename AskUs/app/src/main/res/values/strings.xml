@@ -87,5 +87,8 @@
     <string name="incorrect_password">Incorrect password</string>
     <string name="password_changed">Your password has been successfully changed</string>
     <string name="error_changing_password">There was an error while changing your password. Try again later.</string>
+    <string name="delete_account_text">Are you sure you want to delete the account? This action can not be undone.All data related to your account will be deleted.</string>
+    <string name="account_successfully_removed">Account was successfully removed.</string>
+    <string name="error_deleting_account">There was an error deleting the account. Try again later.</string>
 
 </resources>
