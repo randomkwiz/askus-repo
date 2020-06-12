@@ -301,7 +301,8 @@ class PostsListFragmentTopCommented : Fragment(), SwipeRefreshLayout.OnRefreshLi
     //    }
     override fun onResume() {
         super.onResume()
-        adapter.clear()
-        doApiCall()
+        //        adapter.clear()
+        //        doApiCall()
+        onRefresh()
     }
 }

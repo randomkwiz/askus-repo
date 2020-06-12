@@ -297,8 +297,9 @@ class PostsListFragmentTopRated : Fragment(), SwipeRefreshLayout.OnRefreshListen
 
     override fun onResume() {
         super.onResume()
-        adapter.clear()
-        doApiCall()
+        onRefresh()
+        //        adapter.clear()
+        //        doApiCall()
         //Toast.makeText(context,"TOP RATED entra en on resume", Toast.LENGTH_SHORT).show()
     }
 }

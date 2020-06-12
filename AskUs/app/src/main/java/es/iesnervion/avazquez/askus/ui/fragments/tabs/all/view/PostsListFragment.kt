@@ -301,7 +301,8 @@ class PostsListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     //    }
     override fun onResume() {
         super.onResume()
-        adapter.clear()
-        doApiCall()
+        //        adapter.clear()
+        //        doApiCall()
+        onRefresh()
     }
 }
