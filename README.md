@@ -1,9 +1,12 @@
-# askus-repo
+# AskUs App
 Proyecto final del ciclo formativo Desarrollo de aplicaciones multiplataforma.
 
-Tecnologías utilizadas:
+## Tecnologías utilizadas:
+
 BBDD -> Microsoft SQL Server subido a Azure
+
 BACKEND -> API Rest en C# .NET con ORM Entity Framework subido a Azure
+
 APP -> App Android nativa con Kotlin
 
 Aplicación donde los usuarios pueden subir breves publicaciones, comentar, votar las publicaciones existentes y las enviadas para publicación y conseguir logros.
